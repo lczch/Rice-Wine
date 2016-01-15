@@ -1,0 +1,2 @@
+# rice-wine
+emacs configuration
