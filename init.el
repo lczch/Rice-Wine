@@ -21,7 +21,14 @@
 (require 'init-rice-wine-functions) ; some useful elisp functions at top level
 
 ;;; add needed dirs to load-path
-(rice-wine/add-subdirs-to-load-path (expand-file-name "site-lisp" rice-wine-dir))
+(setq rice-wine-package-dir (expand-file-name "site-lisp" rice-wine-dir))
+(rice-wine/add-subdirs-to-load-path rice-wine-package-dir)
+
+;;; extend emacs with vim key binding styles
+;; This method prevent large damage on my fingers,
+;; especially for little finger!
+;; main package: evil
+(require 'init-evil)
 
 ;;; interactively do things with buffers and files
 ;; main package: ido (built-in)
@@ -29,6 +36,9 @@
 ;; sub package: flx-ido (a more powerful alternative to ido-mode's built-in flex matching)
 ;; TODO test ido-ubiquitous and flx-ido, I really need them?
 (require 'init-ido)
+
+;;; expand-region: increase selected region by semantic units
+(require 'init-expand-region)
 
 ;;; org-mode
 ;; TODO org-mime?
@@ -45,11 +55,6 @@
 ;; I think the organization of backends should be more carefully to avoid conflicts
 (require 'init-company)
 
-;;; extend emacs with vim key binding styles
-;; This method prevent large damage on my fingers,
-;; especially for little finger!
-;; main package: evil
-(require 'init-evil)
 
 ;;; TOD
 (require 'init-smex) ;; M-x interface with Ido-style fuzzy matching
