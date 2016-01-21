@@ -40,11 +40,15 @@
 ;;; expand-region: increase selected region by semantic units
 (require 'init-expand-region)
 
+;;; color theme
+(require 'init-color-theme)
+
+;;; TODO
+(require 'init-smex) ;; M-x interface with Ido-style fuzzy matching
+
 ;;; org-mode
 ;; TODO org-mime?
 (require 'init-org)
-
-
 
 ;;; yet another snippet
 ;; main package: yasnippet
@@ -55,22 +59,10 @@
 ;; I think the organization of backends should be more carefully to avoid conflicts
 (require 'init-company)
 
-
-;;; TOD
-(require 'init-smex) ;; M-x interface with Ido-style fuzzy matching
-
-;;; TODO
-(require 'init-dired) ;; only affect dired-mode
-(require 'init-uniquify) ;; nicer naming buffers for files with identical names
-(require 'init-ibuffer) ;; only affect ibuffer-mode
-
-
 ;;; TODO test what hippie-expand do
 ;; expand text trying various ways to find its expansion (built-in)
 (require 'init-hippie-expand)
 
-;;; color theme
-(require 'init-color-theme)
 
 ;;; support of programming language
 (require 'init-programming)
