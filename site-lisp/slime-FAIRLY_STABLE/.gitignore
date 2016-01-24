@@ -1,0 +1,9 @@
+*.x86f
+*.fasl
+*.dfsl
+*.lx64fsl
+*.elc
+*~
+\#*\#
+.\#*
+.DS_Store

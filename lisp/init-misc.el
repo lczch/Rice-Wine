@@ -10,8 +10,16 @@
 ;;; window numbering: move focus between sub-windows
 (require 'init-window-numbering)
 
+;;; Highlight the cursor whenever the window scrolls
+;; beacon: need package "seq"
+(require 'beacon)
+(beacon-mode 1)
+
 ;;; column number
 (column-number-mode t)
+
+;;; highlight balanced parenthesis
+(show-paren-mode t)
 
 ;effective emacs item 7; no scrollbar, no menubar, no toolbar
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))

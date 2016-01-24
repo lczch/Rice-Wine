@@ -13,7 +13,6 @@
 (defun turn-on-rainbow-delimiters ()
   (rainbow-delimiters-mode t))
 
-
 (add-hook 'rice-wine-lisp-hook 'turn-on-paredit)
 (add-hook 'rice-wine-lisp-hook 'turn-on-eldoc)
 (add-hook 'rice-wine-lisp-hook 'turn-on-rainbow-delimiters)
@@ -24,8 +23,7 @@
 (add-hook 'lisp-mode-hook 'run-rice-wine-lisp-hook)
 
 (require 'slime-autoloads)
-(setq iniferior-lisp-program "sbcl")
+(setq inferior-lisp-program "sbcl")
 (setq slime-contribs '(slime-fancy))
-
 
 (provide 'init-programming)

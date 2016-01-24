@@ -1,0 +1,18 @@
+language: emacs
+before_install:
+  - echo -e "\ndeb http://us.archive.ubuntu.com/ubuntu raring universe multiverse main" | sudo tee -a /etc/apt/sources.list
+  - echo -e "\ndeb http://emacs.naquadah.org/ stable/" | sudo tee -a /etc/apt/sources.list
+  - echo -e "\ndeb-src http://emacs.naquadah.org/ stable/" | sudo tee -a /etc/apt/sources.list
+  - cat /etc/apt/sources.list
+  - wget -q -O - http://emacs.naquadah.org/key.gpg | sudo apt-key add -
+  - sudo apt-get update
+install:
+  - sudo apt-get install sbcl
+  - sudo apt-get install emacs
+  - sudo apt-get -t raring install libgnutls26
+  - sudo apt-get install emacs-snapshot-nox
+before_script:
+script:
+  - EMACS_BIN=emacs LISP_BIN=sbcl make check
+  - git clean -fdx
+  - EMACS_BIN=emacs-snapshot LISP_BIN=sbcl make check
