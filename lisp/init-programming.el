@@ -20,10 +20,6 @@
 (defun run-rice-wine-lisp-hook ()
   (run-hooks 'rice-wine-lisp-hook))
 
-(add-hook 'lisp-mode-hook 'run-rice-wine-lisp-hook)
-
-(require 'slime-autoloads)
-(setq inferior-lisp-program "sbcl")
-(setq slime-contribs '(slime-fancy))
+(require 'init-common-lisp)
 
 (provide 'init-programming)
