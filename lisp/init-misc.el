@@ -31,6 +31,8 @@
   (setq custom-file my-custom-file)
   (setq backup-directory-alist `(("." . ,my-backup-dir))))
 
+;;; set the line space: the space between lines. Extremely important for comfortable!
+(setq-default line-spacing 0.2)
 
 ;;; TODO
 (require 'init-dired) ;; only affect dired-mode
