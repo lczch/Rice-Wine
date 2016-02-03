@@ -9,21 +9,18 @@ This is my personal emacs configuration, it's derived from purcell's and redguar
 - I hope my configuration can be clean, and so, beautiful. 
 
 * Install
-** first 
-   If you want to place this configuration to a specific dir, say "foo/", then \\
-   you can execute below commands in shell:
+- If you want to place this configuration to a specific dir, say "foo/", then \\
+  you can execute below commands in shell:
    #+BEGIN_SRC sh
      cd foo
      git clone git@github.com:lczch/rice-wine.git
    #+END_SRC
-** second
-   override your ~/.emacs:
+- override your ~/.emacs:
    #+BEGIN_SRC emacs-lisp
      (load-file "foo/rice-wine/init.el")
    #+END_SRC
-
-** third
-   Becuase I *do* have all the packages (expect a little) in my configuration staticly, \\
-   so it is enough to work. \\
-   But I use git version of company-coq and PG. \\
-   So, git clone them under site-lisp dir.
+  
+- Becuase I *do* have all the packages (expect a little) in my configuration staticly, \\
+  so it is enough to work. \\
+  But I use git version of company-coq and PG. \\
+  So, git clone them under site-lisp dir.
