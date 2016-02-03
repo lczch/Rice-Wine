@@ -21,6 +21,6 @@ This is my personal emacs configuration, it's derived from purcell's and redguar
    #+END_SRC
   
 - Becuase I *do* have all the packages (expect a little) in my configuration staticly, \\
-  so it is enough to work. \\
-  But I use git version of company-coq and PG. \\
+  so it is enough to work.  \\
+  But I use git version of company-coq and PG.  \\
   So, git clone them under site-lisp dir.
