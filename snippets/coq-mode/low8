@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: low8
+# key: low8
+# binding: direct-keybinding
+# --
+($1&$ OS_MUTEX_KEEP_LOWER_8)$0

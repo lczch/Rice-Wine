@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: shr8
+# key: >>8
+# binding: direct-keybinding
+# --
+($1>>ᵢ$ 8)$0

@@ -4,6 +4,16 @@
 # Packaging
 .cask
 
+# backups
 backups/
 
+# auto-save
 *~
+\#*
+
+# temp
+temp/
+
+# git clone packages
+site-lisp/PG
+site-lisp/company-coq

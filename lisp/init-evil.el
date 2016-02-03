@@ -11,11 +11,12 @@
 (setq evil-leader/leader ",")
 
 (evil-leader/set-key
-  "b" 'switch-to-buffer)
+  "xb" 'switch-to-buffer)
 ;;; Package need
 ;; main package: evil
 ;; dependent package: undo-tree.el
 (rice-wine/add-to-load-path (expand-file-name "evil/lib" rice-wine-package-dir))
+(require 'undo-tree)
 
 (require 'evil)
 (evil-mode 1)

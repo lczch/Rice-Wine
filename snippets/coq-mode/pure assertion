@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: pure assertion
+# key: pure
+# binding: direct-keybinding
+# --
+[| $0 |] **

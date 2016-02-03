@@ -63,4 +63,6 @@ Symbols matching the text at point are put first in the completion list."
 (evil-leader/set-key
   "ir" 'steve-ido-choose-from-recentf)
 
+(require 'init-smex) ;; M-x interface with Ido-style fuzzy matching
+
 (provide 'init-ido)

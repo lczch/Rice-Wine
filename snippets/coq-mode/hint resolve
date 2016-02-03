@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: hint resolve
+# key: hr
+# binding: direct-keybinding
+# --
+Hint Resolve $0

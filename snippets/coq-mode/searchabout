@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: searchabout
+# key: sa
+# binding: direct-keybinding
+# --
+SearchAbout 

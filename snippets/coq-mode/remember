@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: remember
+# key: rm
+# binding: direct-keybinding
+# --
+remember $0

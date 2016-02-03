@@ -36,13 +36,6 @@
   (make-local-variable 'company-backends)
   (setq company-backends backends))
 
-;; test
-(defun elisp-setup-company-mode ()
-  "company specific setup for elisp"
-  (setup-company-mode '(company-elisp)))
-
-(add-hook 'emacs-lisp-mode-hook 'elisp-setup-company-mode)
-
 ;;; useful company-backend
 ;;  company-c-headers
 ;;  company-elisp

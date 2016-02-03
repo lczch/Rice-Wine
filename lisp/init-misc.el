@@ -1,29 +1,16 @@
-;;; modeline
-(require 'init-modeline)
+;;; ELPA
+;; require package from network: I only use it to get a package from network,
+;; and move it to site-lisp/, or get the description of a package.
+(require 'init-elpa)
 
-;;; isearch
-(require 'init-isearch)
+;;; configure the appearance of emacs
+(require 'init-gui-frame)
 
-;;; save place
-(require 'init-saveplace)
+;;; functions and configuration about editing text
+(require 'init-editing)
 
-;;; window numbering: move focus between sub-windows
-(require 'init-window-numbering)
-
-;;; Highlight the cursor whenever the window scrolls
-;; beacon: need package "seq"
-(require 'beacon)
-(beacon-mode 1)
-
-;;; column number
-(column-number-mode t)
-
-;;; highlight balanced parenthesis
-(show-paren-mode t)
-
-;effective emacs item 7; no scrollbar, no menubar, no toolbar
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+;;; functions and manipulation about windows, from purcell's emacs.d
+(require 'init-windows)
 
 ;;; custom-file and backup-directory
 (let ((my-custom-file (expand-file-name "custom.el" rice-wine-dir))
@@ -31,12 +18,8 @@
   (setq custom-file my-custom-file)
   (setq backup-directory-alist `(("." . ,my-backup-dir))))
 
-;;; set the line space: the space between lines. Extremely important for comfortable!
-(setq-default line-spacing 0.2)
-
 ;;; TODO
 (require 'init-dired) ;; only affect dired-mode
-(require 'init-uniquify) ;; nicer naming buffers for files with identical names
 (require 'init-ibuffer) ;; only affect ibuffer-mode
 
 (provide 'init-misc)

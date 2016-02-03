@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: hint extern
+# key: he
+# binding: direct-keybinding
+# --
+Hint Extern $0

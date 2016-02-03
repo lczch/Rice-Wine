@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: hint immediate 
+# key: hi
+# binding: direct-keybinding
+# --
+Hint Immediate
