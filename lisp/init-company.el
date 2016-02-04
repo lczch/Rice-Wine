@@ -13,7 +13,8 @@
 
 ;; ignore case when collecting complete candidates? Maybe I want to try.
 ;; nil is no, t is yes.
-(setq company-dabbrev-ignore-case t)
+(setq company-dabbrev-ignore-case nil)
+
 
 ;; show number of first ten candidates
 (setq company-show-numbers t)

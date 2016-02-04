@@ -34,4 +34,20 @@
 
 (global-set-key (kbd "C-c o") 'other-frame)
 
+;;------------------------------------------------------------------------------
+;; some basic preferences
+;;------------------------------------------------------------------------------
+(setq-default buffers-menu-max-size 30
+              case-fold-search t
+              save-interprogram-paste-before-kill t
+              indent-tabs-mode nil
+              mouse-yank-at-point t
+              tooltip-delay 1.5
+              truncate-lines nil
+              truncate-partial-width-windows nil
+              ;; visible-bell has some issue
+              ;; @see https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/issues/9#issuecomment-97848938
+              visible-bell nil)
+
+
 (provide 'init-editing)

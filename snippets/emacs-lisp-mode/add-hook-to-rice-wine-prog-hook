@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: add-hook-to-prog
+# key: ahp
+# binding: direct-keybinding
+# --
+(add-hook 'rice-wine-prog-hook $0)
