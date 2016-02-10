@@ -20,9 +20,9 @@
 (add-hook 'rice-wine-prog-hook 'turn-on-subword-mode)
 
 ;; electric-pair-mode
-(defun turn-on-electric-pair-mode ()
-  (electric-pair-mode 1))
-(add-hook 'rice-wine-prog-hook 'turn-on-electric-pair-mode)
+;; (defun turn-on-electric-pair-mode ()
+;;   (electric-pair-mode 1))
+;; (add-hook 'rice-wine-prog-hook 'turn-on-electric-pair-mode)
 
 ;; eldoc
 (require 'eldoc)
@@ -43,5 +43,7 @@
 (require 'init-lisp)
 
 (require 'init-coq)
+
+(require 'init-c)
 
 (provide 'init-programming)

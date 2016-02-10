@@ -34,6 +34,14 @@
 (define-key evil-normal-state-map (kbd "C-e") 'move-end-of-line)
 (define-key evil-normal-state-map (kbd "C-k") 'kill-line)
 
+;;;
+;; (defun rw/evil-change-read-only-file-initial-state ()
+;;   (when (and  buffer-read-only
+;;               (eq major-mode 'fundermental-mode))
+;;     (evil-insert)))
+
+;; (add-hook ')
+
 
 ;;; change mode-line color by evil state
 (lexical-let ((default-color (cons (face-background 'mode-line)

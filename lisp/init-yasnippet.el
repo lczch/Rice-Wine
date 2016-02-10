@@ -1,7 +1,7 @@
 (require 'yasnippet)
 
 (let ((rice-wine-yas-dir (expand-file-name "snippets" rice-wine-dir)))
-  (setq yas-snippet-dirs 
+  (setq yas-snippet-dirs
 	`(,rice-wine-yas-dir)))
 
 (defun turn-on-yas-mode ()

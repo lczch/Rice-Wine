@@ -17,3 +17,6 @@ temp/
 # git clone packages
 site-lisp/PG
 site-lisp/company-coq
+
+# doc
+site-lisp/slime-FAIRLY_STABLE/doc
