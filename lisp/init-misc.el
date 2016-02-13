@@ -18,6 +18,14 @@
   (setq custom-file my-custom-file)
   (setq backup-directory-alist `(("." . ,my-backup-dir))))
 
+;;; info mode
+(defun info-mode ()
+  (interactive)
+  (let ((file-name (buffer-file-name)))
+    (kill-buffer (current-buffer))
+    (info file-name)))
+(add-to-list 'auto-mode-alist '("\\.info\\'" . info-mode))
+
 ;;; TODO
 (require 'init-dired) ;; only affect dired-mode
 (require 'init-ibuffer) ;; only affect ibuffer-mode
