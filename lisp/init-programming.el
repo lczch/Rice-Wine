@@ -19,18 +19,6 @@
   (subword-mode 1))
 (add-hook 'rice-wine-prog-hook 'turn-on-subword-mode)
 
-;; electric-pair-mode
-;; (defun turn-on-electric-pair-mode ()
-;;   (electric-pair-mode 1))
-;; (add-hook 'rice-wine-prog-hook 'turn-on-electric-pair-mode)
-
-;; eldoc
-(require 'eldoc)
-(setq eldoc-idle-delay 0.2)
-(setq eldoc-echo-area-use-multiline-p t)
-(defun turn-on-eldoc ()
-  (turn-on-eldoc-mode))
-(add-hook 'rice-wine-prog-hook 'turn-on-eldoc)
 
 ;; show trailing whitspace
 (defun turn-on-show-trailing-whitspace ()

@@ -78,4 +78,12 @@ Call a second time to restore the original window configuration."
 ;; window numbering: move focus between sub-windows
 (require 'init-window-numbering)
 
+(defun rw/display-other-frame-in-other-gui-window ()
+  (interactive)
+  (other-frame 1)
+  (other-frame -1))
+
+(global-set-key (kbd "<f1>") 'rw/display-other-frame-in-other-gui-window)
+(global-set-key (kbd "<f2>") 'pop-to-mark-command)
+
 (provide 'init-windows)

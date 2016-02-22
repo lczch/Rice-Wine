@@ -4,6 +4,8 @@
   (setq yas-snippet-dirs
 	`(,rice-wine-yas-dir)))
 
+(yas-reload-all)
+
 (defun turn-on-yas-mode ()
   (yas-minor-mode 1))
 

@@ -1,4 +1,4 @@
-;;; setup proof-general 
+;;; setup proof-general
 (let ((setup-file
        (expand-file-name "PG/generic/proof-site.el"
 				    rice-wine-package-dir)))
@@ -15,6 +15,20 @@
 (defun turn-on-company-coq ()
   (company-coq-initialize))
 
+(setq company-coq-disabled-features
+      '(snippets
+        outline
+        code-folding
+        company-defaults
+        ;;refman-ltac-abbrevs-backend
+        ;;refman-tactic-abbrevs-backend
+        ;;refman-vernac-abbrevs-backend
+        refman-scope-abbrevs-backend
+        pg-backend
+        dynamic-symbols-backend
+        obsolete-settings))
+
+(add-hook 'coq-mode-hook 'run-rice-wine-prog-hook)
 (add-hook 'coq-mode-hook 'turn-on-company-coq)
 
 
@@ -73,7 +87,7 @@
 (defconst lzh/coq-check-regexp "\\(?:Check.*[.]$\\)")
 (defconst lzh/coq-locate-regexp "\\(?:Locate.*[.]$\\)")
 (defconst lzh/coq-show-regexp "\\(?:Show.*[.]$\\)")
-(defconst lzh/coq-idtac-regexp "\\(?:idtac.*[.;]$\\)")
+(defconst lzh/coq-idtac-regexp "\\(?:idtac .*[.;]$\\)")
 
 (defconst lzh/coq-fuzz-regexp
   (concat "\\(^[[:blank:]]*\\)\\("

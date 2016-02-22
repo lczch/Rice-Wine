@@ -1,13 +1,21 @@
 ;;; coding environment of lisp
 
+(add-hook 'rice-wine-lisp-hook 'run-rice-wine-prog-hook)
+
 ;; paredit
 (require 'paredit)
 (defun turn-on-paredit ()
   (paredit-mode +1))
-
-;;  my lisp-hook
-(add-hook 'rice-wine-lisp-hook 'run-rice-wine-prog-hook)
 (add-hook 'rice-wine-lisp-hook 'turn-on-paredit)
+
+;; eldoc mode is make coq-mode extensive low !!!!!!!
+(require 'eldoc)
+(setq eldoc-idle-delay 0.2)
+(setq eldoc-echo-area-use-multiline-p t)
+(defun turn-on-eldoc ()
+  (turn-on-eldoc-mode))
+(add-hook 'rice-wine-lisp-hook 'turn-on-eldoc)
+
 (add-hook 'rice-wine-lisp-hook 'turn-on-yas-mode)
 
 (defun run-rice-wine-lisp-hook ()

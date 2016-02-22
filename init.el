@@ -12,7 +12,7 @@
 ;; disable auto-load of packages, I prefer require them manually
 (setq package-enable-at-startup nil)
 
-;; load base functionalities 
+;; load base functionalities
 (require 'init-base-lib)
 
 ;; add needed dirs to load-path
@@ -42,7 +42,7 @@
 (require 'init-org)
 
 ;;------------------------------------------------------------------------------
-;; yasnippet: text template unfolding functionality 
+;; yasnippet: text template unfolding functionality
 ;;------------------------------------------------------------------------------
 (require 'init-yasnippet)
 
