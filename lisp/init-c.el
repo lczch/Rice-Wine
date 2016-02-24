@@ -4,6 +4,8 @@
 ;; give me NO newline automatically after electric expressions are entered
 (setq c-auto-newline nil)
 
+(require 'company-clang)
+(require 'company-dabbrev)
 (defun turn-on-company-mode-for-c ()
   (setup-company-mode '((company-clang company-dabbrev))))
 

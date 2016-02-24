@@ -1,5 +1,8 @@
 ;; configure company for elisp
 
+(require 'company-elisp)
+(require 'company-dabbrev)
+
 (defun elisp-setup-company-mode ()
   "company specific setup for elisp"
   (setup-company-mode '((company-elisp company-dabbrev))))
