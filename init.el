@@ -13,7 +13,7 @@
 (setq package-enable-at-startup nil)
 
 ;; load base functionalities
-(require 'init-base-lib)
+(require 'init-utils)
 
 ;; add needed dirs to load-path
 (setq rice-wine-package-dir (expand-file-name "site-lisp" rice-wine-dir))
@@ -24,7 +24,6 @@
 ;; evil: extend emacs with vim key binding styles
 ;;------------------------------------------------------------------------------
 (require 'init-evil)
-
 
 ;;------------------------------------------------------------------------------
 ;; ido: interactively do things with buffers and files

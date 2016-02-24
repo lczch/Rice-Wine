@@ -1,4 +1,26 @@
 ;;; setup proof-general
+(setq
+ proof-splash-enable nil
+ coq-indent-semicolon-tactical 0
+ coq-match-indent 4
+ coq-one-command-per-line t
+ proof-auto-raise-buffers nil ;; prevent closing the other frame when it only show *goals* and *responds*
+ proof-multiple-frames-enable nil ;; this feature is buggy...
+ proof-keep-response-history nil
+ proof-next-command-insert-space t)
+
+(defun rw/pg-debug-on ()
+  (interactive)
+  (setq proof-general-debug t))
+
+(defun rw/pg-debug-off ()
+  (interactive)
+  (setq proof-general-debug nil))
+
+(defun rw/pg-save-frame-configuration ()
+  (interactive)
+  (setq pg-frame-configuration (current-frame-configuration)))
+
 (let ((setup-file
        (expand-file-name "PG/generic/proof-site.el"
 				    rice-wine-package-dir)))
@@ -27,6 +49,19 @@
         pg-backend
         dynamic-symbols-backend
         obsolete-settings))
+
+(setq company-coq-prettify-symbols-alist
+      '(("|-" . 8866)
+        ("->" . 8594)
+        ("=>" . 8658)
+        ("fun" . 955)
+        ("forall" . 8704)
+        ("exists" . 8707)
+        ("/\\" . 8743)
+        ("\\/" . 8744)
+        ("~" . 172)
+        ("+-" . 177)
+        (">->" . 8611)))
 
 (add-hook 'coq-mode-hook 'run-rice-wine-prog-hook)
 (add-hook 'coq-mode-hook 'turn-on-company-coq)
