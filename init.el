@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8 -*-
 
-;; Work with Emacs 24.3,
+;; Work with Emacs 24.5,
 ;; implement for my personal specifications
 
 ;;------------------------------------------------------------------------------

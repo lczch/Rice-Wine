@@ -22,6 +22,7 @@
 (add-hook 'rice-wine-lisp-hook 'turn-on-eldoc)
 
 (add-hook 'rice-wine-lisp-hook 'turn-on-yas-mode)
+(add-hook 'rice-wine-lisp-hook 'turn-on-show-trailing-whitspace)
 
 (defun run-rice-wine-lisp-hook ()
   (run-hooks 'rice-wine-lisp-hook))

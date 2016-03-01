@@ -68,11 +68,10 @@
 ;; And its depends on a lot packages:
 ;;  company-math(on math-symbol-list), dash, noflet, altert(on gntp and log4e)...
 ;; This package should be made more primitive.
-(require 'use-package)
 
 (use-package company-coq
   :commands (company-coq-initialize)
-  :config
+  :init
   (setq company-coq-disabled-features
         '(snippets
           outline
@@ -102,9 +101,6 @@
   (company-coq-initialize))
 
 (add-hook 'coq-mode-hook 'run-rice-wine-prog-hook)
-(add-hook 'coq-mode-hook
-          '(lambda ()
-             (turn-off-show-trailing-whitspace)))
 (add-hook 'coq-mode-hook 'turn-on-company-coq)
 (add-hook 'coq-mode-hook
           '(lambda ()

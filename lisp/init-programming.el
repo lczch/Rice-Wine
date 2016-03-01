@@ -19,13 +19,12 @@
   (subword-mode 1))
 (add-hook 'rice-wine-prog-hook 'turn-on-subword-mode)
 
-
 ;; show trailing whitspace
 (defun turn-on-show-trailing-whitspace ()
   (setq show-trailing-whitespace t))
 (defun turn-off-show-trailing-whitspace ()
   (setq show-trailing-whitespace nil))
-(add-hook 'rice-wine-prog-hook 'turn-on-show-trailing-whitspace)
+;; (add-hook 'rice-wine-prog-hook 'turn-on-show-trailing-whitspace)
 
 (defun run-rice-wine-prog-hook ()
   (run-hooks 'rice-wine-prog-hook))
