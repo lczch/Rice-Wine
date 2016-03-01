@@ -101,6 +101,9 @@
         (">->" . 8611)))
 
 (add-hook 'coq-mode-hook 'run-rice-wine-prog-hook)
+(add-hook 'coq-mode-hook
+          '(lambda ()
+             (turn-off-show-trailing-whitspace)))
 (add-hook 'coq-mode-hook 'turn-on-company-coq)
 (add-hook 'coq-mode-hook
           '(lambda ()

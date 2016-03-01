@@ -5,7 +5,12 @@
 ;; paredit
 (require 'paredit)
 (defun turn-on-paredit ()
-  (paredit-mode +1))
+  (paredit-mode +1)
+  (define-key paredit-mode-map [remap kill-line] 'paredit-kill)
+  (define-key paredit-mode-map (kbd "C-j") nil)
+  (local-set-key (kbd "C-j") 'eval-print-last-sexp)
+  (local-set-key (kbd "RET") 'paredit-newline))
+
 (add-hook 'rice-wine-lisp-hook 'turn-on-paredit)
 
 ;; eldoc mode is make coq-mode extensive low !!!!!!!
