@@ -19,6 +19,11 @@
 (setq rice-wine-package-dir (expand-file-name "site-lisp" rice-wine-dir))
 (rice-wine/add-subdirs-to-load-path rice-wine-package-dir)
 
+;; use-package
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)                ;; if you use :diminish
+(require 'bind-key)                ;; if you use any :bind variant
 
 ;;------------------------------------------------------------------------------
 ;; evil: extend emacs with vim key binding styles

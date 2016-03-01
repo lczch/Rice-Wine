@@ -1,4 +1,3 @@
-;;; setup proof-general
 (setq
  proof-splash-enable nil
  coq-indent-semicolon-tactical 0
@@ -69,36 +68,38 @@
 ;; And its depends on a lot packages:
 ;;  company-math(on math-symbol-list), dash, noflet, altert(on gntp and log4e)...
 ;; This package should be made more primitive.
-(require 'company-coq)
+(require 'use-package)
+
+(use-package company-coq
+  :commands (company-coq-initialize)
+  :config
+  (setq company-coq-disabled-features
+        '(snippets
+          outline
+          code-folding
+          company-defaults
+          ;;refman-ltac-abbrevs-backend
+          ;;refman-tactic-abbrevs-backend
+          ;;refman-vernac-abbrevs-backend
+          refman-scope-abbrevs-backend
+          pg-backend
+          dynamic-symbols-backend
+          obsolete-settings))
+  (setq company-coq-prettify-symbols-alist
+        '(("|-" . 8866)
+          ("->" . 8594)
+          ("=>" . 8658)
+          ("fun" . 955)
+          ("forall" . 8704)
+          ("exists" . 8707)
+          ("/\\" . 8743)
+          ("\\/" . 8744)
+          ("~" . 172)
+          ("+-" . 177)
+          (">->" . 8611))))
 
 (defun turn-on-company-coq ()
   (company-coq-initialize))
-
-(setq company-coq-disabled-features
-      '(snippets
-        outline
-        code-folding
-        company-defaults
-        ;;refman-ltac-abbrevs-backend
-        ;;refman-tactic-abbrevs-backend
-        ;;refman-vernac-abbrevs-backend
-        refman-scope-abbrevs-backend
-        pg-backend
-        dynamic-symbols-backend
-        obsolete-settings))
-
-(setq company-coq-prettify-symbols-alist
-      '(("|-" . 8866)
-        ("->" . 8594)
-        ("=>" . 8658)
-        ("fun" . 955)
-        ("forall" . 8704)
-        ("exists" . 8707)
-        ("/\\" . 8743)
-        ("\\/" . 8744)
-        ("~" . 172)
-        ("+-" . 177)
-        (">->" . 8611)))
 
 (add-hook 'coq-mode-hook 'run-rice-wine-prog-hook)
 (add-hook 'coq-mode-hook
