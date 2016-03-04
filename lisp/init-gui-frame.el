@@ -25,9 +25,13 @@
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-echo-area-message t)
 
+;; hooks about frame
+(require 'init-frame-hooks)
 
+(defun rw-maximize-frame ()
+  "maximize frame"
+  (set-frame-parameter (selected-frame) 'fullscreen 'maximized))
 
-
-
+(add-hook 'after-make-window-system-frame-hooks 'rw-maximize-frame)
 
 (provide 'init-gui-frame)

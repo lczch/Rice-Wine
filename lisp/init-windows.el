@@ -78,12 +78,28 @@ Call a second time to restore the original window configuration."
 ;; window numbering: move focus between sub-windows
 (require 'init-window-numbering)
 
-(defun rw/display-other-frame-in-other-gui-window ()
+(defun rw/lift-frame-in-other-monitor ()
+  "lift emacs-frame in other monitor"
   (interactive)
-  (other-frame 1)
-  (other-frame -1))
+  (let ((cframe (selected-frame))
+        (xframe (rw-select-frame-in-other-monitor)))
+    (select-frame-set-input-focus xframe)
+    (select-frame-set-input-focus cframe)))
 
-(global-set-key (kbd "<f1>") 'rw/display-other-frame-in-other-gui-window)
+(global-set-key (kbd "<f1>") 'rw/lift-frame-in-other-monitor)
 (global-set-key (kbd "<f2>") 'pop-to-mark-command)
+
+(defun rw/switch-to-next-frame-in-same-monitor (&optional frame)
+  (interactive)
+  (let* ((frame (or frame (selected-frame))))
+    (select-frame-set-input-focus (rw-next-frame-in-same-monitor frame))))
+
+(defun rw/switch-to-previous-frame-in-same-monitor (&optional frame)
+  (interactive)
+  (let* ((frame (or frame (selected-frame))))
+    (select-frame-set-input-focus (rw-previous-frame-in-same-monitor frame))))
+
+(global-set-key (kbd "C-M-<next>") 'rw/switch-to-next-frame-in-same-monitor)
+(global-set-key (kbd "C-M-<prior>") 'rw/switch-to-previous-frame-in-same-monitor)
 
 (provide 'init-windows)

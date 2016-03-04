@@ -16,40 +16,26 @@
   (interactive)
   (setq proof-general-debug nil))
 
-(defun rw/pg-save-frame-configuration ()
-  (interactive)
-  (setq pg-frame-configuration (current-frame-configuration)))
-
-(defun rw/count-frames ()
-  "count current frames, return a number"
-  (let ((current-frame-list (frame-list)))
-    (length current-frame-list)))
-
-(defun rw/only-one-frame? ()
-  "is there only one frame?"
-  (let ((n (rw/count-frames)))
-    (if (= n 1) t
-      nil)))
-
 (defun rw/pg-show-goals-and-responds-in-other-frame ()
   "show buffer *goals* and *responds* in other frame.
-   1. if there is other frame exists, then switch to that
+   1. if there is frame in other monitor exists, then switch to that
       frame, rearrange it to show  *goals* and *responds* horizontally
    2. if there is only one frame, then create one, and
       perform same action as 1"
   (interactive)
   (delete-other-windows) ;; delete auto generate layout
-  (if (rw/only-one-frame?)
-      (make-frame) ;; FIXME frame-hook automatic switch to new frame, is this clean?
-    (select-frame (next-frame))) ;; or using other-frame?
-  ;; now we in new frame
-  (switch-to-buffer "*goals*")
-  (delete-other-windows)
-  (split-window-horizontally)
-  (other-window 1)
-  (switch-to-buffer "*response*")
-  (other-window 1)
-  (select-frame (previous-frame)))
+  (let ((cframe (selected-frame))
+        (xframe (or (rw-select-frame-in-other-monitor)
+                    (make-frame))))
+    (select-frame xframe)
+    ;; now we in new frame
+    (switch-to-buffer "*goals*")
+    (delete-other-windows)
+    (split-window-horizontally)
+    (other-window 1)
+    (switch-to-buffer "*response*")
+    (other-window 1)
+    (select-frame cframe)))
 
 (global-set-key (kbd "<f3>") 'rw/pg-show-goals-and-responds-in-other-frame)
 (evil-leader/set-key

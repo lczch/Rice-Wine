@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: split-line
+# key: ln
+# binding: direct-keybinding
+# --
+(******************************************************************************)
