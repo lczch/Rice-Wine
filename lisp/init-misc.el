@@ -72,6 +72,9 @@ buffer is not visiting a file."
 ;; writting
 (require 'init-writting)
 
+;; w3m
+(require 'init-emacs-w3m)
+
 ;;; TODO
 (require 'init-dired) ;; only affect dired-mode
 (require 'init-ibuffer) ;; only affect ibuffer-mode

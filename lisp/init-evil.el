@@ -42,6 +42,7 @@
 
 ;; (add-hook ')
 
+(define-key evil-normal-state-map "q" nil)
 
 ;;; change mode-line color by evil state
 (lexical-let ((default-color (cons (face-background 'mode-line)

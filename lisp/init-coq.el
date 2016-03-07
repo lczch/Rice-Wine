@@ -44,9 +44,12 @@
 
 (let ((setup-file
        (expand-file-name "PG/generic/proof-site.el"
-				    rice-wine-package-dir)))
+                         rice-wine-package-dir))
+      (project-file
+       (expand-file-name ".coq-project.el" rice-wine-dir)))
+  (when (file-exists-p project-file)
+    (load-file project-file))
   (load-file setup-file))
-
 
 ;;; setup company-coq
 ;; company-coq itself include setup of company and yasnippet,

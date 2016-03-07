@@ -9,11 +9,12 @@
   (define-key paredit-mode-map [remap kill-line] 'paredit-kill)
   (define-key paredit-mode-map (kbd "C-j") nil)
   (local-set-key (kbd "C-j") 'eval-print-last-sexp)
-  (local-set-key (kbd "RET") 'paredit-newline))
+  (local-set-key (kbd "RET") 'paredit-newline)
+  (define-key paredit-mode-map [remap bachward-kill-sentence] nil))
 
 (add-hook 'rice-wine-lisp-hook 'turn-on-paredit)
 
-;; eldoc mode is make coq-mode extensive low !!!!!!!
+;; eldoc mode make coq-mode extensive low !!!!!!!
 (require 'eldoc)
 (setq eldoc-idle-delay 0.2)
 (setq eldoc-echo-area-use-multiline-p t)
