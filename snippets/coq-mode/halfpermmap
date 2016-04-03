@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: halfpermmap
+# key: hp
+# binding: direct-keybinding
+# --
+HalfPermMap.$0

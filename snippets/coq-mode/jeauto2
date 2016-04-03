@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: jeauto2
+# key: j2
+# binding: direct-keybinding
+# --
+jeauto2$0

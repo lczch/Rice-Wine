@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: qed
+# key: qed
+# binding: direct-keybinding
+# --
+Qed.$0

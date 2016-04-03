@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: check
+# key: ck
+# binding: direct-keybinding
+# --
+Check $0

@@ -3,6 +3,18 @@
 (add-hook 'rice-wine-lisp-hook 'run-rice-wine-prog-hook)
 
 ;; paredit
+;; (use-package paredit
+;;   :commands paredit-mode
+;;   :diminish paredit-mode
+;;   :config
+;;   (unbind-key "C-j" paredit-mode-map)
+;;   (define-key paredit-mode-map [remap kill-line] 'paredit-kill)
+
+;;   (bind-key "RET" 'paredit-newline paredit-mode-map)
+;;   (bind-key "<return>" 'paredit-newline paredit-mode-map))
+
+;; (defun turn-on-paredit ()
+;;   (paredit-mode 1))
 (require 'paredit)
 (defun turn-on-paredit ()
   (paredit-mode +1)

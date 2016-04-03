@@ -8,6 +8,8 @@
 (setq inferior-lisp-program "sbcl")
 (setq slime-contribs '(slime-fancy slime-company))
 
+;; TODO: intelligent <return>, if position at the end of block, run slime-repl-return,
+;; else, slime-repl-newline-and-indent.
 (add-hook 'slime-repl-mode-hook
           '(lambda ()
              (run-rice-wine-lisp-hook)

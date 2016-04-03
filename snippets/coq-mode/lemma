@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: lemma
+# key: lem
+# binding: direct-keybinding
+# --
+Lemma $0

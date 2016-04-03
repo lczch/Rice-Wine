@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: destruct
+# key: de
+# binding: direct-keybinding
+# --
+destruct $0

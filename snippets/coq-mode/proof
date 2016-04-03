@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: proof
+# key: pf
+# binding: direct-keybinding
+# --
+Proof.$0

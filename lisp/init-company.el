@@ -15,6 +15,7 @@
 ;; nil is no, t is yes.
 (setq company-dabbrev-ignore-case nil)
 
+(setq company-minimum-prefix-length 4)
 
 ;; show number of first ten candidates
 (setq company-show-numbers t)
