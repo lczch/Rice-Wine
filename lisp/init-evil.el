@@ -85,6 +85,8 @@
   (define-key evil-motion-state-map [right] 'evil-forward-char)
   (define-key evil-motion-state-map [up] 'evil-previous-line)
   (define-key evil-motion-state-map [down] 'evil-next-line)
+  (define-key evil-motion-state-map "G" 'evil-goto-line)
+  (define-key evil-motion-state-map "gg" 'evil-goto-first-line)
   (define-key evil-motion-state-map ":" 'evil-ex)
   (define-key evil-motion-state-map "!" 'evil-shell-command)
   (define-key evil-motion-state-map
