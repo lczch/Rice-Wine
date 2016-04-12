@@ -96,7 +96,6 @@
              (local-set-key (kbd "C-c l") 'rw/pg-show-goals-and-responds-in-other-frame)))
 
 ;; useful functions
-
 (defun lzh/coq-grasp (lemma-name)
   "Grasp the whole text in *goals*, and transform it to a readable (for coq) Lemma"
   (interactive "sname:")
@@ -104,10 +103,11 @@
     (with-current-buffer temp-buffer
       (insert-buffer-substring "*goals*")
       (goto-char (point-min))
-      ;; delete first 1 lines
-      (kill-whole-line)
+      ;; delete the thing above a blank line
+      (let ((blank-line (re-search-forward "^[[:blank:]]*$")))
+        (delete-region (point-min) blank-line))
       ;; insert the lemma header
-      (re-search-forward "^.*$")
+      (re-search-forward "^[[:blank:]]*$")
       (replace-match (concat "Lemma " lemma-name ": forall"))
       ;; deal with spliter
       (let ((split-point nil))

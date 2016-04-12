@@ -18,6 +18,9 @@
   (setq custom-file my-custom-file)
   (setq backup-directory-alist `(("." . ,my-backup-dir))))
 
+;;; emacs sessions
+(require 'init-sessions)
+
 ;;; info mode
 (defun info-mode ()
   (interactive)
