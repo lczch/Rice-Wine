@@ -6,8 +6,13 @@
 
 (yas-reload-all)
 
-(defun turn-on-yas-mode ()
+(defun yas-on ()
+  (interactive)
   (yas-minor-mode 1))
+
+(defun yas-off ()
+  (interactive)
+  (yas-minor-mode 0))
 
 (define-key evil-insert-state-map (kbd "M-j") 'yas-expand)
 (define-key evil-emacs-state-map (kbd "M-j") 'yas-expand)

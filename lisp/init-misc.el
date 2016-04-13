@@ -69,6 +69,20 @@ buffer is not visiting a file."
   (global-set-key (kbd "C-=") 'text-scale-increase)
   (global-set-key (kbd "C--") 'text-scale-decrease))
 
+;; system command
+;; (defadvice async-shell-command (before uniqify-running-shell-command activate)
+;;   (let ((buf (get-buffer "*Async Shell Command*")))
+;;     (if buf
+;;         (let ((proc (get-buffer-process buf)))
+;;           (if (and proc (eq 'run (process-status proc)))
+;;               (with-current-buffer buf
+;;                 (rename-uniquely)))))))
+
+(evil-leader/set-key
+  "sc" 'async-shell-command
+  "cr" 'comment-region
+  "ur" 'uncomment-region)
+
 ;; sh
 (require 'init-sh)
 

@@ -1,21 +1,3 @@
-(setq
- proof-splash-enable nil
- coq-indent-semicolon-tactical 0
- coq-match-indent 4
- coq-one-command-per-line t
- proof-auto-raise-buffers nil ;; prevent closing the other frame when it only show *goals* and *responds*
- proof-multiple-frames-enable nil ;; this feature is buggy...
- proof-keep-response-history nil
- proof-next-command-insert-space t)
-
-(defun rw/pg-debug-on ()
-  (interactive)
-  (setq proof-general-debug t))
-
-(defun rw/pg-debug-off ()
-  (interactive)
-  (setq proof-general-debug nil))
-
 (defun rw/pg-show-goals-and-responds-in-other-frame ()
   "show buffer *goals* and *responds* in other frame.
    1. if there is frame in other monitor exists, then switch to that
@@ -37,19 +19,44 @@
     (other-window 1)
     (select-frame cframe)))
 
-(global-set-key (kbd "<f3>") 'rw/pg-show-goals-and-responds-in-other-frame)
 (evil-leader/set-key
   "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
 
 
-(let ((setup-file
-       (expand-file-name "PG/generic/proof-site.el"
-                         rice-wine-package-dir))
-      (project-file
-       (expand-file-name ".coq-project.el" rice-wine-dir)))
-  (when (file-exists-p project-file)
-    (load-file project-file))
-  (load-file setup-file))
+(add-to-list 'load-path
+             (expand-file-name "PG/generic"
+                               rice-wine-package-dir))
+(use-package proof-site
+  :mode ("\\.v\\'" . coq-mode)
+  :config
+  (setq
+   proof-splash-enable nil
+   coq-indent-semicolon-tactical 0
+   coq-match-indent 4
+   coq-one-command-per-line t
+   proof-auto-raise-buffers nil ;; prevent closing the other frame when it only show *goals* and *responds*
+   proof-multiple-frames-enable nil ;; this feature is buggy...
+   proof-keep-response-history nil
+   proof-next-command-insert-space t)
+
+  (defun pg-debug-on ()
+    (interactive)
+    (setq proof-general-debug t))
+
+  (defun pg-debug-off ()
+    (interactive)
+    (setq proof-general-debug nil)))
+
+
+
+;; (let ((setup-file
+;;        (expand-file-name "PG/generic/proof-site.el"
+;;                          rice-wine-package-dir))
+;;       (project-file
+;;        (expand-file-name ".coq-project.el" rice-wine-dir)))
+;;   (when (file-exists-p project-file)
+;;     (load-file project-file))
+;;   (load-file setup-file))
 
 ;;; setup company-coq
 ;; company-coq itself include setup of company and yasnippet,
@@ -59,8 +66,16 @@
 ;; This package should be made more primitive.
 
 (use-package company-coq
-  :commands (company-coq-initialize)
+  :commands (company-coq-mode company-coq-initialize)
   :init
+  (defun company-coq-on ()
+    (interactive)
+    (company-coq-initialize))
+  (defun company-coq-off ()
+    (interacitve)
+    (company-coq-mode 0))
+
+  :config
   (setq company-coq-disabled-features
         '(snippets
           outline
@@ -86,89 +101,89 @@
           ("+-" . 177)
           (">->" . 8611))))
 
-(defun turn-on-company-coq ()
-  (company-coq-initialize))
+(use-package coq
+  :commands coq-mode
+  :config
+  (defun coq-mode-func ()
+    (rice-wine-prog-func)
+    (yas-on)
+    (company-coq-on))
+  (add-hook 'coq-mode-hook 'coq-mode-func)
 
-(add-hook 'coq-mode-hook 'run-rice-wine-prog-hook)
-(add-hook 'coq-mode-hook 'turn-on-company-coq)
-(add-hook 'coq-mode-hook
-          '(lambda ()
-             (local-set-key (kbd "C-c l") 'rw/pg-show-goals-and-responds-in-other-frame)))
-
-;; useful functions
-(defun lzh/coq-grasp (lemma-name)
-  "Grasp the whole text in *goals*, and transform it to a readable (for coq) Lemma"
-  (interactive "sname:")
-  (let ((temp-buffer (get-buffer-create "*temp-buffer*")))
-    (with-current-buffer temp-buffer
-      (insert-buffer-substring "*goals*")
-      (goto-char (point-min))
-      ;; delete the thing above a blank line
-      (let ((blank-line (re-search-forward "^[[:blank:]]*$")))
-        (delete-region (point-min) blank-line))
-      ;; insert the lemma header
-      (re-search-forward "^[[:blank:]]*$")
-      (replace-match (concat "Lemma " lemma-name ": forall"))
-      ;; deal with spliter
-      (let ((split-point nil))
-        (let ((init-p (point)))
-          (re-search-forward "^[ =]*$")
-          (replace-match "(\* ================================= \*) ,")
-          (forward-line -1)
-          (end-of-line)
-          (insert ")")
-          (setq split-point (point-marker))
-          (goto-char init-p))
-        ;; add parenthesis
-        (re-search-forward " : "  nil t)
-        (beginning-of-line-text)
-        (insert "(")
-        (end-of-line)
-        (while (and
-                (re-search-forward " : " nil t)
-                (< (point) (marker-position split-point)))
-          ;; first
+  ;; useful functions
+  (defun lzh/coq-grasp (lemma-name)
+    "Grasp the whole text in *goals*, and transform it to a readable (for coq) Lemma"
+    (interactive "sname:")
+    (let ((temp-buffer (get-buffer-create "*temp-buffer*")))
+      (with-current-buffer temp-buffer
+        (insert-buffer-substring "*goals*")
+        (goto-char (point-min))
+        ;; delete the thing above a blank line
+        (let ((blank-line (re-search-forward "^[[:blank:]]*$")))
+          (delete-region (point-min) blank-line))
+        ;; insert the lemma header
+        (re-search-forward "^[[:blank:]]*$")
+        (replace-match (concat "Lemma " lemma-name ": forall"))
+        ;; deal with spliter
+        (let ((split-point nil))
+          (let ((init-p (point)))
+            (re-search-forward "^[ =]*$")
+            (replace-match "(\* ================================= \*) ,")
+            (forward-line -1)
+            (end-of-line)
+            (insert ")")
+            (setq split-point (point-marker))
+            (goto-char init-p))
+          ;; add parenthesis
+          (re-search-forward " : "  nil t)
           (beginning-of-line-text)
           (insert "(")
-          ;; last
-          (forward-line -1)
           (end-of-line)
-          (insert ")")
-          ;; move point
-          (forward-line 2)))
-      ;; add the last "."
-      (let ((init-p (point)))
-        (goto-char (point-max))
-        (insert ".")
-        (goto-char init-p))
-      ;; add whole text to kill-ring
-      (kill-new (buffer-string))
-      (kill-buffer temp-buffer))))
+          (while (and
+                  (re-search-forward " : " nil t)
+                  (< (point) (marker-position split-point)))
+            ;; first
+            (beginning-of-line-text)
+            (insert "(")
+            ;; last
+            (forward-line -1)
+            (end-of-line)
+            (insert ")")
+            ;; move point
+            (forward-line 2)))
+        ;; add the last "."
+        (let ((init-p (point)))
+          (goto-char (point-max))
+          (insert ".")
+          (goto-char init-p))
+        ;; add whole text to kill-ring
+        (kill-new (buffer-string))
+        (kill-buffer temp-buffer))))
 
-(defconst lzh/coq-search-regexp "\\(?:Search.*[.]$\\)")
-(defconst lzh/coq-print-regexp "\\(?:Print.*[.]$\\)")
-(defconst lzh/coq-check-regexp "\\(?:Check.*[.]$\\)")
-(defconst lzh/coq-locate-regexp "\\(?:Locate.*[.]$\\)")
-(defconst lzh/coq-show-regexp "\\(?:Show.*[.]$\\)")
-(defconst lzh/coq-idtac-regexp "\\(?:idtac .*[.;]$\\)")
+  (defconst lzh/coq-search-regexp "\\(?:Search.*[.]$\\)")
+  (defconst lzh/coq-print-regexp "\\(?:Print.*[.]$\\)")
+  (defconst lzh/coq-check-regexp "\\(?:Check.*[.]$\\)")
+  (defconst lzh/coq-locate-regexp "\\(?:Locate.*[.]$\\)")
+  (defconst lzh/coq-show-regexp "\\(?:Show.*[.]$\\)")
+  (defconst lzh/coq-idtac-regexp "\\(?:idtac .*[.;]$\\)")
 
-(defconst lzh/coq-fuzz-regexp
-  (concat "\\(^[[:blank:]]*\\)\\("
-          lzh/coq-search-regexp "\\|"
-          lzh/coq-print-regexp "\\|"
-          lzh/coq-check-regexp "\\|"
-          lzh/coq-locate-regexp "\\|"
-          lzh/coq-show-regexp "\\|"
-          lzh/coq-idtac-regexp "\\)"))
+  (defconst lzh/coq-fuzz-regexp
+    (concat "\\(^[[:blank:]]*\\)\\("
+            lzh/coq-search-regexp "\\|"
+            lzh/coq-print-regexp "\\|"
+            lzh/coq-check-regexp "\\|"
+            lzh/coq-locate-regexp "\\|"
+            lzh/coq-show-regexp "\\|"
+            lzh/coq-idtac-regexp "\\)"))
 
-(defun lzh/coq-beautify ()
-  "auto comment all the assistant command"
-  (interactive)
-  (let ((init-p (point)))
-    (goto-char (point-min))
-    (while (re-search-forward lzh/coq-fuzz-regexp nil t nil)
-      (replace-match "\\1(* ** ac: \\2 *)"))
-    (goto-char init-p)))
+  (defun lzh/coq-beautify ()
+    "auto comment all the assistant command"
+    (interactive)
+    (let ((init-p (point)))
+      (goto-char (point-min))
+      (while (re-search-forward lzh/coq-fuzz-regexp nil t nil)
+        (replace-match "\\1(* ** ac: \\2 *)"))
+      (goto-char init-p))))
 
 
 (provide 'init-coq)
