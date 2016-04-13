@@ -1,14 +1,14 @@
 ;;; coding environment of lisp
 (use-package paredit
-  :commands paredit-mode
-  :init
+  :commands (paredit-on paredit-off)
+  :config
   (defun paredit-on ()
     (interactive)
-    (paredit-mode +1))
+    (paredit-mode 1))
   (defun paredit-off ()
     (interactive)
     (paredit-mode 0))
-  :config
+  
   (define-key paredit-mode-map [remap kill-line] 'paredit-kill)
   (define-key paredit-mode-map (kbd "C-j") 'eval-print-last-sexp)
   (define-key paredit-mode-map (kbd "RET") 'paredit-newline)
@@ -16,15 +16,15 @@
 
 ;; eldoc mode make coq-mode extensive low !!!!!!!
 (use-package eldoc
-  :commands turn-on-eldoc-mode
-  :init
+  :commands (eldoc-on eldoc-off)
+  :config
   (defun eldoc-on ()
     (interactive)
     (eldoc-mode 1))
   (defun eldoc-off ()
     (interactive)
     (eldoc-mode 0))
-  :config
+
   (setq eldoc-idle-delay 0.2)
   (setq eldoc-echo-area-use-multiline-p t))
 
@@ -38,19 +38,18 @@
 (use-package lisp-mode
   :mode (("\\.el\\'" . emacs-lisp-mode)
          ("\\.lisp\\'" . lisp-mode))
-  :init
-  (defun elisp-setup-func ()
+  :config
+  (defun rice-wine-emacs-lisp-func ()
     (rice-wine-lisp-func)
     (setup-company-mode '(company-elisp)))
 
-  (defun common-lisp-func ()
+  (defun rice-wine-common-lisp-func ()
     (rice-wine-lisp-func)
     (slime-mode))
 
   (use-package company-elisp)
-  (add-hook 'emacs-lisp-mode-hook 'elisp-setup-func)
-  (add-hook 'lisp-mode-hook 'common-lisp-func)
-  )
+  (add-hook 'emacs-lisp-mode-hook 'rice-wine-emacs-lisp-func)
+  (add-hook 'lisp-mode-hook 'rice-wine-common-lisp-func))
 
 
 (use-package slime
@@ -74,11 +73,11 @@
     (define-key slime-repl-mode-map (kbd "RET") 'slime-repl-newline-and-indent)
     (define-key slime-repl-mode-map (kbd "<return>") 'slime-repl-newline-and-indent))
 
-  (defun slime-repl-func ()
+  (defun rice-wine-slime-repl-func ()
     (rice-wine-lisp-func)
     (slime-repl-set-key))
 
-  (add-hook 'slime-repl-mode-hook 'slime-repl-func))
+  (add-hook 'slime-repl-mode-hook 'rice-wine-slime-repl-func))
 
 ;; end of init-lisp
 (provide 'init-lisp)
