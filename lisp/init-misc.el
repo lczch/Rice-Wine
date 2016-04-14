@@ -83,6 +83,13 @@ buffer is not visiting a file."
   "cr" 'comment-region
   "ur" 'uncomment-region)
 
+;; server
+(use-package server
+  :config
+  (unless (server-running-p)
+    (server-start)
+    (message "success start server")))
+
 ;; sh
 (require 'init-sh)
 

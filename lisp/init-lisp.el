@@ -58,7 +58,7 @@
   (require 'slime-autoloads)
   (setq slime-contribs
         '(slime-fancy
-          slime-company
+          ;; slime-company
           slime-asdf
           slime-autodoc
           ))
@@ -69,9 +69,9 @@
 
   (defun slime-repl-set-key ()
     (define-key slime-repl-mode-map (read-kbd-macro paredit-backward-delete-key) nil)
-    (define-key slime-repl-mode-map (kbd "TAB") 'indent-for-tab-command)
     (define-key slime-repl-mode-map (kbd "RET") 'slime-repl-newline-and-indent)
-    (define-key slime-repl-mode-map (kbd "<return>") 'slime-repl-newline-and-indent))
+    (define-key slime-repl-mode-map (kbd "<return>") 'slime-repl-newline-and-indent)
+    (define-key slime-repl-mode-map (kbd "C-j") 'slime-repl-return))
 
   (defun rice-wine-slime-repl-func ()
     (rice-wine-lisp-func)
