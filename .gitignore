@@ -17,6 +17,8 @@ temp/
 # git clone packages
 site-lisp/PG
 site-lisp/company-coq
+site-lisp/racket-mode
+site-lisp/use-package
 
 # doc
 site-lisp/slime/doc
