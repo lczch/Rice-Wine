@@ -173,8 +173,7 @@
             lzh/coq-print-regexp "\\|"
             lzh/coq-check-regexp "\\|"
             lzh/coq-locate-regexp "\\|"
-            lzh/coq-show-regexp "\\|"
-            lzh/coq-idtac-regexp "\\)"))
+            lzh/coq-show-regexp "\\)"))
 
   (defun lzh/coq-beautify ()
     "auto comment all the assistant command"

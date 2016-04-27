@@ -51,13 +51,6 @@
 
 (require 'init-coq)
 
-(use-package s
-  ;; used by racket-mode
-  :defer t)
-
-(use-package racket-mode
-  :mode (("\\.rkt\\'" . racket-mode))
-  :init)
 
 ;; (require 'init-c)
 

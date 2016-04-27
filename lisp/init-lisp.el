@@ -79,5 +79,34 @@
 
   (add-hook 'slime-repl-mode-hook 'rice-wine-slime-repl-func))
 
+
+(use-package racket-mode
+  :mode (("\\.rkt\\'" . racket-mode))
+  :disabled t
+  :init
+  (use-package s
+    :defer t)
+  :config
+  (defun rice-wine-racket-func ()
+    (rice-wine-lisp-func)
+    (company-mode 1))
+  
+  (add-hook 'racket-mode-hook 'rice-wine-racket-func))
+
+(use-package scheme
+  :mode (("\\.rkt\\'" . scheme-mode)
+         ("\\.scm\\'" . scheme-mode))
+  :config
+  (use-package geiser)
+  
+  (defun rice-wine-geiser-func ()
+    (rice-wine-prog-func)
+    (paredit-on)
+    (yas-on)
+    (company-mode 1))
+  
+  (add-hook 'scheme-mode-hook 'rice-wine-geiser-func))
+
+
 ;; end of init-lisp
 (provide 'init-lisp)
