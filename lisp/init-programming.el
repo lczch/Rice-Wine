@@ -51,6 +51,7 @@
 
 (require 'init-coq)
 
+(require 'init-ruby)
 
 ;; (require 'init-c)
 
