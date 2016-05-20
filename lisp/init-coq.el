@@ -107,7 +107,8 @@
   (defun coq-mode-func ()
     (rice-wine-prog-func)
     (yas-on)
-    (company-coq-on))
+    (company-coq-on)
+    (smartparens-on))
   (add-hook 'coq-mode-hook 'coq-mode-func)
 
   ;; useful functions
@@ -160,12 +161,12 @@
         (kill-new (buffer-string))
         (kill-buffer temp-buffer))))
 
-  (defconst lzh/coq-search-regexp "\\(?:Search.*[.]$\\)")
-  (defconst lzh/coq-print-regexp "\\(?:Print.*[.]$\\)")
-  (defconst lzh/coq-check-regexp "\\(?:Check.*[.]$\\)")
-  (defconst lzh/coq-locate-regexp "\\(?:Locate.*[.]$\\)")
-  (defconst lzh/coq-show-regexp "\\(?:Show.*[.]$\\)")
-  (defconst lzh/coq-idtac-regexp "\\(?:idtac .*[.;]$\\)")
+  (defconst lzh/coq-search-regexp "\\(?:Search.*[.]\\)")
+  (defconst lzh/coq-print-regexp "\\(?:Print.*[.]\\)")
+  (defconst lzh/coq-check-regexp "\\(?:Check.*[.]\\)")
+  (defconst lzh/coq-locate-regexp "\\(?:Locate.*[.]\\)")
+  (defconst lzh/coq-show-regexp "\\(?:Show.*[.]\\)")
+  (defconst lzh/coq-idtac-regexp "\\(?:idtac .*[.;]\\)")
 
   (defconst lzh/coq-fuzz-regexp
     (concat "\\(^[[:blank:]]*\\)\\("

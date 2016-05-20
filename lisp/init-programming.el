@@ -41,6 +41,20 @@
 (defun trailing-whitspace-off ()
   (setq show-trailing-whitespace nil))
 
+;; smartparens
+(use-package smartparens
+  :commands (smartparens-on smartparens-off)
+  :config
+  (require 'smartparens-config)
+  (defun smartparens-on ()
+    (interactive)
+    (smartparens-mode t))
+
+  (defun smartparens-off ()
+    (interactive)
+    (smartparens-mode nil))
+  )
+
 (defun rice-wine-prog-func ()
   "common features of all programming mode"
   (rainbow-on)

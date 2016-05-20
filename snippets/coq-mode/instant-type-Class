@@ -1,0 +1,64 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: instant-type-Class
+# key: ins
+# binding: direct-keybinding
+# --
+  {
+    usePerm := $1.usePerm;
+    isRw := $1.isRw;
+    flip := $1.flip;
+    sameV := $1.sameV;
+    same := $1.same;
+    emp := $1.emp;
+    join := $1.join;
+    del := $1.del;
+    get := $1.get;
+    set := $1.set;
+    sig := $1.sig;
+    merge := $1.merge;
+    minus := $1.minus
+  }.
+Proof.
+  exact $1.map_dec_a.
+  intros; tryfalse.
+  intros; tryfalse.
+  exact $1.map_join_emp.
+  exact $1.map_join_pos.
+  exact $1.map_join_comm.
+  exact $1.map_join_assoc.
+  exact $1.map_join_cancel.
+  exact $1.map_join_deter.
+  exact $1.map_sv_ref.
+  exact $1.map_sv_comm.
+  exact $1.map_sv_assoc.
+  exact $1.map_perm_eql.
+  exact $1.map_flip_isRw.
+  exact $1.map_flip_sv.
+  exact $1.map_emp_get.
+  exact $1.map_eql.
+  exact $1.map_disjoint.
+  exact $1.map_get_unique.
+  exact $1.map_get_sig.
+  exact $1.map_get_sig'.
+  exact $1.map_get_set.
+  exact $1.map_get_set'.
+  exact $1.map_join_get_none.
+  exact $1.map_join_get_some.
+  exact $1.map_join_getp_some.
+  exact $1.map_set_emp.
+  exact $1.map_set_sig.
+  exact $1.map_join_set_none.
+  exact $1.map_join_set_perm.
+  exact $1.map_join_get_sig.
+  exact $1.map_join_get_sig_perm.
+  exact $1.map_merge_sem.
+  intros; tryfalse.
+  exact $1.map_join_merge.
+  exact $1.map_merge_comm.
+  intros; tryfalse.
+  intros; tryfalse.
+  exact $1.map_minus_sem.
+  intros; tryfalse.
+  exact $1.map_join_minus.
+  exact $1.map_del_sem.
+Defined.
