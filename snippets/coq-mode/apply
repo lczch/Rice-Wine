@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: apply
+# key: ap
+# binding: direct-keybinding
+# --
+  intros.
+  eapply `(lzh/coq-get-lemma-name-backward)`'; ica.
+Qed.

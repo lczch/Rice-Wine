@@ -183,7 +183,83 @@
       (goto-char (point-min))
       (while (re-search-forward lzh/coq-fuzz-regexp nil t nil)
         (replace-match "\\1(* ** ac: \\2 *)"))
-      (goto-char init-p))))
+      (goto-char init-p)))
 
+  (defconst lzh/coq-lemma-name-regexp
+      "Lemma[ ]+\\([a-zA-Z0-9_']*\\)")
+  
+  (defun lzh/coq-get-lemma-name-backward ()
+    (interactive)
+    (save-excursion
+      (let ((search (re-search-backward lzh/coq-lemma-name-regexp)))
+        (match-string 1))))
+
+  (defun lzh/coq-lemma-new-name (name)
+    (concat name "_auto"))
+      
+  (defun lzh/coq-get-lemma-name-forward ()
+    (interactive)
+    (save-excursion
+      (let ((search (re-search-forward lzh/coq-lemma-name-regexp)))
+        (match-string 1))))
+  
+  (defun lzh/coq-get-lemma-forward ()
+    (interactive)
+    (save-excursion
+      (let* ((search (re-search-forward "Lemma"))
+             (start (match-beginning 0))
+             (search1 (re-search-forward "[.]$"))
+             (end (match-end 0)))
+        (buffer-substring-no-properties start end))))
+
+  (defun lzh/coq-trans-admit ()
+    (interactive)
+    (save-excursion
+      (let* ((name (lzh/coq-get-lemma-name-forward))
+             (name1 (lzh/coq-lemma-new-name name))
+             (search (re-search-forward "Admitted[.]"))
+             (new (concat "  intros; eapply " name1 "; ica.\n" "Qed.")))
+        (replace-match new t t))))
+  
+  (defun lzh/coq-trans-lemma ()
+    (interactive)
+    (save-excursion
+      (let* ((text (lzh/coq-get-lemma-forward))
+             (text-lines (vconcat (split-string text "$"))))
+        (let* ((line (aref text-lines 0))
+               (search (string-match lzh/coq-lemma-name-regexp line))
+               (name (match-string 1 line))
+               (new-name (lzh/coq-lemma-new-name name))
+               (new-line (replace-match new-name nil nil line 1)))
+          (aset text-lines 0 new-line))
+        (let* ((line (aref text-lines 1))
+               (search1 (string-match "(\\(.*\\)[ ]*:[ ]*\\(.*\\))" line))
+               (type (match-string 2 line))
+               (new-line1 (replace-match "\\1" nil nil line 0))
+               (search2 (string-match "forall" new-line1))
+               (new-line2 (replace-match "forall (A B T : Type) (MC : PermMap A B T)" nil t new-line1 0)))
+          ;; (insert "\n" type)
+          (if (string-equal type "mem")
+              (setq new-line2 (concat new-line2 "\n    usePerm = true ->"))
+            (setq new-line2 (concat new-line2 "\n    usePerm = false ->")))
+          (aset text-lines 1 new-line2))
+        (insert "\n")
+        (loop for line across text-lines 
+              do (insert line))
+        (insert "\n  hy.\n" "Qed.\n"))))
+
+  (defun lzh/coq-trans ()
+    (interactive)
+    (lzh/coq-trans-admit)
+    (lzh/coq-trans-lemma)
+    (re-search-forward "Qed[.]" nil t 2)
+    (forward-line))
+
+  (evil-leader/set-key
+    "ap" 'lzh/coq-trans))
+  
+
+  
+  
 
 (provide 'init-coq)

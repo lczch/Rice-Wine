@@ -118,4 +118,11 @@ buffer is not visiting a file."
   :config
   (global-evil-matchit-mode 1))
 
+;; dash keyword hylight
+
+(use-package dash
+  :defer t
+  :config
+  (dash-enable-font-lock))
+
 (provide 'init-misc)
