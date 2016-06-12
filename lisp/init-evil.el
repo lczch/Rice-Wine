@@ -16,7 +16,10 @@
 ;; main package: evil
 ;; dependent package: undo-tree.el
 (rice-wine/add-to-load-path (expand-file-name "evil/lib" rice-wine-package-dir))
-(require 'undo-tree)
+
+(use-package undo-tree
+  :config
+  (setq undo-limit 800000))
 
 (require 'evil)
 (evil-mode 1)

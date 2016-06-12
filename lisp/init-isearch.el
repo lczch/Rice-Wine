@@ -5,7 +5,11 @@
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 
-(evil-leader/set-key
-  "rr" 'query-replace-regexp)
+(use-package visual-regexp
+  :commands (vr/query-replace)
+  :init 
+  (evil-leader/set-key
+    "rr" 'vr/query-replace
+    "vm" 'vr/mc-mark))
 
 (provide 'init-isearch)

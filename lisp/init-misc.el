@@ -118,11 +118,19 @@ buffer is not visiting a file."
   :config
   (global-evil-matchit-mode 1))
 
+;; these two packages are extremely useful!
 ;; dash keyword hylight
-
 (use-package dash
-  :defer t
+;;  :defer t
   :config
   (dash-enable-font-lock))
+
+(use-package s)
+
+(defmacro measure-time (&rest body)
+  "Measure the time it takes to evaluate BODY."
+  `(let ((time (current-time)))
+     ,@body
+     (message "%.06f" (float-time (time-since time)))))
 
 (provide 'init-misc)
