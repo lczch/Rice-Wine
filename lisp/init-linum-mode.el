@@ -1,4 +1,5 @@
 (use-package nlinum
+  :disabled t
   :config   
   (global-nlinum-mode t)
   ;; http://stackoverflow.com/questions/3875213/turning-on-linum-mode-when-in-python-c-mode
