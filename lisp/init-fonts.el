@@ -1,6 +1,5 @@
 (require 'cl)
 
-
 (defun font-name-replace-size (font-name new-size)
   (let ((parts (split-string font-name "-")))
     (setcar (nthcdr 7 parts) (format "%d" new-size))
@@ -30,5 +29,10 @@ DELTA should be a multiple of 10, in the units used by the
 (defun decrease-default-font-height ()
   (interactive)
   (increment-default-font-height -10))
+
+;; increase and decrease font size in GUI emacs
+(when (display-graphic-p)
+  (global-set-key (kbd "C-=") 'text-scale-increase)
+  (global-set-key (kbd "C--") 'text-scale-decrease))
 
 (provide 'init-fonts)

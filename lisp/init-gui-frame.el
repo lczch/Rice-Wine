@@ -2,7 +2,21 @@
 (require 'init-modeline)
 
 ;;; color theme
-(require 'init-color-theme)
+(use-package color-theme-sanityinc-solarized
+  :config
+  (setq-default custom-enabled-themes '(sanityinc-solarized-dark))
+  (load-theme 'sanityinc-solarized-dark t)
+  
+  (defun light ()
+    "Activate a light color theme."
+    (interactive)
+    (color-theme-sanityinc-solarized-light))
+  
+  (defun dark ()
+    "Activate a dark color theme."
+    (interactive)
+    (color-theme-sanityinc-solarized-dark))
+  )
 
 ;;; column number
 (column-number-mode t)
@@ -26,7 +40,21 @@
 (setq inhibit-startup-echo-area-message t)
 
 ;; hooks about frame
-(require 'init-frame-hooks)
+;; from redguardtoo's configuration
+(defvar after-make-console-frame-hooks '()
+  "Hooks to run after creating a new TTY frame")
+(defvar after-make-window-system-frame-hooks '()
+  "Hooks to run after creating a new window-system frame")
+
+(defun run-after-make-frame-hooks (frame)
+  "Selectively run either `after-make-console-frame-hooks' or
+`after-make-window-system-frame-hooks'"
+  (select-frame frame)
+  (run-hooks (if window-system
+                 'after-make-window-system-frame-hooks
+               'after-make-console-frame-hooks)))
+
+(add-hook 'after-make-frame-functions 'run-after-make-frame-hooks)
 
 (defun rw-maximize-frame ()
   "maximize frame"

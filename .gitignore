@@ -15,10 +15,7 @@ backups/
 temp/
 
 # git clone packages
-site-lisp/PG
-site-lisp/company-coq
-site-lisp/racket-mode
-site-lisp/use-package
+git-lisp/
 
 # doc
 site-lisp/slime/doc
@@ -26,3 +23,5 @@ site-lisp/slime/doc
 # desktop
 *.desktop
 
+# custom
+custom.el

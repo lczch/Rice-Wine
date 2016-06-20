@@ -76,7 +76,16 @@ Call a second time to restore the original window configuration."
 (global-set-key (kbd "C-c <down>") 'sanityinc/toggle-current-window-dedication)
 
 ;; window numbering: move focus between sub-windows
-(require 'init-window-numbering)
+(use-package window-numbering
+  :config
+  (custom-set-faces '(window-numbering-face ((t (:foreground "DeepPink" :underline "DeepPink" :weight bold)))))
+  (window-numbering-mode 1)
+  )
+
+;;------------------------------------------------------------------------------
+;; rice-wine frame moving function
+;;------------------------------------------------------------------------------
+(use-package rw-frame-lib)
 
 (defun rw/lift-frame-in-other-monitor ()
   "lift emacs-frame in other monitor"
@@ -102,4 +111,6 @@ Call a second time to restore the original window configuration."
 (global-set-key (kbd "C-M-<next>") 'rw/switch-to-next-frame-in-same-monitor)
 (global-set-key (kbd "C-M-<prior>") 'rw/switch-to-previous-frame-in-same-monitor)
 
+(global-set-key (kbd "C-<next>") 'next-buffer)
+(global-set-key (kbd "C-<prior>") 'previous-buffer)
 (provide 'init-windows)

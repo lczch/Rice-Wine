@@ -1,15 +1,7 @@
-(require 'cl) ; Compatibility aliases for the old CL library Built-in
+;; from other's configuration
+
+(require 'cl)  ; Compatibility aliases for the old CL library Built-in
 (require 'cl-lib) ; Common Lisp extensions for Emacs, Built-in
-
-(defun rice-wine/add-subdirs-to-load-path (dir)
-  "add all subdirs of DIR to load-path, using internal function
-   normal-top-level-add-subdirs-to-load-path"
-  (let ((default-directory dir))
-    (normal-top-level-add-subdirs-to-load-path)))
-
-(defun rice-wine/add-to-load-path (dir)
-  "add DIR to the head of load-path"
-  (add-to-list 'load-path dir))
 
 ;; elisp version of try...catch...finally
 (defmacro safe-wrap (fn &rest clean-up)
@@ -99,8 +91,6 @@
   (browse-url-generic (concat "file://" (buffer-file-name))))
 
 
-(require 'cl)
-
 (defmacro with-selected-frame (frame &rest forms)
   (let ((prev-frame (gensym))
         (new-frame (gensym)))
@@ -170,65 +160,29 @@
     rlt))
 
 ;;------------------------------------------------------------------------------
-;; my functions
+;; sudo-edit and measure-time
 ;;------------------------------------------------------------------------------
+(defun sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Find file(as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-;; manipulate frames
-(defun rw-count-frames ()
-  "count current frames, return a number"
-  (let ((current-frame-list (frame-list)))
-    (length current-frame-list)))
+(defadvice ido-find-file (after find-file-sudo activate)
+  "Find file as root if necessary."
+  (unless (and buffer-file-name
+               (file-writable-p buffer-file-name))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-(defun rw-only-one-frame? ()
-  "is there only one frame?"
-  (let ((n (rw-count-frames)))
-    (if (= n 1) t
-      nil)))
+(defmacro measure-time (&rest body)
+  "Measure the time it takes to evaluate BODY."
+  `(let ((time (current-time)))
+     ,@body
+     (message "%.06f" (float-time (time-since time)))))
 
-(defun rw-get-monitor-name-of-frame (&optional frame)
-  (let ((attributes
-         (frame-monitor-attributes frame)))
-    (cl-loop for attribute in attributes
-             do (pcase attribute
-                  (`(name . ,monitor-name)
-                   (return monitor-name))
-                  (_ nil))
-             finally return nil)))
-
-(defun rw-select-frame-in-other-monitor (&optional frame)
-  "return the frame in other monitor comparing with frame, if no such frame, return nil"
-  (let* ((frame (or frame (selected-frame)))
-         (monitor1 (rw-get-monitor-name-of-frame frame)))
-    (cl-loop for xframe = (next-frame frame) then (next-frame xframe)
-             until (eql xframe frame)
-             do
-             (unless (string= (rw-get-monitor-name-of-frame xframe) monitor1)
-               ;; xframe in different monitor with frame
-               (return xframe))
-             finally return nil)))
-
-(defun rw-next-frame-in-same-monitor (&optional frame)
-  "return the next frame in same monitor with frame, if no such frame, return frame itself"
-  (let* ((frame (or frame (selected-frame)))
-         (monitor1 (rw-get-monitor-name-of-frame frame)))
-    (cl-loop for xframe = (next-frame frame) then (next-frame xframe)
-             until (eql xframe frame)
-             do
-             (when (string= (rw-get-monitor-name-of-frame xframe) monitor1)
-               ;; xframe in different monitor with frame
-               (return xframe))
-             finally return frame)))
-
-(defun rw-previous-frame-in-same-monitor (&optional frame)
-  "return the previous frame in same monitor with frame, if no such frame, return frame itself"
-  (let* ((frame (or frame (selected-frame)))
-         (monitor1 (rw-get-monitor-name-of-frame frame)))
-    (cl-loop for xframe = (previous-frame frame) then (previous-frame xframe)
-             until (eql xframe frame)
-             do
-             (when (string= (rw-get-monitor-name-of-frame xframe) monitor1)
-               ;; xframe in different monitor with frame
-               (return xframe))
-             finally return frame)))
-
-(provide 'init-utils)
+(provide 'other-lib)
