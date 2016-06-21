@@ -24,11 +24,6 @@
 
 (use-package evil
   :init
-  (use-package evil-leader
-    :config
-    (global-evil-leader-mode)
-    (setq evil-leader/leader ","))
-
   (use-package undo-tree
     :load-path (lambda () (expand-file-name "evil/lib" rice-wine-package-dir))
     :config
