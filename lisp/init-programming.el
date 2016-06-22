@@ -55,7 +55,7 @@
   (defun smartparens-off ()
     (interactive)
     (smartparens-mode nil))
-
+  
   (sp-use-smartparens-bindings)
   ;; (sp-with-modes '(coq-mode)
   ;;   (sp-local-pair "Lemma" "Qed."))
@@ -182,33 +182,37 @@
   
   (add-hook 'scheme-mode-hook 'rice-wine-geiser-func))
 
+(use-package clojure-mode
+  :mode (("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
+         ("\\.cljc\\'" . clojurec-mode)
+         ("\\.cljx\\'" . clojurex-mode)
+         ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
+  :config
+  (defun rice-wine-clojure-func ()
+    (rice-wine-prog-func)
+    (subword-on)
+    (eldoc-on)
+    (yas-on)
+    (paredit-on)
+    (company-mode-on))
+
+  (use-package cider
+    :config
+    (defun rice-wine-cider-repl-func ()
+      (rainbow-on)
+      (eldoc-on)
+      (turn-on-smartparens-strict-mode)
+      (company-mode-on))
+
+    (add-hook 'cider-repl-mode-hook 'rice-wine-cider-repl-func))
+  
+  (add-hook 'clojure-mode-hook 'rice-wine-clojure-func)
+  )
+
+
 ;;------------------------------------------------------------------------------
 ;; coq
 ;;------------------------------------------------------------------------------
-(use-package rw-frame-lib)
-(defun rw/pg-show-goals-and-responds-in-other-frame ()
-  "show buffer *goals* and *responds* in other frame.
-   1. if there is frame in other monitor exists, then switch to that
-      frame, rearrange it to show  *goals* and *responds* horizontally
-   2. if there is only one frame, then create one, and
-      perform same action as 1"
-  (interactive)
-  (delete-other-windows) ;; delete auto generate layout
-  (let ((cframe (selected-frame))
-        (xframe (or (rw-select-frame-in-other-monitor)
-                    (make-frame))))
-    (select-frame xframe)
-    ;; now we in new frame
-    (switch-to-buffer "*goals*")
-    (delete-other-windows)
-    (split-window-horizontally)
-    (other-window 1)
-    (switch-to-buffer "*response*")
-    (other-window 1)
-    (select-frame cframe)))
-
-(evil-leader/set-key
-  "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
 
 (use-package proof-site
   :load-path (lambda ()
@@ -233,6 +237,33 @@
   (defun pg-debug-off ()
     (interactive)
     (setq proof-general-debug nil))
+
+  (use-package rw-frame-lib)
+
+  (defun rw/pg-show-goals-and-responds-in-other-frame ()
+    "show buffer *goals* and *responds* in other frame.
+     1. if there is frame in other monitor exists, then switch to that
+        frame, rearrange it to show  *goals* and *responds* horizontally
+     2. if there is only one frame, then create one, and
+        perform same action as 1"
+    (interactive)
+    (delete-other-windows) ;; delete auto generate layout
+    (let ((cframe (selected-frame))
+          (xframe (or (rw-select-frame-in-other-monitor)
+                      (make-frame))))
+      (select-frame xframe)
+      ;; now we in new frame
+      (switch-to-buffer "*goals*")
+      (delete-other-windows)
+      (split-window-horizontally)
+      (other-window 1)
+      (switch-to-buffer "*response*")
+      (other-window 1)
+      (select-frame cframe)))
+
+  ;; improve pg's *goals* and *respons* display
+  (evil-leader/set-key
+    "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
 
   (use-package company-coq
     :commands (company-coq-mode company-coq-initialize)

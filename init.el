@@ -178,9 +178,14 @@
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
+(defun rw-display-current-buffer-other-frame ()
+  "display current buffer on other frame"
+  (interactive)
+  (display-buffer-other-frame (current-buffer)))
+
 (evil-leader/set-key
   "xh" 'mark-whole-buffer
-  "do" 'display-buffer-other-frame)
+  "do" 'rw-display-current-buffer-other-frame)
 
 
 (fset 'yes-or-no-p 'y-or-n-p)
