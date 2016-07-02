@@ -343,7 +343,7 @@
     (yas-on)
     (robe-mode)
     (smartparens-on)
-    ;; (setup-company-mode '(company-robe))
+    (setup-company-mode '(company-robe))
     )
 
   (dolist (hook '(ruby-mode-hook inf-ruby-mode-hook))
