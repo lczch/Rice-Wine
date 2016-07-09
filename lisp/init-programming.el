@@ -55,7 +55,8 @@
   (defun smartparens-off ()
     (interactive)
     (smartparens-mode nil))
-  
+
+  (setq sp-autoskip-closing-pair 'always)
   (sp-use-smartparens-bindings)
   ;; (sp-with-modes '(coq-mode)
   ;;   (sp-local-pair "Lemma" "Qed."))
