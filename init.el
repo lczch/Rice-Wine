@@ -10,6 +10,8 @@
 
 (setq message-log-max 16384)
 
+(defvar best-gc-cons-threshold 4000000 "Best default gc threshold value. Should't be too big.") ;; five times of default value
+(setq gc-cons-threshold best-gc-cons-threshold)
 ;;------------------------------------------------------------------------------
 ;; prepare work: set working directory and load-path
 ;;------------------------------------------------------------------------------
@@ -45,7 +47,7 @@
 (rw-add-subdirs-to-load-path rice-wine-git-package-dir)
 
 ;;------------------------------------------------------------------------------
-;; use-package: base abstraction tool
+;; use-package: wonderful organization tool of emacs configuration 
 ;;------------------------------------------------------------------------------
 (eval-and-compile
   (require 'cl)
@@ -91,8 +93,7 @@
 (use-package init-gui-frame)
 (use-package init-fonts)
 (use-package init-isearch)
-(use-package init-minibuff
-  :disabled t)
+(use-package init-minibuff)
 (use-package init-windows)
 
 
@@ -175,6 +176,8 @@
 (use-package init-emacs-w3m)
 (use-package init-profiler)
 
+(use-package init-clipboard)
+
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
@@ -216,7 +219,6 @@
 (defun rw-test-new-config ()
   (interactive)
   (async-shell-command "emacs --debug"))
-
 
 ;;------------------------------------------------------------------------------
 ;; Post initialization

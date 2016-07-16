@@ -1,6 +1,7 @@
 (defun my-minibuffer-setup-hook ()
   ;; Use paredit in the minibuffer
   ;; (conditionally-paredit-mode 1)
+  (smartparens-on)
   (local-set-key (kbd "M-y") 'paste-from-x-clipboard)
   (local-set-key (kbd "C-k") 'kill-line)
   (setq gc-cons-threshold most-positive-fixnum))
@@ -8,6 +9,7 @@
 (defun my-minibuffer-exit-hook ()
   ;; evil-mode also use minibuf
   ;; (conditionally-paredit-mode -1)
+  (smartparens-off)
   (setq gc-cons-threshold best-gc-cons-threshold))
 
 ;; @see http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
