@@ -85,6 +85,7 @@
   )
 
 (evil-leader/set-key
-  "cp" 'copy-to-x-clipboard)
+  "aa" 'copy-to-x-clipboard
+  "zz" 'paste-from-x-clipboard)
 
 (provide 'init-clipboard)
