@@ -135,7 +135,7 @@
 (defun org-mode-hook-setup ()
   (setq evil-auto-indent nil)
   ;; org-mode's own flycheck will be loaded
-  (enable-flyspell-mode-conditionally)
+  ;; (enable-flyspell-mode-conditionally)
 
   ;; but I don't want to auto spell check when typing,
   ;; please comment out `(flyspell-mode -1)` if prefer auto spell check
@@ -146,7 +146,10 @@
 
   ;; display wrapped lines instead of truncated lines
   (setq truncate-lines nil)
-  (setq word-wrap t))
+  (setq word-wrap t)
+  ;; added by rice-wine
+  (rainbow-on)
+  (smartparens-on))
 (add-hook 'org-mode-hook 'org-mode-hook-setup)
 
 (defadvice org-open-at-point (around org-open-at-point-choose-browser activate)
@@ -163,9 +166,9 @@
 (defadvice org-publish (around org-publish-advice activate)
   "Stop running major-mode hook when org-publish"
   (let ((old load-user-customized-major-mode-hook))
-	(setq load-user-customized-major-mode-hook nil)
+    (setq load-user-customized-major-mode-hook nil)
     ad-do-it
-	(setq load-user-customized-major-mode-hook old)))
+    (setq load-user-customized-major-mode-hook old)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; {{ org2nikola set up                                    ;;
