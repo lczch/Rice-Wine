@@ -178,6 +178,11 @@
 
 (use-package init-clipboard)
 
+(use-package tex-mode
+  :init
+  (add-hook 'latex-mode-hook 'smartparens-on)
+  (add-hook 'latex-mode-hook 'rainbow-on))
+
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
