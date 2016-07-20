@@ -1,0 +1,8 @@
+** 怎么使自己定义的key-bindings具有最高的优先级?
+- 在这里,最高优先级的意思是不会被其他的key-bindings覆盖掉
+*** 解决方案
+    1. 自己定义一个minor mode,并将自己想要置顶的key-bindings定义在这个minor mode中.
+    2. 将这个minor mode加入~emulation-mode-map-alists~中
+    3. 在想要置顶的major mode中将这个minor mode打开,完成.
+**** 例子
+- 参见[[file:~/rice-wine/lisp/init-lisp.el][init-lisp.el]] 中~rice-wine-lisp-repl-mode~相关的文档.

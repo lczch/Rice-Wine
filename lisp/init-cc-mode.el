@@ -16,7 +16,6 @@
   (defun rice-wine-c-func ()
     (rice-wine-prog-func)
     (yas-on)
-    (smartparens-on)
     (cscope-minor-mode))
 
   (add-hook 'c-mode-common-hook 'rice-wine-c-func)
