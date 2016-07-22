@@ -120,22 +120,37 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
 ;;------------------------------------------------------------------------------
 ;; scheme and racket
 ;;------------------------------------------------------------------------------
-(use-package scheme
-  :mode (("\\.rkt\\'" . scheme-mode)
-         ("\\.scm\\'" . scheme-mode))
+
+(use-package geiser
+  :commands (geiser run-racket geiser-mode)
   :config
-  (use-package geiser)
-  ;; I don't know when and how the company-mode is turned on. 
-
-  (defun rice-wine-geiser-func ()
-    (rice-wine-lisp-func))
-
   (defun rice-wine-geiser-repl-func ()
     (rice-wine-lisp-repl-func))
-    
-  (add-hook 'scheme-mode-hook 'rice-wine-geiser-func)
   (add-hook 'geiser-repl-mode-hook 'rice-wine-geiser-repl-func))
+
+(use-package scheme
+  :mode (("\\.scm\\'" . scheme-mode))
+  :config
+  ;; I don't know when and how the company-mode is turned on. 
+  (use-package geiser)
   
+  (defun rice-wine-scheme-func ()
+    (rice-wine-lisp-func)
+    (geiser-mode))
+
+  (add-hook 'scheme-mode-hook 'rice-wine-scheme-func))
+
+(use-package racket-mode
+  :mode (("\\.rkt\\'" . racket-mode))
+  :config
+  ;; use racket-mode's font-lock, and geiser's repl
+  (setq racket-mode-map (make-sparse-keymap))
+
+  (defun rice-wine-racket-func ()
+    (rice-wine-lisp-func)
+    (geiser-mode))
+
+  (add-hook 'racket-mode-hook 'rice-wine-racket-func))
 
 ;;------------------------------------------------------------------------------
 ;; clojure: not very complete
