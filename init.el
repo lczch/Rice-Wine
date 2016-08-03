@@ -180,12 +180,14 @@
 
 (use-package tex-mode
   :init
-  (add-hook 'latex-mode-hook 'smartparens-on)
-  (add-hook 'latex-mode-hook 'rainbow-on))
+  (add-hook 'latex-mode-hook 'smartparens-mode)
+  (add-hook 'latex-mode-hook 'rainbow-delimiters-mode))
 
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
+(use-package htmlize)
+
 (defun rw-display-current-buffer-other-frame ()
   "display current buffer on other frame"
   (interactive)

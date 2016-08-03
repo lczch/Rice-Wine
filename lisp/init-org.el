@@ -148,8 +148,8 @@
   (setq truncate-lines nil)
   (setq word-wrap t)
   ;; added by rice-wine
-  (rainbow-on)
-  (smartparens-on))
+  (rainbow-delimiters-mode)
+  (smartparens-mode))
 (add-hook 'org-mode-hook 'org-mode-hook-setup)
 
 (defadvice org-open-at-point (around org-open-at-point-choose-browser activate)
@@ -212,5 +212,6 @@
 ;;   (turn-on-yas-mode))                                                                      ;;
 ;; (add-hook 'org-mode-hook 'rice-wine-org-mode-hook)                                         ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (provide 'init-org)
