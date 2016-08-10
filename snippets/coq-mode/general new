@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: general new
+# key: gn
+# binding: direct-keybinding
+# --
+forall {A B} {MK: MapKey A} {MV: MapVal B} 

@@ -84,5 +84,18 @@
 ;;------------------------------------------------------------------------------
 (use-package init-sh-mode)
 
+;;------------------------------------------------------------------------------
+;; asm (for sparc)
+;;------------------------------------------------------------------------------
+(use-package asm-mode
+  :mode (("\\.S'" . asm-mode))
+  :commands (asm-mode)
+  :config
+  (defun asm-mode-func ()
+    ;; for sparc asm, which I always use
+    (setq asm-comment-char ?\!))
+
+  (add-hook 'asm-mode-hook 'asm-mode-func)
+  )
 
 (provide 'init-programming)
