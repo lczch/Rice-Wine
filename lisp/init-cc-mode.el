@@ -9,10 +9,6 @@
   ;; give me NO newline automatically after electric expressions are entered
   (setq c-auto-newline nil)
 
-  (use-package xcscope
-    :config
-    (add-to-list 'cscope-indexer-suffixes "*.[sS]"))
-  
   (defun rice-wine-c-func ()
     (rice-wine-prog-func)
     (yas-on)

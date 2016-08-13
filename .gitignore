@@ -25,3 +25,6 @@ site-lisp/slime/doc
 
 # custom
 custom.el
+
+# cscope file
+cscope.*

@@ -57,7 +57,8 @@
   "common features of all programming mode"
   (rainbow-delimiters-mode)
   (fic-mode)
-  (smartparens-mode))
+  (smartparens-mode)
+  (cscope-minor-mode))
 
 ;;------------------------------------------------------------------------------
 ;; lisp: all languages belong to lisp or scheme

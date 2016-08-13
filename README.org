@@ -1,26 +1,11 @@
 This is my personal emacs configuration, it's derived from purcell's and redguardtoo's.
 
 * Feature
-- support coq using proof-general and company-coq
-- heavily using of company
-- using evil to have vim-style key bindings
+- fully supported computer languages which I use frequency: ~elisp, clojure, coq, racket~.
+- organizing configuration with ~use-package~.
+- using ~evil~ to have vim-style key bindings.
+- *Do not* use package systems in Emacs, most packages are local, and little using ~git~.
 
 * Philosophy
 - I hope my configuration can be clean, and so, beautiful. 
 
-* Install
-- If you want to place this configuration to a specific dir, say "foo/", then 
-  you can execute below commands in shell:
-   #+BEGIN_SRC sh
-     cd foo
-     git clone git@github.com:lczch/rice-wine.git
-   #+END_SRC
-- override your ~/.emacs:
-   #+BEGIN_SRC emacs-lisp
-     (load-file "foo/rice-wine/init.el")
-   #+END_SRC
-  
-- Becuase I *do* have all the packages (expect a little) in my configuration staticly, 
-  so it is enough to work.  
-  But I use git version of company-coq and PG.  
-  So, git clone them under site-lisp dir.

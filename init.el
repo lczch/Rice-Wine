@@ -190,21 +190,27 @@
     (server-start)
     (message "success start server")))
 
-(use-package init-programming)
-(use-package init-markdown)
+(use-package init-xcscope)
+(use-package init-clipboard)
+
+(use-package which-key
+  :config
+  (which-key-mode 1))
+
 (use-package init-emacs-w3m)
 (use-package init-profiler)
 
-(use-package init-clipboard)
+;;------------------------------------------------------------------------------
+;; about programming
+;;------------------------------------------------------------------------------
+(use-package init-programming)
+(use-package init-markdown)
 
 (use-package tex-mode
   :init
   (add-hook 'latex-mode-hook 'smartparens-mode)
   (add-hook 'latex-mode-hook 'rainbow-delimiters-mode))
 
-(use-package which-key
-  :config
-  (which-key-mode 1))
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
