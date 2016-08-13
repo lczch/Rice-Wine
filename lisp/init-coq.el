@@ -1,7 +1,7 @@
 (use-package proof-site
   :load-path (lambda ()
                (expand-file-name "PG/generic"
-                                 rice-wine-package-dir))
+                                 rice-wine-git-package-dir))
   :mode ("\\.v\\'" . coq-mode)
   :config
   (setq

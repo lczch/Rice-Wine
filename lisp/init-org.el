@@ -1,9 +1,12 @@
-(require 'org)
+;; (require 'org)
 
 ;; some cool org tricks
 ;; @see http://emacs.stackexchange.com/questions/13820/inline-verbatim-and-code-with-quotes-in-org-mode
 
 ;; {{ NO spell check for embedded snippets
+
+(use-package htmlize)
+
 (defun org-mode-is-code-snippet ()
   (let (rlt
         (begin-regexp "^[ \t]*#\\+begin_\\(src\\|html\\|latex\\)")

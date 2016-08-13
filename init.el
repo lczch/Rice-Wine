@@ -5,6 +5,12 @@
 
 (defconst emacs-start-time (current-time))
 
+(defun print-load-path ()
+  "print load-path to *message*, for debugging"
+  (interactive)
+  (dolist (elt load-path)
+    (princ (format "%s\n" elt))))
+
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
@@ -23,29 +29,32 @@
 ;; disable auto-load of packages, I prefer require them manually
 (setq package-enable-at-startup nil)
 
-(defun rw-add-subdirs-to-load-path (dir)
-  "add all subdirs of DIR to load-path, using internal function
-   normal-top-level-add-subdirs-to-load-path"
-  (let ((default-directory dir))
-    (normal-top-level-add-subdirs-to-load-path)))
-
 (defun rw-add-to-load-path (dir)
   "add DIR to the head of load-path"
   (add-to-list 'load-path dir))
+
+(defun rw-add-subdirs-to-load-path (dir)
+  "add all subdirs of DIR to load-path, which begins with a digital or letter."
+  (let ((dir-files (directory-files dir t "^[0-9A-Za-z].*")))
+    (dolist (file dir-files)
+      (when (file-directory-p file)
+        (rw-add-to-load-path file)))))
 
 ;; add needed dirs to load-path
 (defvar rice-wine-package-dir
   (expand-file-name "site-lisp" rice-wine-dir)
   "packages' src directory")
 
-(rw-add-subdirs-to-load-path rice-wine-package-dir)
-
 (defvar rice-wine-git-package-dir
   (expand-file-name "git-lisp" rice-wine-dir)
   "packages from my git")
 
-(rw-add-subdirs-to-load-path rice-wine-git-package-dir)
+(defun add-all-packages-to-load-path ()
+  (interactive)
+  (rw-add-subdirs-to-load-path rice-wine-package-dir)
+  (rw-add-subdirs-to-load-path rice-wine-git-package-dir))
 
+(add-all-packages-to-load-path)
 ;;------------------------------------------------------------------------------
 ;; use-package: wonderful organization tool of emacs configuration 
 ;;------------------------------------------------------------------------------
@@ -77,6 +86,7 @@
 (use-package other-lib)
 (use-package rw-frame-lib)
 
+(print-load-path)
 ;;------------------------------------------------------------------------------
 ;; individual package configuration
 ;;------------------------------------------------------------------------------
@@ -105,9 +115,18 @@
 
 (use-package init-ido)
 (use-package init-company)
-(use-package init-org)
+(use-package org
+  :init
+  (rw-add-to-load-path (expand-file-name "org-mode/lisp" rice-wine-git-package-dir))
+  (rw-add-to-load-path (expand-file-name "org-mode/contrib/lisp" rice-wine-git-package-dir))
+  :mode (("\\.org\\'" . org-mode))
+  :commands (org-mode)
+  :config
+  (use-package init-org)
+  )
+
+
 (use-package init-yasnippet)
-;; functions and manipulation about windows, base from purcell's emacs.d
 
 ;; Nicer naming of buffers for files with identical names
 (use-package uniquify
@@ -183,10 +202,12 @@
   (add-hook 'latex-mode-hook 'smartparens-mode)
   (add-hook 'latex-mode-hook 'rainbow-delimiters-mode))
 
+(use-package which-key
+  :config
+  (which-key-mode 1))
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
-(use-package htmlize)
 
 (defun rw-display-current-buffer-other-frame ()
   "display current buffer on other frame"
