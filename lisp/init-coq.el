@@ -1,3 +1,10 @@
+(defun coq-mode-func ()
+  "features needed by coq mode"
+  (rice-wine-prog-func)
+  (yas-on)
+  (company-coq-on)
+  (cscope-minor-mode))
+
 (use-package proof-site
   :load-path (lambda ()
                (expand-file-name "PG/generic"
@@ -85,10 +92,6 @@
             ("+-" . 177)
             (">->" . 8611))))
 
-  (defun coq-mode-func ()
-    (rice-wine-prog-func)
-    (yas-on)
-    (company-coq-on))
 
   (add-hook 'coq-mode-hook 'coq-mode-func)
   (use-package rw-coq-lib

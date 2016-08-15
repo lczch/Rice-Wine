@@ -1,3 +1,8 @@
+(defun rice-wine-c-func ()
+  "features needed by c-mode"
+  (rice-wine-prog-func)
+  (yas-on)
+  (cscope-minor-mode))
 
 (use-package cc-mode
   :mode (("\\.c\\'" . c-mode)
@@ -8,11 +13,6 @@
   (setq c-basic-offset 4)
   ;; give me NO newline automatically after electric expressions are entered
   (setq c-auto-newline nil)
-
-  (defun rice-wine-c-func ()
-    (rice-wine-prog-func)
-    (yas-on)
-    (cscope-minor-mode))
 
   (add-hook 'c-mode-common-hook 'rice-wine-c-func)
 )

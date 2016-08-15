@@ -58,7 +58,8 @@
   (rainbow-delimiters-mode)
   (fic-mode)
   (smartparens-mode)
-  (cscope-minor-mode))
+  ;; (cscope-minor-mode)
+  )
 
 ;;------------------------------------------------------------------------------
 ;; lisp: all languages belong to lisp or scheme
@@ -92,9 +93,11 @@
   :mode (("\\.S'" . asm-mode))
   :commands (asm-mode)
   :config
+  ;; for sparc asm, which I always use
+  (setq asm-comment-char ?\!)
+
   (defun asm-mode-func ()
-    ;; for sparc asm, which I always use
-    (setq asm-comment-char ?\!))
+    )
 
   (add-hook 'asm-mode-hook 'asm-mode-func)
   )
