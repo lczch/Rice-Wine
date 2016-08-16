@@ -58,7 +58,7 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   "common fetures shared by all lisp repl mode"
   (rice-wine-prog-func)
   (turn-on-smartparens-strict-mode)
-  (company-mode-on)
+  (company-mode)
   (rice-wine-lisp-repl-mode))
 
 ;;------------------------------------------------------------------------------
@@ -68,17 +68,25 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   :mode (("\\.el\\'" . emacs-lisp-mode)
          ("\\.lisp\\'" . lisp-mode))
   :config
+  (defvar elisp-company-backends
+    '(company-elisp company-files))
+
+  (defvar slime-company-backends
+    '(company-slime company-files))
+  
   (defun rice-wine-emacs-lisp-func ()
     (rice-wine-lisp-func)
     (eldoc-mode)
-    (setup-company-mode '(company-elisp)))
+    (setup-company-mode elisp-company-backends))
 
   (defun rice-wine-common-lisp-func ()
     (rice-wine-lisp-func)
     (eldoc-mode)
-    (slime-mode))
+    (slime-mode)
+    (local-set-key (kbd "C-j") 'slime-eval-print-last-expression)
+    (setup-company-mode slime-company-backends)
+    )
 
-  (use-package company-elisp)
   (add-hook 'emacs-lisp-mode-hook 'rice-wine-emacs-lisp-func)
   (add-hook 'lisp-mode-hook 'rice-wine-common-lisp-func))
 
@@ -99,7 +107,8 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   (setq slime-net-coding-system 'utf-8-unix)
 
   (defun rice-wine-slime-repl-func ()
-    (rice-wine-lisp-repl-func))
+    (rice-wine-lisp-repl-func)
+    (setup-company-mode slime-company-backends))
 
   (add-hook 'slime-repl-mode-hook 'rice-wine-slime-repl-func))
 
@@ -124,19 +133,25 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
 (use-package geiser
   :commands (geiser run-racket geiser-mode)
   :config
+  (defvar geiser-company-backends
+    '(company-capf company-files))
+
   (defun rice-wine-geiser-repl-func ()
-    (rice-wine-lisp-repl-func))
+    (rice-wine-lisp-repl-func)
+    (setup-company-mode geiser-company-backends)
+    )
+  
   (add-hook 'geiser-repl-mode-hook 'rice-wine-geiser-repl-func))
 
 (use-package scheme
   :mode (("\\.scm\\'" . scheme-mode))
   :config
   ;; I don't know when and how the company-mode is turned on. 
-  (use-package geiser)
   
   (defun rice-wine-scheme-func ()
     (rice-wine-lisp-func)
-    (geiser-mode))
+    (geiser-mode)
+    (setup-company-mode geiser-company-backends))
 
   (add-hook 'scheme-mode-hook 'rice-wine-scheme-func))
 
@@ -148,7 +163,8 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
 
   (defun rice-wine-racket-func ()
     (rice-wine-lisp-func)
-    (geiser-mode))
+    (geiser-mode)
+    (setup-company-mode geiser-company-backends))
 
   (add-hook 'racket-mode-hook 'rice-wine-racket-func))
 
@@ -161,14 +177,19 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
          ("\\.cljx\\'" . clojurex-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
+  (defvar clojure-company-backends
+    '(company-capf company-files))
+  
   (defun rice-wine-clojure-func ()
     (rice-wine-lisp-func)
+    (setup-company-mode clojure-company-backends)
     (eldoc-mode))
 
   (use-package cider
     :config
     (defun rice-wine-cider-repl-func ()
       (rice-wine-lisp-repl-func)
+      (setup-company-mode clojure-company-backends)
       (eldoc-mode))
 
     (add-hook 'cider-repl-mode-hook 'rice-wine-cider-repl-func))

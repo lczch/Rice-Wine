@@ -4,7 +4,7 @@
   (setq company-require-match nil)
   (setq company-dabbrev-downcase nil)
   (setq company-dabbrev-ignore-case nil)
-  (setq company-minimum-prefix-length 4)
+  (setq company-minimum-prefix-length 3)
   (setq company-show-numbers t)
   ;; If I actually get the point, this variable `company-begin-commands` controls
   ;; what commands of emacs can triger the starting of company.
@@ -12,9 +12,18 @@
   (setq company-begin-commands '(self-insert-command))
   (setq company-idle-delay 0.2)
 
+  (use-package company-statistics
+    :commands (company-statistics-mode))
+  (use-package company-elisp
+    :commands (company-elisp))
+  (use-package company-capf
+    :commands (company-capf))
+  (use-package company-files
+    :commands (company-files))
+  (use-package company-dabbrev
+    :commands (company-dabbrev))
+  
   ;; use company-statistics to arrange the order of candidates, show more probably selected one to the first
-  (use-package company-statistics)
-
   (defun setup-company-mode (backends)
     "turn-on company-mode, then make variable company-backends to buffer local, and set it to BACKENDS.
      Example: for elisp, (setup-company-mode '(company-elisp))"
