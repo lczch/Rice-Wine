@@ -28,7 +28,8 @@
                 (let ((default-directory (concat git-dir "org-mode/")))
                   ;; keep to the latest stable release of org-mode
                   (shell-command "git checkout -b stable origin/maint")
-                  (shell-command "make autoloads")))
+                  (shell-command "make autoloads")
+                  (princ (format "checkout to stable branch, and make autoloads\n"))))
             (princ (format "finish clone: %s\n" name))
             )
         ;; file exists
