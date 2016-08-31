@@ -5,6 +5,7 @@
 
 ;; {{ NO spell check for embedded snippets
 
+
 (use-package htmlize)
 
 (defun org-mode-is-code-snippet ()
@@ -172,6 +173,22 @@
     (setq load-user-customized-major-mode-hook nil)
     ad-do-it
     (setq load-user-customized-major-mode-hook old)))
+
+;;------------------------------------------------------------------------------
+;; `org-entities' contain many useful symbols! C-c C-x \ toggle this feature.
+;; use `org-entities-help' to see all symbols.
+;;------------------------------------------------------------------------------
+
+(defun org-entities-find-utf (symbol)
+  "find a utf-8 symbol in `org-entities'"
+  (cl-loop for item in org-entities
+           when (listp item)
+           do (message "%s" (nth 6 item))
+           and when (string= symbol (nth 6 item)) return item   
+           finally (return nil)
+           ))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; {{ org2nikola set up                                    ;;

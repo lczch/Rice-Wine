@@ -66,7 +66,8 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
 ;;------------------------------------------------------------------------------
 (use-package lisp-mode
   :mode (("\\.el\\'" . emacs-lisp-mode)
-         ("\\.lisp\\'" . lisp-mode))
+         ("\\.lisp\\'" . lisp-mode)
+         ("\\.asd\\'" . lisp-mode))
   :config
   (defvar elisp-company-backends
     '(company-elisp company-files))
@@ -183,7 +184,9 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   (defun rice-wine-clojure-func ()
     (rice-wine-lisp-func)
     (setup-company-mode clojure-company-backends)
-    (eldoc-mode))
+    (eldoc-mode)
+    (local-set-key (kbd "C-j") 'cider-eval-print-last-sexp)
+    )
 
   (use-package cider
     :config

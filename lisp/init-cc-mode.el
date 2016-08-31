@@ -2,6 +2,7 @@
   "features needed by c-mode"
   (rice-wine-prog-func)
   (yas-on)
+  (setq c-basic-offset 8)
   (cscope-minor-mode))
 
 (use-package cc-mode
@@ -10,7 +11,6 @@
 
   :config
   (setq c-default-style "linux")
-  (setq c-basic-offset 4)
   ;; give me NO newline automatically after electric expressions are entered
   (setq c-auto-newline nil)
 
