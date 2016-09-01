@@ -153,7 +153,8 @@
   (setq word-wrap t)
   ;; added by rice-wine
   (rainbow-delimiters-mode)
-  (smartparens-mode))
+  (smartparens-mode)
+  (yas-minor-mode))
 (add-hook 'org-mode-hook 'org-mode-hook-setup)
 
 (defadvice org-open-at-point (around org-open-at-point-choose-browser activate)
