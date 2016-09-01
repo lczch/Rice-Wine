@@ -1,9 +1,11 @@
 (use-package yasnippet
   :commands (yas-on yas-off)
   :config
-  (let ((rice-wine-yas-dir (expand-file-name "snippets" rice-wine-dir)))
+  (let ((rice-wine-yas-dir (expand-file-name "snippets" rice-wine-dir))
+        (yas-official-dir (expand-file-name "yasnippet/snippets" rice-wine-package-dir)))
     (setq yas-snippet-dirs
-          `(,rice-wine-yas-dir)))
+          `(,rice-wine-yas-dir
+            ,yas-official-dir)))
 
   (yas-reload-all)
 

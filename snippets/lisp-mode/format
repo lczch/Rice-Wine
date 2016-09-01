@@ -1,5 +1,6 @@
 # -*- mode: snippet -*-
+# contributor: Mark Karpov
 # name: format
-# key: print
+# key: format
 # --
-(format t "~& $0 ~%")
+(format ${1:nil} ${2:str} $0)

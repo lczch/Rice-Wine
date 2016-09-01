@@ -1,10 +1,12 @@
 # -*- mode: snippet -*-
+# contributor: Mark Karpov
 # name: defpackage
-# key: defp
+# key: defpackage
 # --
-(defpackage #:${1:name}
-   (:nicknames #:${2:nick})
-   (:use #:cl #:closer-mop #:${3:package})
-   (:shadow :${4.symbol})
-   (:shadowing-import-from #:${5:package} #:${6:symbol})
-   (:export :$0))
+(defpackage   :${1:package}${2:
+  (:nicknames ${3:nicks})}${4:
+  (:use       ${5:packages})}${6:
+  (:shadow    ${7:packages})}${8:
+  (:export    ${9:packages})}${10:
+  (:documentation "${11:doc}")})
+$0

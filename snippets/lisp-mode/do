@@ -1,9 +1,8 @@
 # -*- mode: snippet -*-
+# contributor: Mark Karpov
 # name: do
 # key: do
 # --
-(do ((${1:var1} ${2:init-form} ${3:step-form})
-     (${4:var2} ${5:init-form} ${6:step-form}))  
-    (${7:condition} ${8:return-value})
-    (${9:body}))
-$0
+(do (${1:vars})
+    (${2:end-test-form}${3: result})
+  $0)
