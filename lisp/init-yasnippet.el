@@ -5,7 +5,8 @@
         (yas-official-dir (expand-file-name "yasnippet/snippets" rice-wine-package-dir)))
     (setq yas-snippet-dirs
           `(,rice-wine-yas-dir
-            ,yas-official-dir)))
+            ;; ,yas-official-dir
+            )))
 
   (yas-reload-all)
 
