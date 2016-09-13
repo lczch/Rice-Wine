@@ -6,26 +6,46 @@
 
   (setq ruby-use-encoding-map nil)
 
+  (use-package robe)
+
   (use-package inf-ruby
     :config
-    (defun rw-ruby-run-file ()
+    (setq inf-ruby-default-implementation "pry")
+    
+    ;; (defun rw-ruby-run-file ()
+    ;;   (interactive)
+    ;;   (save-curret-buffer
+    ;;     (unless inf-ruby-buffer
+    ;;       (run-ruby)))
+    ;;   (ruby-load-file (buffer-file-name))
+    ;;   (ruby-switch-to-inf t))
+
+    (defun ruby-send-current-buffer ()
+      "Send current buffer to repl. If there is no repl, run `inf-ruby' and `robe-start'."
       (interactive)
       (save-current-buffer
         (unless inf-ruby-buffer
-          (run-ruby)))
-      (ruby-load-file (buffer-file-name))
+          (inf-ruby inf-ruby-default-implementation)
+          (robe-start)))
+
+      (ruby-send-buffer)
       (ruby-switch-to-inf t))
     
     (define-key inf-ruby-minor-mode-map
-      (kbd "C-c C-l") 'rw-ruby-run-file))
+      (kbd "C-c C-l") 'ruby-send-current-buffer))
 
-  (use-package robe)
 
+  (defvar ruby-company-backends
+    '(;; company-capf
+      company-robe
+      company-files 
+      ))
+  
   (defun rice-wine-ruby-func ()
     (rice-wine-prog-func)
     (yas-on)
     (robe-mode)
-    (setup-company-mode '(company-capf company-robe))
+    (setup-company-mode ruby-company-backends)
     )
 
   (dolist (hook '(ruby-mode-hook inf-ruby-mode-hook))

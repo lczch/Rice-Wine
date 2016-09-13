@@ -234,5 +234,7 @@
 ;; (add-hook 'org-mode-hook 'rice-wine-org-mode-hook)                                         ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; allow one character to represent plain ordered list
+(setq org-list-allow-alphabetical t)
 
 (provide 'init-org)
