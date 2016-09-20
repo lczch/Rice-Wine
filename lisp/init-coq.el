@@ -97,6 +97,14 @@
   (use-package rw-coq-lib
     :config
     (evil-leader/set-key
-      "ap" 'lzh/coq-trans)))
+      "ap" 'lzh/coq-trans)
+
+    (defun lzh/coq-create-dir-locals-spaceos (dir)
+      "More specific version of `lzh/coq-create-dir-locals' for spaceos."
+      (interactive "DDir:")
+      (let* ((coq-prog-name (expand-file-name "coqtop" (getenv "coq85bin")))
+             (coq-prog-args `("-R" ,(expand-file-name dir) "CertiOS")))
+        (lzh/coq-create-dir-locals dir coq-prog-name coq-prog-args)))
+    ))
 
 (provide 'init-coq)

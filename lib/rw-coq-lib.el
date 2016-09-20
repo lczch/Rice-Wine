@@ -1,3 +1,9 @@
+;; export:
+;; `lzh/coq-grasp'
+;; `lzh/coq-beautify'
+;; `lzh/coq-trans': only for a specific use.
+;; `lzh/coq-hint-resolve-backward-lemma'
+;; `lzh/coq-create-dir-locals'
 
 (defun lzh/coq-grasp (lemma-name)
   "Grasp the whole text in *goals*, and transform it to a readable (for coq) Lemma, using LEMMA-NAME as the name of new lemma.
@@ -65,7 +71,7 @@
           lzh/coq-show-regexp "\\)"))
 
 (defun lzh/coq-beautify ()
-  "auto comment all the assistant command"
+  "auto comment all the assistant command, base on `lzh/coq-fuzz-regexp'"
   (interactive)
   (let ((init-p (point)))
     (goto-char (point-min))
@@ -77,6 +83,7 @@
   "Lemma[ ]+\\([a-zA-Z0-9_']*\\)")
 
 (defun lzh/coq-get-lemma-name-backward ()
+  "Get lemma name just above to the cursor."
   (interactive)
   (save-excursion
     (let ((search (re-search-backward lzh/coq-lemma-name-regexp)))
@@ -86,12 +93,14 @@
   (concat name "_auto"))
 
 (defun lzh/coq-get-lemma-name-forward ()
+  "Get lemma name just below to the cursor."
   (interactive)
   (save-excursion
     (let ((search (re-search-forward lzh/coq-lemma-name-regexp)))
       (match-string 1))))
 
 (defun lzh/coq-get-lemma-forward ()
+  "Get the whole lemma definition just below to the cursor."
   (interactive)
   (save-excursion
     (let* ((search (re-search-forward "Lemma"))
@@ -137,10 +146,36 @@
       (insert "\n  hy.\n" "Qed.\n"))))
 
 (defun lzh/coq-trans ()
+  "Transform old style join-lemma to new form join-lemma."
   (interactive)
   (lzh/coq-trans-admit)
   (lzh/coq-trans-lemma)
   (re-search-forward "Qed[.]" nil t 2)
   (forward-line))
+
+(defun lzh/coq-hint-resolve-backward-lemma (&optional hint-database)
+  "Insert string |Hint Resolve lemma-name: HINT-DATABASE.| basing on the lemma above to cursor.
+ HINT-DATABASE must be a string, naming a hint database name."
+  (interactive)
+  (let ((lemma-name (lzh/coq-get-lemma-name-backward)))
+    (insert "Hint Resolve " lemma-name ": ")
+    (when hint-database
+      (insert hint-database "."))))
+
+
+(defmacro lzh/coq-create-sexp-of-dir-locals (coq-prog-name coq-prog-args)
+  `((nil
+     . ((eval
+         . (progn
+             (setq coq-prog-name ,coq-prog-name)
+             (setq coq-prog-args ,coq-prog-args)))))))
+
+(defun lzh/coq-create-dir-locals (dir coq-prog-name coq-prog-args)
+  "Create a dir-locals file in DIR, base on COQ-PROG-NAME COQ-PROG-ARGS"
+  (with-temp-file (expand-file-name dir-locals-file dir)
+    (print
+     (macroexpand `(lzh/coq-create-sexp-of-dir-locals ,coq-prog-name ,coq-prog-args))
+     (current-buffer))))
+
 
 (provide 'rw-coq-lib)
