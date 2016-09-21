@@ -55,6 +55,8 @@
   (rw-add-subdirs-to-load-path rice-wine-git-package-dir))
 
 (add-all-packages-to-load-path)
+
+
 ;;------------------------------------------------------------------------------
 ;; use-package: wonderful organization tool of emacs configuration 
 ;;------------------------------------------------------------------------------
@@ -65,6 +67,8 @@
   
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
+
+
 
 ;;------------------------------------------------------------------------------
 ;; useful lib
@@ -85,8 +89,15 @@
 (use-package s)
 (use-package other-lib)
 (use-package rw-frame-lib)
+(use-package rw-buffer-lib)
+(use-package rw-file-lib)
+(use-package rw-misc-lib)
 
 (print-load-path)
+
+
+
+
 ;;------------------------------------------------------------------------------
 ;; individual package configuration
 ;;------------------------------------------------------------------------------
@@ -246,15 +257,6 @@
       (my-backup-dir (expand-file-name "backups" rice-wine-dir)))
   (setq custom-file my-custom-file)
   (setq backup-directory-alist `(("." . ,my-backup-dir))))
-
-;;------------------------------------------------------------------------------
-;; misc functions
-;;------------------------------------------------------------------------------
-(defun rw-test-new-config ()
-  "Async open a new emacs, with current file opened"
-  (interactive)
-  (let ((file (buffer-file-name)))
-    (async-shell-command (concat "emacs " file " --debug"))))
 
 ;;------------------------------------------------------------------------------
 ;; Post initialization
