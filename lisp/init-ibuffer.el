@@ -21,6 +21,13 @@
   
   (setq ibuffer-saved-filter-groups
         (quote (("default"
+                 ("emacs-config" (filename . "/rice-wine/"))
+                 ("CertiSpace" (filename . "/CertiSpaceOS2/coqimp/"))
+                 ("SpaceOS" (filename . "/CertiSpaceOS2/"))
+                 ("CertiUcosII" (filename . "/CertiUcosII/"))
+                 ("emacs-lisp" (mode . emacs-lisp-mode))
+                 ("common-lisp" (mode . lisp-mode))
+                 ("program" (filename . "/program/"))
                  ("code" (or (mode . emacs-lisp-mode)
                              (mode . cperl-mode)
                              (mode . c-mode)

@@ -86,6 +86,8 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
     (slime-mode)
     (local-set-key (kbd "C-j") 'slime-eval-print-last-expression)
     (setup-company-mode slime-company-backends)
+    ;; (setq indent-line-function 'common-lisp-indent-function)
+    ;; (put 'if 'common-lisp-indent-function 2)
     )
 
   (add-hook 'emacs-lisp-mode-hook 'rice-wine-emacs-lisp-func)

@@ -168,7 +168,7 @@
      . ((eval
          . (progn
              (setq coq-prog-name ,coq-prog-name)
-             (setq coq-prog-args ,coq-prog-args)))))))
+             (setq coq-prog-args ',coq-prog-args)))))))
 
 (defun lzh/coq-create-dir-locals (dir coq-prog-name coq-prog-args)
   "Create a dir-locals file in DIR, base on COQ-PROG-NAME COQ-PROG-ARGS"
