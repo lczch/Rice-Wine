@@ -163,19 +163,4 @@
       (insert hint-database "."))))
 
 
-(defmacro lzh/coq-create-sexp-of-dir-locals (coq-prog-name coq-prog-args)
-  `((nil
-     . ((eval
-         . (progn
-             (setq coq-prog-name ,coq-prog-name)
-             (setq coq-prog-args ',coq-prog-args)))))))
-
-(defun lzh/coq-create-dir-locals (dir coq-prog-name coq-prog-args)
-  "Create a dir-locals file in DIR, base on COQ-PROG-NAME COQ-PROG-ARGS"
-  (with-temp-file (expand-file-name dir-locals-file dir)
-    (print
-     (macroexpand `(lzh/coq-create-sexp-of-dir-locals ,coq-prog-name ,coq-prog-args))
-     (current-buffer))))
-
-
 (provide 'rw-coq-lib)

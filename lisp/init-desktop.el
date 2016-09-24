@@ -34,6 +34,12 @@
                   (shell-command-history    . 128)
                   (evil-ex                  . 128)
                   desktop-missing-file-warning
-                  register-alist))))
+                  register-alist)))
+
+  (setq desktop-restore-frames nil) ; not save frame and window configuration.
+  (setq desktop-restore-eager 100)
+  
+  (desktop-save-mode)
+  )
 
 (provide 'init-desktop)

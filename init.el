@@ -96,7 +96,18 @@
 (print-load-path)
 
 
+;;------------------------------------------------------------------------------
+;; start server: if a emacs starts with server, it must be the main emacs!
+;;------------------------------------------------------------------------------
+(defvar rw-main-emacs-p nil
+  "Whether this emacs is the main emacs?")
 
+(use-package server
+  :config
+  (unless (server-running-p)
+    (server-start)
+    (setq rw-main-emacs-p t)
+    (message "success start server")))
 
 ;;------------------------------------------------------------------------------
 ;; individual package configuration
@@ -119,7 +130,6 @@
 
 
 (use-package init-evil)
-(use-package init-desktop)
 (use-package init-dired)
 (use-package init-ibuffer)
 
@@ -194,12 +204,6 @@
   ;; g => update/refresh
   )
 
-;; server
-(use-package server
-  :config
-  (unless (server-running-p)
-    (server-start)
-    (message "success start server")))
 
 (use-package init-xcscope)
 (use-package init-clipboard)
@@ -259,6 +263,12 @@
   (setq backup-directory-alist `(("." . ,my-backup-dir))))
 
 ;;------------------------------------------------------------------------------
+;; restore desktop
+;;------------------------------------------------------------------------------
+(when rw-main-emacs-p
+  (use-package init-desktop))
+
+;;------------------------------------------------------------------------------
 ;; Post initialization
 ;;------------------------------------------------------------------------------
 (when window-system
@@ -273,7 +283,6 @@
                  (message "Loading %s...done (%.3fs) [after-init]"
                           ,load-file-name elapsed)))
             t))
-
 
 
 
