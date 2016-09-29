@@ -16,17 +16,14 @@
 
 (setq message-log-max 16384)
 
-(defvar best-gc-cons-threshold 4000000 "Best default gc threshold value. Should't be too big.") ;; five times of default value
+;; five times of default value
+(defvar best-gc-cons-threshold 4000000 "Best default gc threshold value. Should't be too big.")
 (setq gc-cons-threshold best-gc-cons-threshold)
 ;;------------------------------------------------------------------------------
 ;; prepare work: set working directory and load-path
 ;;------------------------------------------------------------------------------
-(defvar rice-wine-dir (expand-file-name "~/rice-wine")
-  "top directory of configuration")
 
-(add-to-list 'load-path (expand-file-name "lisp" rice-wine-dir))
-
-;; disable auto-load of packages, I prefer require them manually
+;; Disable auto-load of packages. I prefer requiring them manually.
 (setq package-enable-at-startup nil)
 
 (defun rw-add-to-load-path (dir)
@@ -34,28 +31,58 @@
   (add-to-list 'load-path dir))
 
 (defun rw-add-subdirs-to-load-path (dir)
-  "add all subdirs of DIR to load-path, which begins with a digital or letter."
+  "add all subdirs of DIR to load-path, which begin with a digital or letter."
   (let ((dir-files (directory-files dir t "^[0-9A-Za-z].*")))
     (dolist (file dir-files)
       (when (file-directory-p file)
         (rw-add-to-load-path file)))))
 
+(defun rw-add-dir-and-subdirs-to-load-path (dir)
+  "add DIR and all subdirs of DIR to load-path, which begin with a digital or letter."
+  (interactive "DDir:")
+  (rw-add-to-load-path dir)
+  (rw-add-subdirs-to-load-path dir))
+
 ;; add needed dirs to load-path
+(defvar rice-wine-dir (file-name-directory load-file-name)
+  "top directory of configuration")
+
+(defvar rice-wine-lisp-dir (expand-file-name "lisp" rice-wine-dir)
+  "configurations of packages")
+
 (defvar rice-wine-package-dir
   (expand-file-name "site-lisp" rice-wine-dir)
-  "packages' src directory")
+  "local packages")
 
 (defvar rice-wine-git-package-dir
   (expand-file-name "git-lisp" rice-wine-dir)
-  "packages from my git")
+  "packages from git")
 
-(defun add-all-packages-to-load-path ()
+(defvar rice-wine-lib-dir
+  (expand-file-name "lib" rice-wine-dir)
+  "library packages, mostly for elisp programming")
+
+(defun rw-add-all-packages-to-load-path ()
+  "Add all need packages to load path."
   (interactive)
-  (rw-add-subdirs-to-load-path rice-wine-package-dir)
-  (rw-add-subdirs-to-load-path rice-wine-git-package-dir))
+  (let ((dirs (list rice-wine-package-dir
+                    rice-wine-git-package-dir
+                    rice-wine-lib-dir)))
+    (mapc #'rw-add-dir-and-subdirs-to-load-path dirs)))
 
-(add-all-packages-to-load-path)
+(defun rw-configure-load-path ()
+  "Configuring load path for rice-wine emacs"
+  (interactive)
+  ;; top dir
+  (rw-add-to-load-path rice-wine-dir)
+  ;; package configuration dir
+  (rw-add-dir-and-subdirs-to-load-path rice-wine-lisp-dir)
+  ;; package dir
+  (rw-add-all-packages-to-load-path))
 
+(rw-configure-load-path)
+
+;; (print-load-path)
 
 ;;------------------------------------------------------------------------------
 ;; use-package: wonderful organization tool of emacs configuration 
@@ -68,32 +95,24 @@
 (require 'diminish)                ;; if you use :diminish
 (require 'bind-key)                ;; if you use any :bind variant
 
-
-
 ;;------------------------------------------------------------------------------
 ;; useful lib
 ;;------------------------------------------------------------------------------
 (use-package cl)
 (use-package cl-lib)
 
-(defvar rice-wine-lib-dir
-  (expand-file-name "lib" rice-wine-dir))
-
-(rw-add-to-load-path rice-wine-lib-dir)
-(rw-add-subdirs-to-load-path rice-wine-lib-dir)
-
 (use-package dash
   :config
   (dash-enable-font-lock))
 
 (use-package s)
+(use-package f)
+
 (use-package other-lib)
 (use-package rw-frame-lib)
 (use-package rw-buffer-lib)
 (use-package rw-file-lib)
 (use-package rw-misc-lib)
-
-(print-load-path)
 
 
 ;;------------------------------------------------------------------------------
@@ -107,7 +126,7 @@
   (unless (server-running-p)
     (server-start)
     (setq rw-main-emacs-p t)
-    (message "success start server")))
+    (message "rw: success start server!")))
 
 ;;------------------------------------------------------------------------------
 ;; individual package configuration
@@ -204,15 +223,19 @@
   ;; g => update/refresh
   )
 
-
+;; TODO: may switch to gtags?
 (use-package init-xcscope)
+
 (use-package init-clipboard)
 
 (use-package which-key
   :config
   (which-key-mode 1))
 
+;; TODO: I use this seldom.
 (use-package init-emacs-w3m)
+
+;; TODO: I use this seldom.
 (use-package init-profiler)
 
 ;;------------------------------------------------------------------------------
@@ -230,15 +253,9 @@
 ;; misc configurations
 ;;------------------------------------------------------------------------------
 
-(defun rw-display-current-buffer-other-frame ()
-  "display current buffer on other frame"
-  (interactive)
-  (display-buffer-other-frame (current-buffer)))
-
 (evil-leader/set-key
   "xh" 'mark-whole-buffer
   "do" 'rw-display-current-buffer-other-frame)
-
 
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq history-delete-duplicates t)
