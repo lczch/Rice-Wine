@@ -258,10 +258,14 @@
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
+;; debug on
+(global-set-key (kbd "<f12>") 'toggle-debug-on-error)
 
 (evil-leader/set-key
   "xh" 'mark-whole-buffer
-  "do" 'rw-display-current-buffer-other-frame)
+  "do" 'rw-display-current-buffer-other-frame
+  "eb" 'eval-buffer
+  "rb" 'revert-buffer) 
 
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq history-delete-duplicates t)
@@ -284,6 +288,21 @@
       (my-backup-dir (expand-file-name "backups" rice-wine-dir)))
   (setq custom-file my-custom-file)
   (setq backup-directory-alist `(("." . ,my-backup-dir))))
+
+;; about Semantic
+(setq semanticdb-default-save-directory nil)
+
+(global-set-key (kbd "<f5>")
+                #'(lambda ()
+                    (interactive)
+                    (semantic-grammar-create-package)
+                    (eval-buffer)))
+
+(global-set-key (kbd "<f6>")
+                #'(lambda ()
+                    (interactive)
+                    (revert-buffer nil t)
+                    (bovinate)))
 
 ;;------------------------------------------------------------------------------
 ;; restore desktop
