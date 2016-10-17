@@ -1,0 +1,7 @@
+# key: id
+# name: identifier# key: id
+# name: identifier
+# --
+Definition $1 : ident := 0%Z.
+$0
+

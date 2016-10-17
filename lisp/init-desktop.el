@@ -3,6 +3,9 @@
   ;; use seldom
   :config
   (setq desktop-dirname rice-wine-dir)
+  (setq desktop-path (list rice-wine-dir))
+  
+  (message "desktop: %s\n" desktop-dirname)
   
   (defun rw-desktop-save ()
     (interactive)
@@ -40,6 +43,8 @@
   (setq desktop-restore-eager 100)
   
   (desktop-save-mode)
+
+  (message "desktop: %s\n" desktop-dirname)
   )
 
 (provide 'init-desktop)

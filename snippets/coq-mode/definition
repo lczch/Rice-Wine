@@ -1,6 +1,6 @@
-# -*- mode: snippet; require-final-newline: nil -*-
+# -*- mode: snippet -*-
 # name: definition
-# key: def
-# binding: direct-keybinding
+# key: df
 # --
-Definition $0
+Definition $1 := $2.
+$0
