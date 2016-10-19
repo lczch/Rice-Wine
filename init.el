@@ -84,7 +84,9 @@
   ;; package dir
   (rw-add-all-packages-to-load-path)
   ;; app dir
-  (rw-add-dir-and-subdirs-to-load-path rice-wine-app-dir))
+  (when (file-exists-p rice-wine-app-dir)
+    (rw-add-dir-and-subdirs-to-load-path rice-wine-app-dir))
+  )
 
 (rw-configure-load-path)
 
