@@ -152,7 +152,7 @@
   (setq truncate-lines nil)
   (setq word-wrap t)
   ;; added by rice-wine
-  (rainbow-delimiters-mode)
+  ;; (rainbow-delimiters-mode)
   (smartparens-mode)
   (yas-minor-mode))
 (add-hook 'org-mode-hook 'org-mode-hook-setup)
@@ -236,5 +236,17 @@
 
 ;; allow one character to represent plain ordered list
 (setq org-list-allow-alphabetical t)
+
+;; babel
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (clojure . t)))
+
+;; show syntax highlighting per language native mode in *.org
+(setq org-src-fontify-natively t)
+
+;; For languages with significant whitespace like Python, but I don't need it in coq.
+;; (setq org-src-preserve-indentation t)
 
 (provide 'init-org)
