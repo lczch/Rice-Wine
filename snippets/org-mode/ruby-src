@@ -1,0 +1,9 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: ruby-src
+# key: ruby
+# binding: direct-keybinding
+# --
+#+name: $1
+#+BEGIN_SRC ruby :tangle no :noweb yes
+$0
+#+END_SRC
