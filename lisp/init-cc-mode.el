@@ -1,11 +1,6 @@
-(defun rice-wine-c-func ()
-  "features needed by c-mode"
-  (rice-wine-prog-func)
-  (yas-on)
-  (setq c-basic-offset 8)
-  (cscope-minor-mode))
 
 (use-package cc-mode
+  :init
   :mode (("\\.c\\'" . c-mode)
          ("\\.h\\'" . c-mode))
 
@@ -14,7 +9,28 @@
   ;; give me NO newline automatically after electric expressions are entered
   (setq c-auto-newline nil)
 
-  (add-hook 'c-mode-common-hook 'rice-wine-c-func)
+  ;; company
+  (use-package company-clang
+    :config
+    (setq company-clang-insert-arguments nil))
+  
+  (use-package company-dabbrev)
+  (defvar cc-mode-company-backends
+    '(company-clang company-dabbrev))
+
+  ;; eldoc
+  (use-package c-eldoc)
+
+  (defun rice-wine-cc-func ()
+    "features needed by c-mode"
+    (rice-wine-prog-func)
+    (yas-on)
+    (setq c-basic-offset 8)
+    (cscope-minor-mode)
+    (setup-company-mode cc-mode-company-backends)
+    (c-turn-on-eldoc-mode))
+  
+  (add-hook 'c-mode-common-hook 'rice-wine-cc-func)
 )
 
 
