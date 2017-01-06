@@ -107,7 +107,8 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
           ))
 
   :config
-  (setq inferior-lisp-program "sbcl")
+  ;; (setq inferior-lisp-program "sbcl")
+  (setq inferior-lisp-program "ros -Q run")
   (setq slime-net-coding-system 'utf-8-unix)
 
   (defun rice-wine-slime-repl-func ()
