@@ -9,7 +9,7 @@
                     (tuareg . "https://github.com/ocaml/tuareg.git")
                     ))
 
-(setq git-dir (expand-file-name "~/rice-wine/git-lisp"))
+(setq git-dir (expand-file-name "~/rice-wine/git-lisp/"))
 
 ;;(setq git-dir (concat (expand-file-name "~/rice-wine/get") "/"))
 
