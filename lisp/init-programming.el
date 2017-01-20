@@ -102,4 +102,20 @@
   (add-hook 'asm-mode-hook 'asm-mode-func)
   )
 
+;;------------------------------------------------------------------------------
+;; ocaml
+;;------------------------------------------------------------------------------
+(use-package tuareg
+  :mode (("\\.\\(ml\\|mli\\|mly\\|mll\\|mlp\\)\\'" . tuareg-mode))
+  :commands (tuareg-mode)
+  :config
+  (defun tuareg-mode-func ()
+    (rice-wine-prog-func)
+    )
+
+  (setq tuareg-use-smie nil) ;; 不关这个, 一分钟遇到bug... 而且还要用老版本, 2.0.8
+  (add-hook 'tuareg-mode-hook 'tuareg-mode-func)
+  )
+;; (load "tuareg-site-file")
+
 (provide 'init-programming)
