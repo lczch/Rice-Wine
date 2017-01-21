@@ -3,7 +3,7 @@
 (setq my-packages '((use-package . "git@github.com:lczch/use-package.git")
                     (PG . "git@github.com:lczch/PG.git")
                     (company-coq . "git@github.com:lczch/company-coq.git")
-                    ;; (racket-mode . "git@github.com:lczch/racket-mode.git")
+                    (racket-mode . "git@github.com:lczch/racket-mode.git")
                     (org-mode . "git://orgmode.org/org-mode.git")
                     (slime . "git@github.com:lczch/slime.git")
                     (tuareg . "https://github.com/ocaml/tuareg.git")
