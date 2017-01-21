@@ -105,17 +105,40 @@
 ;;------------------------------------------------------------------------------
 ;; ocaml
 ;;------------------------------------------------------------------------------
+(use-package caml
+  :defer t
+  ;; tuareg和merlin都需要这个package
+  )
+
+(use-package merlin
+  :commands (merlin-mode)
+  :config
+  ;; ocamlmerlin不会系统PATH中, 需手动指定
+  (setq merlin-command
+        (expand-file-name "ocamlmerlin"
+                          (car (process-lines "opam" "config" "var" "bin"))))
+  ;; process-lines, 又学会了新姿势
+  )
+
 (use-package tuareg
   :mode (("\\.\\(ml\\|mli\\|mly\\|mll\\|mlp\\)\\'" . tuareg-mode))
   :commands (tuareg-mode)
   :config
+
+  (use-package merlin-company)
+  
+  (defvar tuareg-company-backends
+    '(merlin-company-backend company-bbdb))
+  
   (defun tuareg-mode-func ()
     (rice-wine-prog-func)
+    (merlin-mode)
+    (yas-minor-mode)
+    (setup-company-mode tuareg-company-backends)
     )
 
-  (setq tuareg-use-smie nil) ;; 不关这个, 一分钟遇到bug... 而且还要用老版本, 2.0.8
+  (setq tuareg-use-smie nil) ;; 不关SMIE的缩进, 秒遇bug... 而且还要用老版本, 2.0.8
   (add-hook 'tuareg-mode-hook 'tuareg-mode-func)
   )
-;; (load "tuareg-site-file")
 
 (provide 'init-programming)
