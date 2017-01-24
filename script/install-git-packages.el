@@ -7,6 +7,7 @@
                     (org-mode . "git://orgmode.org/org-mode.git")
                     (slime . "git@github.com:lczch/slime.git")
                     (tuareg . "https://github.com/ocaml/tuareg.git")
+                    (smartparens . "https://github.com/Fuco1/smartparens.git")
                     ))
 
 (setq git-dir (expand-file-name "~/rice-wine/git-lisp/"))
@@ -41,9 +42,17 @@
             ;; if it is tuareg, an ocaml mode
             (when (string= name "tuareg")
               ;; checkout to 2.0.8
-              (let ((default-directory (concat git-dir "tuareg")))
+              (let ((default-directory (concat git-dir "tuareg/")))
                 (shell-command "git checkout 2.0.8")
                 (princ (format "checkout to 2.0.8\n"))))
+
+            ;; smartparens
+            (when (string= name "smartparens")
+              ;; checkout to 1.9.0
+              (let ((default-directory (concat git-dir "smartparens/")))
+                (shell-command "git checkout 1.9.0")
+                (princ (format "checkout to 1.9.0\n")))
+              )
             
             (princ (format "finish clone: %s\n" name))
             )

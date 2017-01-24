@@ -1,0 +1,3 @@
+** 要小心系统自动装上的defaut.el和site-start文件
+这种文件会在一开始被emacs读入, 会破坏自己的配置, 还很难查错.
+所以, 用emacs --no-site-file 启动会比较好.
