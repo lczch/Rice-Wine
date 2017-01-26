@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: shebang 
+# key: #!
+# binding: direct-keybinding
+# --
+:; exec emacs -batch -l "$0" -f main -- "$@"
+(load-file "~/rice-wine/init-script.el")
+$0

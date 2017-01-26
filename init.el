@@ -62,9 +62,9 @@
   (expand-file-name "lib" rice-wine-dir)
   "library packages, mostly for elisp programming")
 
-(defvar rice-wine-app-dir
-  (expand-file-name "app" rice-wine-dir)
-  "Some apps writing in elisp.")
+;; (defvar rice-wine-app-dir
+;;   (expand-file-name "app" rice-wine-dir)
+;;   "Some apps writing in elisp.")
 
 (defun rw-add-all-packages-to-load-path ()
   "Add all need packages to load path."
@@ -83,9 +83,6 @@
   (rw-add-dir-and-subdirs-to-load-path rice-wine-lisp-dir)
   ;; package dir
   (rw-add-all-packages-to-load-path)
-  ;; app dir
-  (when (file-exists-p rice-wine-app-dir)
-    (rw-add-dir-and-subdirs-to-load-path rice-wine-app-dir))
   )
 
 (rw-configure-load-path)
@@ -97,7 +94,7 @@
 ;;------------------------------------------------------------------------------
 (eval-and-compile
   (require 'cl)
-  (defvar use-package-verbose t)
+  (defvar use-package-verbose nil) ;; debug message
   (require 'use-package))
   
 (require 'diminish)                ;; if you use :diminish

@@ -2,5 +2,4 @@
 # name: definition
 # key: df
 # --
-Definition $1 := $2.
-$0
+Definition $0

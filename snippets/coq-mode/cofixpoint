@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: cofixpoint
+# key: cf
+# binding: direct-keybinding
+# --
+CoFixpoint $0

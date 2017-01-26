@@ -32,12 +32,12 @@
 
             ;; if it is org-mode
             (when (string= name "org-mode")
-              ;; checkout to stable branch
+              ;; checkout to release_8.3.6
               (let ((default-directory (concat git-dir "org-mode/")))
                 ;; keep to the latest stable release of org-mode
-                (shell-command "git checkout -b stable origin/maint")
+                (shell-command "git checkout release_8.3.6")
                 (shell-command "make autoloads")
-                (princ (format "checkout to stable branch, and make autoloads\n"))))
+                (princ (format "checkout release_8.3.6, and make autoloads\n"))))
 
             ;; if it is tuareg, an ocaml mode
             (when (string= name "tuareg")

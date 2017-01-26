@@ -136,6 +136,11 @@
      ;; @see http://irreal.org/blog/1
      (setq org-src-fontify-natively t)))
 
+;; 插入时间时, 显示到分钟
+(defun rw-org-time-stamp ()
+  (interactive)
+  (org-time-stamp t))
+
 (defun org-mode-hook-setup ()
   (setq evil-auto-indent nil)
   ;; org-mode's own flycheck will be loaded
@@ -154,7 +159,11 @@
   ;; added by rice-wine
   ;; (rainbow-delimiters-mode)
   (smartparens-mode)
-  (yas-minor-mode))
+  (yas-minor-mode)
+
+  ;; 插入时间时, 显示到分钟
+  (define-key org-mode-map [remap org-time-stamp] 'rw-org-time-stamp)
+  )
 (add-hook 'org-mode-hook 'org-mode-hook-setup)
 
 (defadvice org-open-at-point (around org-open-at-point-choose-browser activate)
@@ -248,5 +257,7 @@
 
 ;; For languages with significant whitespace like Python, but I don't need it in coq.
 ;; (setq org-src-preserve-indentation t)
+
+
 
 (provide 'init-org)

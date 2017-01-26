@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: coinductive
+# key: ci
+# binding: direct-keybinding
+# --
+CoInductive $0
