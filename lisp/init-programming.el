@@ -44,9 +44,15 @@
 
   (setq sp-autoskip-closing-pair 'always)
   (sp-use-smartparens-bindings)
-  
-  ;; (sp-with-modes '(coq-mode)
-  ;;   (sp-local-pair "Lemma" "Qed."))
+
+  ;; 这个包真是好用
+  (sp-with-modes 'tuareg-mode
+    ;; disable auto insert of "'" 
+    (sp-local-pair "'" nil :actions nil)
+    (sp-local-pair "`" nil :actions nil))
+
+  (sp-with-modes 'minibuffer-inactive-mode
+    (sp-local-pair "'" nil :actions nil))
   )
 
 
@@ -105,40 +111,6 @@
 ;;------------------------------------------------------------------------------
 ;; ocaml
 ;;------------------------------------------------------------------------------
-(use-package caml
-  :defer t
-  ;; tuareg和merlin都需要这个package
-  )
-
-(use-package merlin
-  :commands (merlin-mode)
-  :config
-  ;; ocamlmerlin不会系统PATH中, 需手动指定
-  (setq merlin-command
-        (expand-file-name "ocamlmerlin"
-                          (car (process-lines "opam" "config" "var" "bin"))))
-  ;; process-lines, 又学会了新姿势
-  )
-
-(use-package tuareg
-  :mode (("\\.\\(ml\\|mli\\|mly\\|mll\\|mlp\\)\\'" . tuareg-mode))
-  :commands (tuareg-mode)
-  :config
-
-  (use-package merlin-company)
-  
-  (defvar tuareg-company-backends
-    '(merlin-company-backend company-bbdb))
-  
-  (defun tuareg-mode-func ()
-    (rice-wine-prog-func)
-    (merlin-mode)
-    (yas-minor-mode)
-    (setup-company-mode tuareg-company-backends)
-    )
-
-  (setq tuareg-use-smie nil) ;; 不关SMIE的缩进, 秒遇bug... 而且还要用老版本, 2.0.8
-  (add-hook 'tuareg-mode-hook 'tuareg-mode-func)
-  )
+(use-package init-ocaml)
 
 (provide 'init-programming)

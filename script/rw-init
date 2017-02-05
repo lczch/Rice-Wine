@@ -1,0 +1,18 @@
+:; exec emacs -batch -l "$0" -f main -- "$@"
+(load-file "~/rice-wine/init-script.el")
+
+(defun rw-init (name)
+  "创建名为NAME的script文件."
+  (if (f-exists? name)
+      (princ "This file is already exist!")
+    (f-copy (expand-file-name "template/script" rice-wine-dir) name)
+    (chmod name #o775)
+    (princ (format "%s now is available!\n" name))))
+
+(defun main ()
+  (rw-init (car (rw-get-args))))
+
+;; Local Variables:
+;; mode: emacs-lisp
+;; End:
+     

@@ -1,0 +1,9 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: elisp-mode
+# key: el
+# binding: direct-keybinding
+# --
+;; Local Variables:
+;; mode: emacs-lisp
+;; End:
+$0

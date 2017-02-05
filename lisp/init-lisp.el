@@ -70,7 +70,10 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
          ("\\.asd\\'" . lisp-mode))
   :config
   (defvar elisp-company-backends
-    '(company-elisp company-files))
+    '(company-elisp
+      ;; 在笔记本上用时很慢, 不知道为什么...
+      ;; company-files
+      ))
 
   (defvar slime-company-backends
     '(company-slime company-files))

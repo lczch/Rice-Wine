@@ -68,7 +68,8 @@
 
     :config
     (setq company-coq-disabled-features
-          '(snippets
+          '(
+            ;; snippets
             outline
             code-folding
             company-defaults

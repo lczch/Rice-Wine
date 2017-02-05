@@ -1,0 +1,12 @@
+:; exec emacs -batch -l "$0" -f main -- "$@"
+(load-file "~/rice-wine/init-script.el")
+
+;; `read'读入的是sexp,返回的是sexp, 并且会有固定输入信息, 没法改.
+;; `read-from-minibuffer'读入的是string, 返回的是string, 可以人工给定输入帮助信息, 主要用这个.
+;; `read-string'是read-from-minibuffer的简化版.
+(defun main ()
+  (while t
+    (princ (format "%s\n" (read-string "请输入数字:"))))
+  )
+
+

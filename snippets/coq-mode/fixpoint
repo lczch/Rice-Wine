@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: fixpoint
+# key: fx
+# binding: direct-keybinding
+# --
+Fixpoint $0
