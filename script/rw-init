@@ -1,13 +1,24 @@
 :; exec emacs -batch -l "$0" -f main -- "$@"
 (load-file "~/rice-wine/init-script.el")
 
-(defun rw-init (name)
+;; (pcase 3
+;;   ("10" 1)
+;;   (1 2)
+;;   (_ (error "10")))
+
+(defun rw-init (name &optional type)
   "创建名为NAME的script文件."
-  (if (f-exists? name)
-      (princ "This file is already exist!")
-    (f-copy (expand-file-name "template/script" rice-wine-dir) name)
-    (chmod name #o775)
-    (princ (format "%s now is available!\n" name))))
+  (let ((type (or type "sh")))
+    (if (f-exists? name)
+        (princ "This file is already exist!")
+      (let ((template-file (expand-file-name
+                            (concat "template/script" "." type)
+                            rice-wine-dir)))
+        (unless (f-exists? template-file)
+          (error "Invalid TYPE argument"))
+        (f-copy template-file name)
+        (chmod name #o775)
+        (princ (format "%s now is available!\n" name))))))
 
 (defun main ()
   (rw-init (car (rw-get-args))))

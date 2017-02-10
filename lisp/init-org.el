@@ -258,6 +258,21 @@
 ;; For languages with significant whitespace like Python, but I don't need it in coq.
 ;; (setq org-src-preserve-indentation t)
 
+;;------------------------------------------------------------------------------
+;; setting up capture
+;;------------------------------------------------------------------------------
+(setq org-default-notes-file (expand-file-name "notes.org" "~/org/task"))
+;; using org-capture to add ad hoc thinkings to note.org
+(define-key global-map (kbd "C-c c") 'org-capture)
 
+;; place all tasks in task.org, using agenda display them
+(add-to-list 'org-agenda-files (expand-file-name "task/task.org" "~/org"))
+(define-key global-map (kbd "C-c a") 'org-agenda)
+
+;; using C-c C-w (org-refile) move finished task to the right place
+;; using `org-archive-subtree-default' quick move finished task to specific archive files.
+;; or use default key binding: C-c C-x C-a
+(evil-leader/set-key
+  "oa" 'org-archive-subtree-default)
 
 (provide 'init-org)
