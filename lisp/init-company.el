@@ -10,7 +10,7 @@
   ;; what commands of emacs can triger the starting of company.
   ;; `self-insert-command` means typing IO.
   (setq company-begin-commands '(self-insert-command))
-  (setq company-idle-delay 0.2)
+  (setq company-idle-delay 0.1)
 
   (use-package company-statistics
     :commands (company-statistics-mode))
@@ -22,6 +22,8 @@
     :commands (company-files))
   (use-package company-dabbrev
     :commands (company-dabbrev))
+  (use-package company-math
+    :commands (company-math))
   
   ;; use company-statistics to arrange the order of candidates, show more probably selected one to the first
   (defun setup-company-mode (backends)

@@ -249,6 +249,7 @@
 (use-package init-programming)
 (use-package init-markdown)
 
+(use-package init-latex)
 ;; auctex
 (use-package tex-site
   ;; 不知道出了什么问题, 导致下面这一行用不了. 这次配置出现的问题都是功能的封装不好, 每次都要回忆起最细节的东西, 很伤.
@@ -261,19 +262,32 @@
   (setq-default TeX-master nil)
 
   (use-package company-auctex)
-
-  (defun tex-company ()
-    (setup-company-mode '())
-    (company-auctex-init))
+  (use-package company-math)
   
+  (defun tex-company ()
+    (setup-company-mode '((company-math-symbols-latex
+                           company-math-symbols-unicode
+                           company-auctex-macros
+                           company-auctex-symbols
+                           company-auctex-environments
+                           company-dabbrev)
+                          ;; company-auctex-labels
+                          ;; company-auctex-bibs
+                          ))
+    ;; (company-auctex-init)
+    )
+
   (defun tex-func ()
     (rainbow-delimiters-mode)
     (smartparens-mode)
     (yas-on)
     (tex-company)
+    (LaTeX-math-mode)
     )
-  
-  (add-hook 'TeX-mode-hook 'tex-func))
+
+  (add-hook 'LaTeX-mode-hook 'tex-func)
+  ;; (add-hook 'TeX-mode-hook 'tex-func)
+  )
 
 
 ;; (use-package tex-mode

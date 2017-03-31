@@ -142,7 +142,7 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   :commands (geiser run-racket geiser-mode)
   :config
   (defvar geiser-company-backends
-    '(company-capf company-files))
+    '(company-capf company-dabbrev))
 
   (defun rice-wine-geiser-repl-func ()
     (rice-wine-lisp-repl-func)

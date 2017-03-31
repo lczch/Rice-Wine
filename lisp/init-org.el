@@ -259,6 +259,14 @@
 ;; (setq org-src-preserve-indentation t)
 
 ;;------------------------------------------------------------------------------
+;; Toggle display of entities as UTF-8 characters
+;; or #+STARTUP entitiespretty
+;; characters are in `org-entities'
+;;------------------------------------------------------------------------------
+(setq org-pretty-entities t)
+
+
+;;------------------------------------------------------------------------------
 ;; setting up capture
 ;;------------------------------------------------------------------------------
 (setq org-default-notes-file (expand-file-name "notes.org" "~/org/task"))
