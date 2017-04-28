@@ -160,6 +160,10 @@
   ;; (rainbow-delimiters-mode)
   (smartparens-mode)
   (yas-minor-mode)
+  ;; company
+  (setup-company-mode '((company-dabbrev
+                         company-math-symbols-unicode)
+                        ))
 
   ;; 插入时间时, 显示到分钟
   (define-key org-mode-map [remap org-time-stamp] 'rw-org-time-stamp)
@@ -263,7 +267,7 @@
 ;; or #+STARTUP entitiespretty
 ;; characters are in `org-entities'
 ;;------------------------------------------------------------------------------
-(setq org-pretty-entities t)
+;; (setq org-pretty-entities t)
 
 
 ;;------------------------------------------------------------------------------

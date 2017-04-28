@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: rice-wine-math-formula
+# key: rwmf
+# --
+\[
+  \begin{split}
+  $0
+  \end{split}
+\]

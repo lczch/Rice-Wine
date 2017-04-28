@@ -9,7 +9,7 @@
   ;; If I actually get the point, this variable `company-begin-commands` controls
   ;; what commands of emacs can triger the starting of company.
   ;; `self-insert-command` means typing IO.
-  (setq company-begin-commands '(self-insert-command))
+  ;; (setq company-begin-commands '(self-insert-command))
   (setq company-idle-delay 0.1)
 
   (use-package company-statistics
@@ -23,7 +23,7 @@
   (use-package company-dabbrev
     :commands (company-dabbrev))
   (use-package company-math
-    :commands (company-math))
+    :commands (company-math-symbols-unicode))
   
   ;; use company-statistics to arrange the order of candidates, show more probably selected one to the first
   (defun setup-company-mode (backends)

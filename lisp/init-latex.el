@@ -10,6 +10,7 @@
   (setq-default TeX-master nil)
 
   (use-package company-auctex)
+  (use-package reftex)
   
   (defun tex-company ()
     (setup-company-mode '((company-math-symbols-latex
@@ -30,6 +31,7 @@
     (yas-on)
     (tex-company)
     (LaTeX-math-mode)
+    (reftex-mode)
     )
 
   (add-hook 'LaTeX-mode-hook 'tex-func)
