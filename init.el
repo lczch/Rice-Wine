@@ -251,6 +251,7 @@
 
 (use-package init-latex)
 
+(use-package init-haskell-mode)
 
 ;; (use-package tex-mode
 ;;   :init

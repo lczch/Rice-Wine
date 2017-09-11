@@ -8,6 +8,7 @@
                     (slime . "git@github.com:lczch/slime.git")
                     (tuareg . "https://github.com/ocaml/tuareg.git")
                     (smartparens . "https://github.com/Fuco1/smartparens.git")
+                    (haskell-mode . "https://github.com/haskell/haskell-mode.git")
                     ))
 
 (setq git-dir (expand-file-name "~/rice-wine/git-lisp/"))
@@ -53,6 +54,12 @@
                 (shell-command "git checkout 1.9.0")
                 (princ (format "checkout to 1.9.0\n")))
               )
+
+            ;; haskell-mode
+            (when (string= name "haskell-mode")
+              (let ((default-directory (concat git-dir "haskell-mode/")))
+                (shell-command "make")
+                (princ (format "Make finish!\n"))))
             
             (princ (format "finish clone: %s\n" name))
             )

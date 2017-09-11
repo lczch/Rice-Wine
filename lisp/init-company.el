@@ -23,7 +23,8 @@
   (use-package company-dabbrev
     :commands (company-dabbrev))
   (use-package company-math
-    :commands (company-math-symbols-unicode))
+    :commands (company-math-symbols-latex
+               company-math-symbols-unicode))
   
   ;; use company-statistics to arrange the order of candidates, show more probably selected one to the first
   (defun setup-company-mode (backends)

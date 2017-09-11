@@ -32,6 +32,8 @@
     (tex-company)
     (LaTeX-math-mode)
     (reftex-mode)
+    ;; (setq TeX-command-default "LaTeX")
+    ;; (local-set-key (kbd "C-c C-a"))
     )
 
   (add-hook 'LaTeX-mode-hook 'tex-func)
