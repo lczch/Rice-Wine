@@ -77,6 +77,7 @@
       org-agenda-window-setup 'current-window
       org-fast-tag-selection-single-key 'expert
       org-export-kill-product-buffer-when-displayed t
+      org-export-headline-levels 10
       ;; org v7
       org-export-odt-preferred-output-format "doc"
       ;; org v8

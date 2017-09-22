@@ -45,7 +45,6 @@
   (setq sp-autoskip-closing-pair 'always)
   (sp-use-smartparens-bindings)
 
-  ;; 这个包真是好用
   (sp-with-modes 'tuareg-mode
     ;; disable auto insert of "'" 
     (sp-local-pair "'" nil :actions nil)

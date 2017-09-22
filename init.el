@@ -67,7 +67,7 @@
 ;;   "Some apps writing in elisp.")
 
 (defun rw-add-all-packages-to-load-path ()
-  "Add all need packages to load path."
+  "Add files in `rice-wine-package-dir', `rice-wine-git-package-dir' and `rice-wine-lib-dir' in `load-path'."
   (interactive)
   (let ((dirs (list rice-wine-package-dir
                     rice-wine-git-package-dir
@@ -310,7 +310,6 @@
 ;;------------------------------------------------------------------------------
 ;; restore desktop
 ;;------------------------------------------------------------------------------
-;; 我发现我用的很少:)
 ;; (when rw-main-emacs-p
 ;;   (use-package init-desktop))
 
