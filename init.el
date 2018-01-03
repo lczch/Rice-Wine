@@ -56,7 +56,7 @@
 
 (defvar rice-wine-git-package-dir
   (expand-file-name "git-lisp" rice-wine-dir)
-  "packages from git")
+  "packages from git, which have higher priority than pakages in `rice-wine-package-dir'")
 
 (defvar rice-wine-lib-dir
   (expand-file-name "lib" rice-wine-dir)
@@ -67,11 +67,12 @@
 ;;   "Some apps writing in elisp.")
 
 (defun rw-add-all-packages-to-load-path ()
-  "Add files in `rice-wine-package-dir', `rice-wine-git-package-dir' and `rice-wine-lib-dir' in `load-path'."
+  "Add directories in `rice-wine-lib-dir', `rice-wine-git-package-dir' and `rice-wine-package-dir' in `load-path', in which they have the same order."
   (interactive)
-  (let ((dirs (list rice-wine-package-dir
-                    rice-wine-git-package-dir
-                    rice-wine-lib-dir)))
+  (let ((dirs (list
+               rice-wine-package-dir
+               rice-wine-git-package-dir
+               rice-wine-lib-dir)))
     (mapc #'rw-add-dir-and-subdirs-to-load-path dirs)))
 
 (defun rw-configure-load-path ()
@@ -312,6 +313,11 @@
 ;;------------------------------------------------------------------------------
 ;; (when rw-main-emacs-p
 ;;   (use-package init-desktop))
+
+;;------------------------------------------------------------------------------
+;; printer: we need to install "xpp" through os package manager
+;;------------------------------------------------------------------------------
+(setq lpr-command "xpp")
 
 ;;------------------------------------------------------------------------------
 ;; Post initialization

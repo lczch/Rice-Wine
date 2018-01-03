@@ -1,69 +1,99 @@
 :; exec emacs -batch -l "$0" -f main -- "$@"
 
-(setq my-packages '((use-package . "git@github.com:lczch/use-package.git")
-                    (PG . "git@github.com:lczch/PG.git")
-                    (company-coq . "git@github.com:lczch/company-coq.git")
-                    (racket-mode . "git@github.com:lczch/racket-mode.git")
-                    (org-mode . "git://orgmode.org/org-mode.git")
-                    (slime . "git@github.com:lczch/slime.git")
-                    (tuareg . "https://github.com/ocaml/tuareg.git")
-                    (smartparens . "https://github.com/Fuco1/smartparens.git")
-                    (haskell-mode . "https://github.com/haskell/haskell-mode.git")
-                    ))
+(load-file (expand-file-name "init-header.el" "~/rice-wine"))
 
-(setq git-dir (expand-file-name "~/rice-wine/git-lisp/"))
+(setq git-package-plists
+      '((:name
+         use-package
+         :address
+         "git@github.com:lczch/use-package.git")
+        (:name
+         PG
+         :address
+         "git@github.com:lczch/PG.git")
+        (:name
+         company-coq
+         :address
+         "git@github.com:lczch/company-coq.git")
+        (:name
+         racket-mode
+         :address
+         "git@github.com:lczch/racket-mode.git")
+        (:name
+         org-mode
+         :address
+         "git://orgmode.org/org-mode.git"
+         :actions
+         ("git checkout release_8.3.6"
+          "make autoloads"))
+        (:name
+         slime
+         :address
+         "git@github.com:lczch/slime.git")
+        (:name
+         tuareg :address
+         "https://github.com/ocaml/tuareg.git"
+         :actions
+         ("git checkout 2.0.8"))
+        (:name
+         smartparens
+         :address
+         "https://github.com/Fuco1/smartparens.git"
+         :actions
+         ("git checkout 1.9.0"))
+        (:name
+         haskell-mode
+         :address
+         "https://github.com/haskell/haskell-mode.git"
+         :actions
+         ("make"))
+        (:name
+         yasnippet
+         :address
+         "git@github.com:joaotavora/yasnippet.git"
+         :actions
+         ("git checkout 0.12.2"))
+        ))
 
-;;(setq git-dir (concat (expand-file-name "~/rice-wine/get") "/"))
 
-(unless (file-exists-p git-dir)
-  (mkdir git-dir))
+(setq git-dir rice-wine-git-package-dir)
+;; (setq git-dir (expand-directory-name "~/rice-wine/test-git-lisp"))
 
-(setq default-directory git-dir)
+(defun expand-directory-name (name &optional default-directory)
+  "Same as `expand-file-name', but make sure the return value endes with slash."
+  (let ((result (expand-file-name name default-directory)))
+    (if (not (string-suffix-p "/" result))
+        (concat result "/")
+      result)))
+
+(defun git-package-handler (plist)
+  (let* ((name (symbol-name (plist-get plist :name)))
+         (address (plist-get plist :address))
+         (actions (plist-get plist :actions))
+         (package-directory (expand-file-name name git-dir)))
+    ;; start
+    (let ((default-directory git-dir))
+      (princ (format "Start clone: %s\n" name))
+      (shell-command (concat "git clone " address))
+
+      ;; run actions
+      (let ((default-directory (expand-directory-name name git-dir)))
+        (-each actions
+          (lambda (it)
+            (princ (format "Execute: %s\n" it))
+            (shell-command it))))
+
+      ;; finish
+      (princ (format "Finish configure package: %s\n\n" name)))
+    ))
 
 (defun main ()
-  (dolist (elt my-packages)
-    (let* ((name (symbol-name (car elt)))
-           (url (cdr elt))
-           (file-name (concat git-dir name)))
-      (if (not (file-exists-p file-name))
-          (progn
-            ;; file not exits, need clone
-            (princ (format "start clone: %s\n" name))
-            (shell-command (concat "git clone " url))
+  (unless (file-exists-p git-dir)
+    (mkdir git-dir))
 
-            ;; if it is org-mode
-            (when (string= name "org-mode")
-              ;; checkout to release_8.3.6
-              (let ((default-directory (concat git-dir "org-mode/")))
-                ;; keep to the latest stable release of org-mode
-                (shell-command "git checkout release_8.3.6")
-                (shell-command "make autoloads")
-                (princ (format "checkout release_8.3.6, and make autoloads\n"))))
-
-            ;; if it is tuareg, an ocaml mode
-            (when (string= name "tuareg")
-              ;; checkout to 2.0.8
-              (let ((default-directory (concat git-dir "tuareg/")))
-                (shell-command "git checkout 2.0.8")
-                (princ (format "checkout to 2.0.8\n"))))
-
-            ;; smartparens
-            (when (string= name "smartparens")
-              ;; checkout to 1.9.0
-              (let ((default-directory (concat git-dir "smartparens/")))
-                (shell-command "git checkout 1.9.0")
-                (princ (format "checkout to 1.9.0\n")))
-              )
-
-            ;; haskell-mode
-            (when (string= name "haskell-mode")
-              (let ((default-directory (concat git-dir "haskell-mode/")))
-                (shell-command "make")
-                (princ (format "Make finish!\n"))))
-            
-            (princ (format "finish clone: %s\n" name))
-            )
-        ;; file exists
-        (princ (format "%s is already exits!\n" name))))))
+  ;; (setq default-directory git-dir)
+  (-each git-package-plists
+    (lambda (it)
+      (git-package-handler it))))
 
 
