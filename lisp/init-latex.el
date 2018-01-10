@@ -37,7 +37,32 @@
     )
 
   (add-hook 'LaTeX-mode-hook 'tex-func)
-  ;; (add-hook 'TeX-mode-hook 'tex-func)
+  (add-hook 'TeX-mode-hook 'tex-func)
+  ;; (add-hook 'plain-tex-mode-hook)
+
+  (defvar rw/latex-newcommand-regexp nil
+    "Regexp for `\\newcommand' in latex mode.")
+  (setq rw/latex-newcommand-regexp "^[\\]newcommand.*")
+
+  (defun rw-latex-cut-all-newcommands ()
+    "Cut all `\\newcommand' in the current buffer, and store them on the paste board."
+    (interactive)
+    (let ((init-p (point))
+          (s nil))
+      (goto-char (point-max))
+      (while (re-search-backward rw/latex-newcommand-regexp nil t nil)
+        (setq s (cons (delete-and-extract-region
+                       (line-beginning-position)
+                       (+ (line-end-position) 1))
+                      s)))
+      (goto-char init-p)
+      (if (not (null s))
+          (kill-new (-reduce (lambda (s1 s2) (concat s1 s2))
+                             s))
+        (error "No command to cut!"))
+      ))
+  
+;; \newcommand{\SplitNewBlock}[1]{\ensuremath{\mathsf{SplitNewBlock}(#1)}}
   )
 
 (provide 'init-latex)

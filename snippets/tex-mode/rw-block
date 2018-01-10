@@ -1,0 +1,13 @@
+# key: rwb
+# name: rw-block
+# --
+\begin{figure}[htbp]
+  \centering
+  \[
+    \begin{array}{c}
+        $0
+    \end{array}
+  \]
+  \caption{}
+  \label{}
+\end{figure}
