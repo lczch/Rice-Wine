@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: rw-and
+# key: rwa
+# --
+&& $0 \wedge \\\\

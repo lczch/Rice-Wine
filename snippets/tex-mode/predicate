@@ -1,5 +1,0 @@
-# key: rwp
-# name: predicate
-# --
-\newcommand{\\$1}[1]{\ensuremath{\mathsf{$1}(#1)}}
-$0

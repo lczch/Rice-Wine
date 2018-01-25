@@ -13,8 +13,9 @@
   (use-package reftex)
   
   (defun tex-company ()
+    ;; `company-math-symbols-unicode' is used to enter unicode symbols, which in not useful in latex mode. 
     (setup-company-mode '((company-math-symbols-latex
-                           company-math-symbols-unicode
+                           ;; company-math-symbols-unicode
                            company-auctex-macros
                            company-auctex-symbols
                            company-auctex-environments
@@ -37,7 +38,7 @@
     )
 
   (add-hook 'LaTeX-mode-hook 'tex-func)
-  (add-hook 'TeX-mode-hook 'tex-func)
+  ;; (add-hook 'TeX-mode-hook 'tex-func)
   ;; (add-hook 'plain-tex-mode-hook)
 
   (defvar rw/latex-newcommand-regexp nil

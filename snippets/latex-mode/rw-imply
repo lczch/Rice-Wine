@@ -1,0 +1,4 @@
+# key: rwi
+# name: rw-imply
+# --
+&& $0 \rightarrow \\\\
