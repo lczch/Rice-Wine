@@ -138,9 +138,9 @@
      (setq org-src-fontify-natively t)))
 
 ;; 插入时间时, 显示到分钟
-(defun rw-org-time-stamp ()
-  (interactive)
-  (org-time-stamp t))
+;; (defun rw-org-time-stamp ()
+;;   (interactive)
+;;   (org-time-stamp t))
 
 (defun org-mode-hook-setup ()
   (setq evil-auto-indent nil)
@@ -167,7 +167,7 @@
                         ))
 
   ;; 插入时间时, 显示到分钟
-  (define-key org-mode-map [remap org-time-stamp] 'rw-org-time-stamp)
+  ;; (define-key org-mode-map [remap org-time-stamp] 'rw-org-time-stamp)
   )
 (add-hook 'org-mode-hook 'org-mode-hook-setup)
 
@@ -278,8 +278,8 @@
 ;; using org-capture to add ad hoc thinkings to note.org
 (define-key global-map (kbd "C-c c") 'org-capture)
 
-;; place all tasks in task.org, using agenda display them
-(add-to-list 'org-agenda-files (expand-file-name "task/task.org" "~/org"))
+;; place all tasks in "~/org", using agenda display them
+(add-to-list 'org-agenda-files (expand-file-name "~/org/task"))
 (define-key global-map (kbd "C-c a") 'org-agenda)
 
 ;; using C-c C-w (org-refile) move finished task to the right place
