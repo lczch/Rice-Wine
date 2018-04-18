@@ -286,6 +286,8 @@
 ;; using `org-archive-subtree-default' quick move finished task to specific archive files.
 ;; or use default key binding: C-c C-x C-a
 (evil-leader/set-key
-  "oa" 'org-archive-subtree-default)
+  "oa" 'org-archive-subtree-default
+  "oci" 'org-clock-in
+  "oco" 'org-clock-out)
 
 (provide 'init-org)

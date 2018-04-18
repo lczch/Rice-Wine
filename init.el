@@ -288,6 +288,7 @@
               visible-bell nil)
 
 ;; custom-file and backup-directory
+(setq auto-save-interval 50)
 (let ((my-custom-file (expand-file-name "custom.el" rice-wine-dir))
       (my-backup-dir (expand-file-name "backups" rice-wine-dir)))
   (setq custom-file my-custom-file)

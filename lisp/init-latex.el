@@ -63,7 +63,31 @@
         (error "No command to cut!"))
       ))
   
-;; \newcommand{\SplitNewBlock}[1]{\ensuremath{\mathsf{SplitNewBlock}(#1)}}
+  ;; \newcommand{\SplitNewBlock}[1]{\ensuremath{\mathsf{SplitNewBlock}(#1)}}
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (defun rw-latex-find-rref ()
+    (re-search-forward "rref{\\(?2:[^[:blank:]]*\\)}") ;; the number "2" is the manually name
+    (princ (match-string 2)))
+
+  (defun rw-latex-find-equation (enumber)
+    (interactive "s")
+    (re-search-backward (concat "llabel{" (regexp-quote enumber) "}")) ;; must using `regexp-quote'!
+    (forward-line)
+    (goto-char  (line-beginning-position))
+    (re-search-forward "^[[:blank:]]*\\(?1:.*\\)[[:blank:]]*[\\]*[[:blank:]]*")
+    (princ (match-string 1))
+    )
+
+  (defun rw-latex-find-and-insert-equation ()
+    (interactive)
+    (let* ((enumber (rw-latex-find-rref))
+           (p (point))
+           (eqs (rw-latex-find-equation enumber)))
+      (goto-char p)
+      (insert ":\\(" eqs "\\)")
+      (forward-char)
+      ))
   )
 
 (provide 'init-latex)
