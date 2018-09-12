@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: rw-fact
+# key: rwf
+# binding: direct-keybinding
+# --
+\newcommand{\\$1}{\ensuremath{\mathsf{$1}}}
+$0
