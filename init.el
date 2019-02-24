@@ -55,7 +55,7 @@
   "local packages")
 
 (defvar rice-wine-git-package-dir
-  (expand-file-name "git-lisp" rice-wine-dir)
+  (expand-file-name "new" rice-wine-dir)
   "packages from git, which have higher priority than pakages in `rice-wine-package-dir'")
 
 (defvar rice-wine-lib-dir
@@ -71,7 +71,7 @@
   (interactive)
   (let ((dirs (list
                rice-wine-package-dir
-               rice-wine-git-package-dir
+               ;; rice-wine-git-package-dir
                rice-wine-lib-dir)))
     (mapc #'rw-add-dir-and-subdirs-to-load-path dirs)))
 
