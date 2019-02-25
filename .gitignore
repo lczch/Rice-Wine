@@ -15,7 +15,7 @@ backups/
 temp/
 
 # git clone packages
-git-lisp/
+git-lisp/*
 
 # doc
 site-lisp/slime/doc
