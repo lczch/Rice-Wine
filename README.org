@@ -1,11 +1,7 @@
-This is my personal emacs configuration, it's derived from purcell's and redguardtoo's.
+* Prologue 
 
-* Feature
-- fully supported computer languages which I use frequency: ~elisp, clojure, coq, racket~.
-- organizing configuration with ~use-package~.
-- using ~evil~ to have vim-style key bindings.
-- *Do not* use package systems in Emacs, most packages are local, and little using ~git~.
+* Configuration
 
-* Philosophy
-- I hope my configuration can be clean, and so, beautiful. 
+#+BEGIN_SRC elisp :tangle (concat (file-name-directory (buffer-file-name)) "init.el")
 
+#+END_SRC

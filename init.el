@@ -163,8 +163,8 @@
 (use-package init-company)
 (use-package org
   :init
-  (rw-add-to-load-path (expand-file-name "org-mode/lisp" rice-wine-git-package-dir))
-  (rw-add-to-load-path (expand-file-name "org-mode/contrib/lisp" rice-wine-git-package-dir))
+  ;; (rw-add-to-load-path (expand-file-name "org-mode/lisp" rice-wine-git-package-dir))
+  ;; (rw-add-to-load-path (expand-file-name "org-mode/contrib/lisp" rice-wine-git-package-dir))
   :mode (("\\.org\\'" . org-mode))
   :commands (org-mode)
   :config

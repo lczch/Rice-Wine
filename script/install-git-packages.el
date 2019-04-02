@@ -22,7 +22,7 @@
         (:name
          org-mode
          :address
-         "git://orgmode.org/org-mode.git"
+         "https://code.orgmode.org/bzg/org-mode.git"
          :actions
          ("git checkout release_8.3.6"
           "make autoloads"))
@@ -30,27 +30,27 @@
          slime
          :address
          "git@github.com:lczch/slime.git")
-        (:name
-         tuareg :address
-         "https://github.com/ocaml/tuareg.git"
-         :actions
-         ("git checkout 2.0.8"))
+        ;; (:name
+        ;;  tuareg :address
+        ;;  "https://github.com/ocaml/tuareg.git"
+        ;;  :actions
+        ;;  ("git checkout 2.0.8"))
         (:name
          smartparens
          :address
-         "https://github.com/Fuco1/smartparens.git"
+         "git@github.com:lczch/smartparens.git"
          :actions
-         ("git checkout 1.9.0"))
-        (:name
-         haskell-mode
-         :address
-         "https://github.com/haskell/haskell-mode.git"
-         :actions
-         ("make"))
+         ("git checkout -b stable origin/stable"))
+        ;; (:name
+        ;;  haskell-mode
+        ;;  :address
+        ;;  "https://github.com/haskell/haskell-mode.git"
+        ;;  :actions
+        ;;  ("make"))
         (:name
          yasnippet
          :address
-         "git@github.com:joaotavora/yasnippet.git"
+         "git@github.com:lczch/yasnippet.git"
          :actions
          ("git checkout 0.12.2"))
         ))
@@ -72,19 +72,21 @@
          (actions (plist-get plist :actions))
          (package-directory (expand-file-name name git-dir)))
     ;; start
-    (let ((default-directory git-dir))
-      (princ (format "Start clone: %s\n" name))
-      (shell-command (concat "git clone " address))
+    (if (not (f-exists? (expand-file-name name git-dir)))
+      (let ((default-directory git-dir))
+        (princ (format "Start clone: %s\n" name))
+        (shell-command (concat "git clone " address))
 
-      ;; run actions
-      (let ((default-directory (expand-directory-name name git-dir)))
-        (-each actions
-          (lambda (it)
-            (princ (format "Execute: %s\n" it))
-            (shell-command it))))
+        ;; run actions
+        (let ((default-directory (expand-directory-name name git-dir)))
+          (-each actions
+            (lambda (it)
+              (princ (format "Execute: %s\n" it))
+              (shell-command it))))
 
-      ;; finish
-      (princ (format "Finish configure package: %s\n\n" name)))
+        ;; finish
+        (princ (format "Finish configure package: %s\n\n" name)))
+      (princ (format "Package %s exists already!\n" name)))
     ))
 
 (defun main ()
