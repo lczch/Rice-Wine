@@ -1,7 +1,599 @@
+#+PROPERTY: header-args :noweb yes :comments noweb
+
 * Prologue 
+Org-style emacs configuration 
 
 * Configuration
+#+BEGIN_SRC emacs-lisp :tangle "init.el" 
+<<prologue>>
 
-#+BEGIN_SRC elisp :tangle (concat (file-name-directory (buffer-file-name)) "init.el")
+<<misc>>
+
+<<epilogue>>
+#+END_SRC
+
+** prologue
+#+name: prologue
+#+BEGIN_SRC emacs-lisp 
+;; -*- coding: utf-8 -*-
+(defconst emacs-start-time (current-time))
+
+(defun print-load-path ()
+  "print load-path to *message*, for debugging"
+  (interactive)
+  (dolist (elt load-path)
+    (princ (format "%s\n" elt))))
+
+(unless noninteractive
+  (message "Loading %s..." load-file-name))
+
+(setq message-log-max 16384)
+
+;; five times of default value
+(defvar best-gc-cons-threshold 4000000 "Best default gc threshold value. Should't be too big.")
+(setq gc-cons-threshold best-gc-cons-threshold)
+;;------------------------------------------------------------------------------
+;; prepare work: set working directory and load-path
+;;------------------------------------------------------------------------------
+
+;; Disable auto-load of packages. I prefer requiring them manually.
+(setq package-enable-at-startup nil)
+
+(defun rw-add-to-load-path (dir)
+  "add DIR to the head of load-path"
+  (add-to-list 'load-path dir))
+
+(defun rw-add-subdirs-to-load-path (dir)
+  "add all subdirs of DIR to load-path, which begin with a digital or letter."
+  (let ((dir-files (directory-files dir t "^[0-9A-Za-z].*")))
+    (dolist (file dir-files)
+      (when (file-directory-p file)
+        (rw-add-to-load-path file)))))
+
+(defun rw-add-dir-and-subdirs-to-load-path (dir)
+  "add DIR and all subdirs of DIR to load-path, which begin with a digital or letter."
+  (interactive "DDir:")
+  (rw-add-to-load-path dir)
+  (rw-add-subdirs-to-load-path dir))
+
+;; add needed dirs to load-path
+(defvar rice-wine-dir (file-name-directory load-file-name)
+  "top directory of configuration")
+
+(defvar rice-wine-lisp-dir (expand-file-name "lisp" rice-wine-dir)
+  "configurations of packages")
+
+(defvar rice-wine-package-dir
+  (expand-file-name "site-lisp" rice-wine-dir)
+  "local packages")
+
+(defvar rice-wine-git-package-dir
+  (expand-file-name "git-lisp" rice-wine-dir)
+  "packages from git, which have higher priority than pakages in `rice-wine-package-dir'")
+
+(defvar rice-wine-lib-dir
+  (expand-file-name "lib" rice-wine-dir)
+  "library packages, mostly for emacs-lisp programming")
+
+;; (defvar rice-wine-app-dir
+;;   (expand-file-name "app" rice-wine-dir)
+;;   "Some apps writing in emacs-lisp.")
+
+(defun rw-add-all-packages-to-load-path ()
+  "Add directories in `rice-wine-lib-dir', `rice-wine-git-package-dir' and `rice-wine-package-dir' in `load-path', in which they have the same order."
+  (interactive)
+  (let ((dirs (list
+               rice-wine-package-dir
+               rice-wine-git-package-dir
+               rice-wine-lib-dir)))
+    (mapc #'rw-add-dir-and-subdirs-to-load-path dirs)))
+
+(defun rw-configure-load-path ()
+  "Configuring load path for rice-wine emacs"
+  (interactive)
+  ;; top dir
+  (rw-add-to-load-path rice-wine-dir)
+  ;; package configuration dir
+  (rw-add-dir-and-subdirs-to-load-path rice-wine-lisp-dir)
+  ;; package dir
+  (rw-add-all-packages-to-load-path)
+  )
+
+(rw-configure-load-path)
+
+;; (print-load-path)
+
+;;------------------------------------------------------------------------------
+;; use-package: wonderful organization tool of emacs configuration 
+;;------------------------------------------------------------------------------
+(eval-and-compile
+  (require 'cl)
+  (defvar use-package-verbose nil) ;; debug message
+  (require 'use-package))
+
+(require 'diminish)                ;; if you use :diminish
+(require 'bind-key)                ;; if you use any :bind variant
+
+;;------------------------------------------------------------------------------
+;; useful lib
+;;------------------------------------------------------------------------------
+(use-package cl)
+(use-package cl-lib)
+
+(use-package dash
+  :config
+  (dash-enable-font-lock))
+
+(use-package s)
+(use-package f)
+
+(use-package other-lib)
+(use-package rw-frame-lib)
+(use-package rw-buffer-lib)
+(use-package rw-file-lib)
+(use-package rw-misc-lib)
+
+
+;;------------------------------------------------------------------------------
+;; start server: if a emacs starts with server, it must be the main emacs!
+;;------------------------------------------------------------------------------
+(defvar rw-main-emacs-p nil
+  "Whether this emacs is the main emacs?")
+
+(use-package server
+  :config
+  (unless (server-running-p)
+    (server-start)
+    (setq rw-main-emacs-p t)
+    (message "rw: success start server!")))
+
+;; global key bindings
+(use-package evil-leader
+  :config
+  (global-evil-leader-mode)
+  (setq evil-leader/leader ","))
+
 
 #+END_SRC
+
+** misc
+#+name: misc
+#+BEGIN_SRC emacs-lisp :noweb yes
+<<bulk>> 
+<<chinese-font>>
+<<latex>>
+#+END_SRC
+*** bulk
+#+name: bulk
+#+BEGIN_SRC emacs-lisp
+;;------------------------------------------------------------------------------
+;; individual package configuration
+;;------------------------------------------------------------------------------
+(use-package init-elpa)
+(use-package init-locales)
+;; configure the appearance of emacs
+(use-package init-gui-frame)
+(use-package init-fonts)
+(use-package init-isearch)
+(use-package init-minibuff)
+(use-package init-windows)
+
+
+(use-package init-evil)
+(use-package init-dired)
+(use-package init-ibuffer)
+
+
+(use-package init-ido)
+(use-package init-company)
+(use-package org
+  :init
+  ;; (rw-add-to-load-path (expand-file-name "org-mode/lisp" rice-wine-git-package-dir))
+  ;; (rw-add-to-load-path (expand-file-name "org-mode/contrib/lisp" rice-wine-git-package-dir))
+  :mode (("\\.org\\'" . org-mode))
+  :commands (org-mode)
+  :config
+  (use-package init-org)
+  )
+
+
+(use-package init-yasnippet)
+
+;; Nicer naming of buffers for files with identical names
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'reverse)
+  (setq uniquify-separator " • ")
+  (setq uniquify-after-kill-buffer-p t)
+  (setq uniquify-ignore-buffers-re "^\\*"))
+
+(use-package init-info-mode
+  :mode (("\\.info\\'" . info-mode)))
+
+(use-package visual-regexp
+  :commands (vr/query-replace)
+  :init 
+  (evil-leader/set-key
+    "rr" 'vr/query-replace
+    ;; "vm" 'vr/mc-mark
+    ))
+
+;; expand-region: increase selected region by semantic units
+(use-package expand-region
+  :config
+  (evil-leader/set-key
+    "xx" 'er/expand-region)
+  
+  (setq expand-region-contract-fast-key "z")
+  (define-key evil-visual-state-map (kbd "v") 'er/expand-region)
+  )
+
+;; save place
+(use-package saveplace
+  :config
+  (setq-default save-place t))
+
+;; Highlight the cursor whenever the window scrolls
+;; beacon: need package "seq"
+(use-package beacon
+  :config
+  (beacon-mode 1))
+
+(use-package browse-kill-ring
+  :config
+  ;; no duplicates
+  (setq browse-kill-ring-display-duplicates nil)
+  ;; preview is annoying
+  (setq browse-kill-ring-show-preview nil)
+  (browse-kill-ring-default-keybindings)
+  (define-key evil-normal-state-map (kbd "M-y") 'browse-kill-ring)
+  ;; hotkeys:
+  ;; n/p => next/previous
+  ;; s/r => search
+  ;; l => filter with regex
+  ;; g => update/refresh
+  )
+
+;; TODO: may switch to gtags?
+(use-package init-xcscope)
+
+(use-package init-clipboard)
+
+(use-package which-key
+  :config
+  (which-key-mode 1))
+
+;; TODO: I use this seldom.
+(use-package init-emacs-w3m)
+
+;; TODO: I use this seldom.
+(use-package init-profiler)
+
+;;------------------------------------------------------------------------------
+;; about programming
+;;------------------------------------------------------------------------------
+(use-package init-programming)
+(use-package init-markdown)
+
+(use-package init-haskell-mode)
+
+;; (use-package tex-mode
+;;   :init
+;;   (add-hook 'latex-mode-hook 'smartparens-mode)
+;;   (add-hook 'latex-mode-hook 'rainbow-delimiters-mode))
+
+;;------------------------------------------------------------------------------
+;; misc configurations
+;;------------------------------------------------------------------------------
+;; debug on
+(global-set-key (kbd "<f12>") 'toggle-debug-on-error)
+
+(evil-leader/set-key
+  "xh" 'mark-whole-buffer
+  "do" 'rw-display-current-buffer-other-frame
+  "eb" 'eval-buffer
+  "rb" 'revert-buffer) 
+
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq history-delete-duplicates t)
+
+;; some basic preferences
+(setq-default buffers-menu-max-size 30
+              case-fold-search t
+              save-interprogram-paste-before-kill t
+              indent-tabs-mode nil
+              mouse-yank-at-point t
+              tooltip-delay 1.5
+              truncate-lines nil
+              truncate-partial-width-windows nil
+              ;; visible-bell has some issue
+              ;; @see https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/issues/9#issuecomment-97848938
+              visible-bell nil)
+
+;; custom-file and backup-directory
+(setq auto-save-interval 50)
+(let ((my-custom-file (expand-file-name "custom.el" rice-wine-dir))
+      (my-backup-dir (expand-file-name "backups" rice-wine-dir)))
+  (setq custom-file my-custom-file)
+  (setq backup-directory-alist `(("." . ,my-backup-dir))))
+
+;; about Semantic
+(setq semanticdb-default-save-directory nil)
+
+(global-set-key (kbd "<f5>")
+                #'(lambda ()
+                    (interactive)
+                    (semantic-grammar-create-package)
+                    (eval-buffer)))
+
+(global-set-key (kbd "<f6>")
+                #'(lambda ()
+                    (interactive)
+                    (revert-buffer nil t)
+                    (bovinate)))
+
+;;------------------------------------------------------------------------------
+;; restore desktop
+;;------------------------------------------------------------------------------
+;; (when rw-main-emacs-p
+;;   (use-package init-desktop))
+
+;;------------------------------------------------------------------------------
+;; printer: we need to install "xpp" through os package manager
+;;------------------------------------------------------------------------------
+(setq lpr-command "xpp")
+
+#+END_SRC
+
+*** chinese-font
+能自动在系统中寻找能用的中文字体。
+
+找到中文字体很重要，因为在windows下，如果没有合适的字体，emacs会变得无法忍受的慢！
+
+代码还没看。
+
+参考资料：[[http://zhuoqiang.me/torture-emacs.html]]
+
+#+name: chinese-font
+#+BEGIN_SRC emacs-lisp
+(defun qiang-font-existsp (font)
+  (if (null (x-list-fonts font))
+      nil
+    t))
+
+(defvar font-list '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体"))
+
+(require 'cl) ;; find-if is in common list package
+(find-if #'qiang-font-existsp font-list)
+
+(defun qiang-make-font-string (font-name font-size)
+  (if (and (stringp font-size)
+           (equal ":" (string (elt font-size 0))))
+      (format "%s%s" font-name font-size)
+    (format "%s %s" font-name font-size)))
+
+(defun qiang-set-font (english-fonts
+                       english-font-size
+                       chinese-fonts
+                       &optional chinese-font-size)
+
+  "english-font-size could be set to \":pixelsize=18\" or a integer.
+If set/leave chinese-font-size to nil, it will follow english-font-size"
+  (require 'cl) ; for find if
+  (let ((en-font (qiang-make-font-string
+                  (find-if #'qiang-font-existsp english-fonts)
+                  english-font-size))
+        (zh-font (font-spec :family (find-if #'qiang-font-existsp chinese-fonts)
+                            :size chinese-font-size)))
+
+    ;; Set the default English font
+    ;;
+    ;; The following 2 method cannot make the font settig work in new frames.
+    ;; (set-default-font "Consolas:pixelsize=18")
+    ;; (add-to-list 'default-frame-alist '(font . "Consolas:pixelsize=18"))
+    ;; We have to use set-face-attribute
+    (message "Set English Font to %s" en-font)
+    (set-face-attribute 'default nil :font en-font)
+
+    ;; Set Chinese font
+    ;; Do not use 'unicode charset, it will cause the English font setting invalid
+    (message "Set Chinese Font to %s" zh-font)
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font (frame-parameter nil 'font)
+                        charset zh-font))))
+
+(qiang-set-font
+ '("Consolas" "Monaco" "DejaVu Sans Mono" "Monospace" "Courier New") ":pixelsize=18"
+ '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体"))
+
+#+END_SRC
+*** latex 
+#+name: latex
+#+BEGIN_SRC emacs-lisp 
+<<latex-main>>
+#+END_SRC
+**** prepare-for-texlive 
+将texlive tools的目录加入variable ~exec-path~ 和环境变量 ~PATH~ 中。
+参考资料： [[https://blog.csdn.net/fenxian2011/article/details/19254949]]
+#+name: prepare-for-texlive 
+#+BEGIN_SRC emacs-lisp 
+(defun wttr/prepend-to-exec-path (path)  
+  "push the path to the emacs internal `exec-path' and \"PATH\" env variable.  
+Return the updated `exec-path'"  
+  (setenv "PATH" (concat (expand-file-name path)  
+                         path-separator  
+                         (getenv "PATH")))  
+  (setq exec-path  
+        (cons (expand-file-name path)  
+              exec-path)))
+
+(wttr/prepend-to-exec-path "C:\\texlive\\2018\\bin\\win32")
+#+END_SRC
+
+**** prepare-for-pdf-viewer 
+配置由于打开pdf的软件， 这里选择SumatraPDF， 并且可以配置双击pdf会用emacs打开对应的latex代码， 很酷。
+
+其中对于反向打开emacs中命令行的参数还不是很理解。
+
+参考资料： [[http://juanjose.garciaripoll.com/blog/latex-with-emacs-on-windows]]
+
+#+name: prepare-for-pdf-viewer
+#+BEGIN_SRC emacs-lisp
+(setq TeX-PDF-mode t) 
+
+(setq TeX-source-correlate-mode t) 
+
+(setq TeX-source-correlate-method 'synctex) 
+
+(setq TeX-view-program-list 
+      '(("Sumatra PDF" ("\"C:/Program Files/SumatraPDF/SumatraPDF.exe\" -reuse-instance" (mode-io-correlate " -forward-search %b %n ") " %o")))) 
+
+(setq TeX-view-program-selection 
+      '(((output-dvi style-pstricks) 
+         "dvips and start") 
+        (output-dvi "Yap") 
+        (output-pdf "Sumatra PDF") 
+        (output-html "start"))) 
+
+
+(defun pdf-viewer-config ()
+  (visual-line-mode +1)
+  (assq-delete-all 'output-pdf TeX-view-program-selection)
+  (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF")))
+
+(add-hook 'LaTeX-mode-hook 'pdf-viewer-config)
+#+END_SRC
+
+**** latex-functions
+这是在做项目时，处理coq代码时使用的，其实不能算是配置的一部分，不应该导出。
+
+#+name: latex-functions
+#+BEGIN_SRC emacs-lisp
+(defvar rw/latex-newcommand-regexp nil
+  "Regexp for `\\newcommand' in latex mode.")
+(setq rw/latex-newcommand-regexp "^[\\]newcommand.*")
+
+(defun rw-latex-cut-all-newcommands ()
+  "Cut all `\\newcommand' in the current buffer, and store them on the paste board."
+  (interactive)
+  (let ((init-p (point))
+        (s nil))
+    (goto-char (point-max))
+    (while (re-search-backward rw/latex-newcommand-regexp nil t nil)
+      (setq s (cons (delete-and-extract-region
+                     (line-beginning-position)
+                     (+ (line-end-position) 1))
+                    s)))
+    (goto-char init-p)
+    (if (not (null s))
+        (kill-new (-reduce (lambda (s1 s2) (concat s1 s2))
+                           s))
+      (error "No command to cut!"))
+    ))
+
+;; \newcommand{\SplitNewBlock}[1]{\ensuremath{\mathsf{SplitNewBlock}(#1)}}
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun rw-latex-find-rref ()
+  (re-search-forward "rref{\\(?2:[^[:blank:]]*\\)}") ;; the number "2" is the manually name
+  (princ (match-string 2)))
+
+(defun rw-latex-find-equation (enumber)
+  (interactive "s")
+  (re-search-backward (concat "llabel{" (regexp-quote enumber) "}")) ;; must using `regexp-quote'!
+  (forward-line)
+  (goto-char  (line-beginning-position))
+  (re-search-forward "^[[:blank:]]*\\(?1:.*\\)[[:blank:]]*[\\]*[[:blank:]]*")
+  (princ (match-string 1))
+  )
+
+(defun rw-latex-find-and-insert-equation ()
+  (interactive)
+  (let* ((enumber (rw-latex-find-rref))
+         (p (point))
+         (eqs (rw-latex-find-equation enumber)))
+    (goto-char p)
+    (if (and (not (string-match "begin" eqs))
+             (not (looking-at ":")))
+        (insert ":\\(" eqs "\\)"))
+    (forward-char)
+    ))
+)
+#+END_SRC
+
+**** latex-main
+#+name: latex-main
+#+BEGIN_SRC emacs-lisp 
+;; auctex
+(use-package tex-site
+  ;; 不知道出了什么问题, 导致下面这一行用不了. 这次配置出现的问题都是功能的封装不好, 每次都要回忆起最细节的东西, 很伤.
+  ;; :mode ("\\.tex\\'" . Tex-latex-mode)
+  :config
+  <<prepare-for-texlive>>
+
+  
+  (use-package preview-latex)
+
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+
+  (use-package company-auctex)
+  (use-package reftex)
+  
+  (defun tex-company ()
+    ;; `company-math-symbols-unicode' is used to enter unicode symbols, which in not useful in latex mode. 
+    (setup-company-mode '((company-math-symbols-latex
+                           ;; company-math-symbols-unicode
+                           company-auctex-macros
+                           company-auctex-symbols
+                           company-auctex-environments
+                           company-dabbrev)
+                          ;; company-auctex-labels
+                          ;; company-auctex-bibs
+                          ))
+    ;; (company-auctex-init)
+    )
+
+  (defun tex-func ()
+    (rainbow-delimiters-mode)
+    (smartparens-strict-mode)
+    (yas-on)
+    (tex-company)
+    (LaTeX-math-mode)
+    (reftex-mode)
+    ;; (setq TeX-command-default "LaTeX")
+    ;; (local-set-key (kbd "C-c C-a"))
+    )
+
+  (add-hook 'LaTeX-mode-hook 'tex-func)
+  ;; (add-hook 'TeX-mode-hook 'tex-func)
+  ;; (add-hook 'plain-tex-mode-hook)
+
+  <<prepare-for-pdf-viewer>>
+
+  <<latex-functions>>
+#+END_SRC
+** epilogue
+#+name: epilogue
+#+BEGIN_SRC emacs-lisp 
+;;------------------------------------------------------------------------------
+;; Post initialization
+;;------------------------------------------------------------------------------
+(when window-system
+  (let ((elapsed (float-time (time-subtract (current-time)
+                                            emacs-start-time))))
+    (message "Loading %s...done (%.3fs)" load-file-name elapsed))
+
+  (add-hook 'after-init-hook
+            `(lambda ()
+               (let ((elapsed (float-time (time-subtract (current-time)
+                                                         emacs-start-time))))
+                 (message "Loading %s...done (%.3fs) [after-init]"
+                          ,load-file-name elapsed)))
+            t))
+#+END_SRC
+
+* Other 
+** A useful example for asking a question 
+[[https://emacs.stackexchange.com/questions/19355/buffer-local-tangle-in-org-mode][a question about org-mode]]
