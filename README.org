@@ -4,6 +4,62 @@
 Org-style emacs configuration 
 
 * Configuration
+** windows上的前置配置
+1. 安装msys2： [[https://www.msys2.org/]]
+2. 修改软件源：
+   #+BEGIN_SRC sh
+   # /etc/pacman.d/mirrorlist.mingw64
+   Server = https://mirrors.ustc.edu.cn/msys2/mingw/x86_64
+
+   # /etc/pacman.d/mirrorlist.msys
+   Server = https://mirrors.ustc.edu.cn/msys2/msys/$arch
+   #+END_SRC
+   参考： [[https://chriszheng.science/2017/07/16/Best-practice-of-Emacs-on-MS-Windows/]]
+3. 修改git的源，安装windows版本的git:
+   在 ~/etc/pacman.conf~ 中， 加入
+   #+BEGIN_SRC sh
+   [git-for-windows]
+   # SigLevel = Optional TrustedOnly
+   SigLevel = Never
+   Server = https://dl.bintray.com/git-for-windows/pacman/$arch
+   #+END_SRC
+   原理不明，参考如上。
+4. 运行:
+   #+BEGIN_SRC sh
+   pacman -Syu
+   #+END_SRC
+   然后重开terminal，再次运行:
+   #+BEGIN_SRC sh
+   pacman -Su
+   #+END_SRC
+5. 安装 ~make~:
+   #+BEGIN_SRC sh
+   pacman -S make
+   #+END_SRC
+6. 安装openssl（是为了使用ssh）, 并配置目录让ssh能找到key:
+   在 ~c:/msys64/etc/fstab~ 中，写入：
+   #+BEGIN_SRC sh
+   C:/cygwin64/home/lzh /home/lzh ntfs noacl,binary,posix=1,user 0 0
+   #+END_SRC
+   意思是将前者挂载到后者。
+   这应该是因为 ~git~ 是在 ~msys64~ 环境中运行的原因。
+7. 安装emacs:  
+   #+BEGIN_SRC sh
+   pacman -S mingw-w64-x86_64-emacs
+   #+END_SRC
+8. 使用 ~ssh-keygen~ 产生key， 然后将 public key 上传到github中。
+   #+BEGIN_SRC sh
+   git clone git@github.com:lczch/rice-wine.git
+   cd rice-wine 
+   make
+   #+END_SRC
+9. 创建 ~.emacs~ 文件并写入：
+   #+BEGIN_SRC emacs-lisp
+   (load-file "~/rice-wine/init.el")
+   #+END_SRC
+   
+
+** 配置的主文件： ~init.el~ 
 #+BEGIN_SRC emacs-lisp :tangle "init.el" 
 <<prologue>>
 
@@ -431,7 +487,7 @@ Return the updated `exec-path'"
 #+END_SRC
 
 **** prepare-for-pdf-viewer 
-配置由于打开pdf的软件， 这里选择SumatraPDF， 并且可以配置双击pdf会用emacs打开对应的latex代码， 很酷。
+配置用于打开pdf的软件， 这里选择SumatraPDF， 并且可以配置双击pdf会用emacs打开对应的latex代码， 很酷。
 
 其中对于反向打开emacs中命令行的参数还不是很理解。
 
@@ -594,6 +650,37 @@ Return the updated `exec-path'"
             t))
 #+END_SRC
 
-* Other 
-** A useful example for asking a question 
-[[https://emacs.stackexchange.com/questions/19355/buffer-local-tangle-in-org-mode][a question about org-mode]]
+* Material 
+** 怎样可以把问题表达的更清晰？
+见链接：[[https://emacs.stackexchange.com/questions/19355/buffer-local-tangle-in-org-mode][a question about org-mode]]
+* Todo 
+** 更方便的为Emacs添加新功能
+需要做到以下几件事情：
+1. 建立一个目录 ~test~ , 加入 ~load-path~ 用于将要临时使用的package的代码放进去。
+   因为我是纯手工管理包，所以我最终需要的只是干净的elisp文件，如果测试成功，会把代码加入到我的git仓库之中。
+2.用 ~use-package~ 进行配置
+** 更方便的书写snippet
+
+** 我想要一个好用的terminal
+现在配置emacs，不仅要配置emacs的字体啊， ~exec-path~ ，之类的，还要给terminal同样配置一遍，比如 ~PATH~ 啊什么的，很麻烦。
+
+我能不能再emacs中使用terminal提供给我的功能呢？
+
+我现在想到的候选者是eshell，至于emacs中的term，还完全不了解。
+
+*** eshell 
+资料： [[http://zhuoqiang.me/torture-emacs.html]]
+资料： [[https://www.jianshu.com/p/a47a0bb66d5b][aweshell]]
+
+#+BEGIN_QUOTE
+Back in the days, VT-like terminals were our main mean of communicating with a machine. Decades went by, our desktop computers can now handle gigabytes of buffering and display in 24-bit colors, and yet we still stick terminal emulators, that is, programs that emulate the restrictions of those ancient machines.
+#+END_QUOTE
+
+Terminals vs. shells
+#+BEGIN_QUOTE
+It's important to understand that shells are not (or should not be) semantically bound to terminal emulator restrictions. Shells are a textual interface to the machine. They just need input, evaluation, execution, output.
+#+END_QUOTE
+
+*** terminal和shell的区别
+** 在windows下使用同一的文件分隔符
+~cygwin-mount~ 是不是干这件事情的？
