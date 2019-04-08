@@ -696,9 +696,15 @@ It's important to understand that shells are not (or should not be) semantically
 *** terminal和shell的区别
 ** 在windows下使用同一的文件分隔符
 ~cygwin-mount~ 是不是干这件事情的？
-*** font 
+** font 
 也许可以试试这个中英文混编字体？
 链接： [[https://github.com/GitHubNull/YaHei-Consolas-Hybrid-1.12][YaHei-Consolas-Hybrid-1.12]]
 等距更纱黑体也可以试试，据说中英文等高，而且两个英文字符宽度等于一个中文字符。
 配置可以见： [[https://emacs-china.org/t/windows-emacs/7907/38]]
+
+** 配置rust环境
+
+** How to Summarize a Research Article 
+[[http://web2.uconn.edu/ahking/How_to_Summarize_a_Research_Article.pdf]]
+[[http://www.columbia.edu/cu/biology/ug/research/paper.html][WRITING A SCIENTIFIC RESEARCH ARTICLE]]
 
