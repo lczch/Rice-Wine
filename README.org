@@ -909,7 +909,11 @@ Return the updated `exec-path'"
                          :repo "lczch/aweshell")
             ))
 
-(use-package aweshell)
+(use-package aweshell
+  :commands (eshell)
+  :config
+  (defalias 'ec 'find-file-other-frame)
+  )
 #+END_SRC
 ** epilogue
 #+name: epilogue
