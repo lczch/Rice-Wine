@@ -1,32 +1,19 @@
-# Compiled
-*.elc
+# First, ignore everything
+*
+# Now, whitelist anything that's a directory
+!*/
 
-# Packaging
-.cask
+# And all the file types you're interested in.
+!*.org
+!Makefile
+!init-script.el
+!init-header.el
+!site-lisp/**
+!lisp/**
 
-# backups
-backups/
-
-# auto-save
-*~
-\#*
-
-# temp
-temp/
-
-# git clone packages
-git-lisp/*
-
-# doc
-site-lisp/slime/doc
-
-# desktop
-*.desktop
-
-# custom
-custom.el
-
-# cscope file
-cscope.*
-
-.#*
+!script/**
+!snippets/**
+!bash/**
+!lib/**
+!template/**
+!doc/**
