@@ -107,6 +107,7 @@ Org-style emacs configuration
 ;;------------------------------------------------------------------------------
 
 ;; Disable auto-load of packages. I prefer requiring them manually.
+;; use pacakge `straight` instead 
 (setq package-enable-at-startup nil)
 
 (defun rw-add-to-load-path (dir)
@@ -129,6 +130,9 @@ Org-style emacs configuration
 ;; add needed dirs to load-path
 (defvar rice-wine-dir (file-name-directory load-file-name)
   "top directory of configuration")
+
+;; 修改emacs默认的directory到自定义的目录
+(setq user-emacs-directory rice-wine-dir)
 
 (defvar rice-wine-lisp-dir (expand-file-name "lisp" rice-wine-dir)
   "configurations of packages")
@@ -162,7 +166,8 @@ Org-style emacs configuration
   "Configuring load path for rice-wine emacs"
   (interactive)
   ;; top dir
-  (rw-add-to-load-path rice-wine-dir)
+  
+  ;; (rw-add-to-load-path rice-wine-dir)
   ;; package configuration dir
   (rw-add-dir-and-subdirs-to-load-path rice-wine-lisp-dir)
   ;; package dir
@@ -234,6 +239,7 @@ Org-style emacs configuration
 <<chinese-font>>
 <<programming>>
 <<latex>>
+<<eshell>>
 #+END_SRC
 *** straight 
 #+name: straight
@@ -250,6 +256,10 @@ Org-style emacs configuration
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+;; straight默认自动build的功能是我不需要的，我其实只需要它的下载功能
+(rw-add-subdirs-to-load-path (expand-file-name "straight/repos" rice-wine-dir))
+
 #+END_SRC
 *** bulk
 #+name: bulk
@@ -889,6 +899,18 @@ Return the updated `exec-path'"
 
 #+END_SRC
 
+*** eshell 
+#+name: eshell
+#+BEGIN_SRC emacs-lisp
+(straight-use-package
+ '(aweshell :type git :host github :repo "manateelazycat/aweshell"
+            :no-build t
+            :fork (:host github
+                         :repo "lczch/aweshell")
+            ))
+
+(use-package aweshell)
+#+END_SRC
 ** epilogue
 #+name: epilogue
 #+BEGIN_SRC emacs-lisp 
