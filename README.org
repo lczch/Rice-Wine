@@ -11,6 +11,9 @@ Org-style emacs configuration
    # /etc/pacman.d/mirrorlist.mingw64
    Server = https://mirrors.ustc.edu.cn/msys2/mingw/x86_64
 
+   # /etc/pacman.d/mirrorlist.mingw32
+   Server = https://mirrors.ustc.edu.cn/msys2/mingw/i686
+
    # /etc/pacman.d/mirrorlist.msys
    Server = https://mirrors.ustc.edu.cn/msys2/msys/$arch
    #+END_SRC
@@ -37,7 +40,7 @@ Org-style emacs configuration
    #+BEGIN_SRC sh
    pacman -S make
    #+END_SRC
-6. 安装openssl（是为了使用ssh）, 并配置目录让ssh能找到key:
+6. 安装openssh（是为了使用ssh）, 并配置目录让ssh能找到key:
    在 ~c:/msys64/etc/fstab~ 中，写入：
    #+BEGIN_SRC sh
    C:/cygwin64/home/lzh /home/lzh ntfs noacl,binary,posix=1,user 0 0
