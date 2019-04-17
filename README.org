@@ -417,17 +417,17 @@ Org-style emacs configuration
 ;; about Semantic
 (setq semanticdb-default-save-directory nil)
 
-(global-set-key (kbd "<f5>")
-                #'(lambda ()
-                    (interactive)
-                    (semantic-grammar-create-package)
-                    (eval-buffer)))
+;; (global-set-key (kbd "<f5>")
+;;                 #'(lambda ()
+;;                     (interactive)
+;;                     (semantic-grammar-create-package)
+;;                     (eval-buffer)))
 
-(global-set-key (kbd "<f6>")
-                #'(lambda ()
-                    (interactive)
-                    (revert-buffer nil t)
-                    (bovinate)))
+;; (global-set-key (kbd "<f6>")
+;;                 #'(lambda ()
+;;                     (interactive)
+;;                     (revert-buffer nil t)
+;;                     (bovinate)))
 
 ;;------------------------------------------------------------------------------
 ;; restore desktop
@@ -910,7 +910,14 @@ Return the updated `exec-path'"
             ))
 
 (use-package aweshell
-  :commands (eshell)
+  :init
+  (autoload 'aweshell-new "aweshell" "Awesome Eshell" t nil)
+  (autoload 'aweshell-toggle "aweshell" "Awesome Eshell" t nil)
+
+  ;; 定义快捷键F1是召唤出shell, F5是创建一个shell
+  (global-set-key (kbd "<f5>") 'aweshell-new)
+  (global-set-key (kbd "<f1>") 'aweshell-toggle)
+  :defer t 
   :config
   (defalias 'ec 'find-file-other-frame)
   )
