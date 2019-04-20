@@ -84,7 +84,7 @@ Org-style emacs configuration
 
 ** prologue
 #+name: prologue
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :noweb yes 
 ;; -*- coding: utf-8 -*-
 (defconst emacs-start-time (current-time))
 
@@ -110,8 +110,11 @@ Org-style emacs configuration
 ;; use pacakge `straight` instead 
 (setq package-enable-at-startup nil)
 
+<<base-lib>>
+
 (defun rw-add-to-load-path (dir)
   "add DIR to the head of load-path"
+  (interactive "DDir:")
   (add-to-list 'load-path dir))
 
 (defun rw-add-subdirs-to-load-path (dir)
@@ -215,12 +218,12 @@ Org-style emacs configuration
 (defvar rw-main-emacs-p nil
   "Whether this emacs is the main emacs?")
 
-(use-package server
-  :config
-  (unless (server-running-p)
-    (server-start)
-    (setq rw-main-emacs-p t)
-    (message "rw: success start server!")))
+;; (use-package server
+;;   :config
+;;   (unless (server-running-p)
+;;     (server-start)
+;;     (setq rw-main-emacs-p t)
+;;     (message "rw: success start server!")))
 
 ;; global key bindings
 (use-package evil-leader
@@ -231,11 +234,31 @@ Org-style emacs configuration
 
 #+END_SRC
 
+*** base-lib 
+抄自以下文章，问好看起见，改了个名字。
+
+参考资料： [[https://blog.csdn.net/fenxian2011/article/details/19254949]]
+
+#+name: base-lib 
+#+BEGIN_SRC emacs-lisp 
+(defun rw/prepend-to-exec-path (path)  
+  "push the path to the emacs internal `exec-path' and \"PATH\" env variable.  
+Return the updated `exec-path'"  
+  (setenv "PATH" (concat (expand-file-name path)  
+                         path-separator  
+                         (getenv "PATH")))  
+  (setq exec-path  
+        (cons (expand-file-name path)  
+              exec-path)))
+#+END_SRC
+
 ** misc
 #+name: misc
 #+BEGIN_SRC emacs-lisp :noweb yes
 <<straight>>
+<<yasnippet>>
 <<bulk>> 
+<<evil-escape>>
 <<chinese-font>>
 <<programming>>
 <<latex>>
@@ -258,15 +281,62 @@ Org-style emacs configuration
   (load bootstrap-file nil 'nomessage))
 
 ;; straight默认自动build的功能是我不需要的，我其实只需要它的下载功能
-(rw-add-subdirs-to-load-path (expand-file-name "straight/repos" rice-wine-dir))
+(defvar rw-straight-repos-dir (expand-file-name "straight/repos" rice-wine-dir))
+
 
 #+END_SRC
+*** yasnippet 
+#+name: yasnippet 
+#+BEGIN_SRC emacs-lisp 
+(straight-use-package
+ '(yasnippet-snippets :type git :host github :repo "AndreaCrotti/yasnippet-snippets"
+                      :no-build t
+                      :fork (:host github
+                                   :repo "lczch/yasnippet-snippets")
+                      ))
+
+(setq andrea-snippets-dir (expand-file-name "yasnippet-snippets/snippets" rw-straight-repos-dir))
+
+(use-package yasnippet
+  :commands (yas-on yas-off)
+  :config
+  (let* ((rice-wine-yas-dir (expand-file-name "snippets" rice-wine-dir))
+         ;; (yas-official-dir (expand-file-name "standard-snippets" rice-wine-yas-dir))
+         )
+    (setq yas-snippet-dirs
+          `(,rice-wine-yas-dir
+            ,andrea-snippets-dir
+            ;; ,yas-official-dir
+            )))
+
+  (yas-reload-all)
+
+  (defun yas-on ()
+    (interactive)
+    (yas-minor-mode 1))
+  
+  (defun yas-off ()
+    (interactive)
+    (yas-minor-mode 0))
+  )
+
+
+;; (define-key evil-insert-state-map (kbd "M-j") 'yas-expand)
+;; (define-key evil-emacs-state-map (kbd "M-j") 'yas-expand)
+
+
+#+END_SRC
+
 *** bulk
 #+name: bulk
 #+BEGIN_SRC emacs-lisp
 ;;------------------------------------------------------------------------------
 ;; individual package configuration
 ;;------------------------------------------------------------------------------
+(use-package cygwin-mount
+  :config
+  (cygwin-mount-activate))
+
 (use-package init-elpa)
 (use-package init-locales)
 ;; configure the appearance of emacs
@@ -292,10 +362,12 @@ Org-style emacs configuration
   :commands (org-mode)
   :config
   (use-package init-org)
+  (evil-leader/set-key
+    "oo" 'org-babel-tangle)
   )
 
 
-(use-package init-yasnippet)
+<<yasnippet>>
 
 ;; Nicer naming of buffers for files with identical names
 (use-package uniquify
@@ -442,6 +514,29 @@ Org-style emacs configuration
 
 #+END_SRC
 
+*** evil-escape 
+#+name: evil-escape
+#+BEGIN_SRC emacs-lisp
+(straight-use-package
+ '(evil-escape :type git :host github :repo "syl20bnr/evil-escape"
+               :no-build t
+               :fork (:host github
+                            :repo "lczch/evil-escape")
+            ))
+
+(rw-add-to-load-path (expand-file-name "evil-escape" rw-straight-repos-dir))
+
+(use-package evil-escape
+  :config 
+  ;; {{ https://github.com/syl20bnr/evil-escape
+  (setq-default evil-escape-delay 0.3)
+  (setq evil-escape-excluded-major-modes '(dired-mode))
+  (setq-default evil-escape-key-sequence "kj")
+  ;; disable evil-escape when input method is on
+  (evil-escape-mode 1)
+  ;; }}
+  )
+#+END_SRC
 *** chinese-font
 能自动在系统中寻找能用的中文字体。
 
@@ -498,11 +593,25 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
                         charset zh-font))))
+(when (display-graphic-p)
+  (qiang-set-font
+   '("Consolas" "Monaco" "DejaVu Sans Mono" "Monospace" "Courier New") ":pixelsize=18"
+   '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体")))
 
-(qiang-set-font
- '("Consolas" "Monaco" "DejaVu Sans Mono" "Monospace" "Courier New") ":pixelsize=18"
- '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体"))
+(set-language-info
+     "UTF-8"
+     'coding-priority
+     '(utf-8 gb18030 gbk gb2312 iso-2022-cn chinese-big5 chinese-iso-8bit iso-8859-1))
+    (prefer-coding-system 'cp950)
+    (prefer-coding-system 'gb2312)
+    (prefer-coding-system 'cp936)
+    (prefer-coding-system 'gb18030)
+    (prefer-coding-system 'utf-16)
+    (prefer-coding-system 'utf-8-dos)
+    (prefer-coding-system 'utf-8-unix)
+    (prefer-coding-system 'utf-8)
 
+    (setq file-name-coding-system 'gb18030)
 #+END_SRC
 *** latex 
 #+name: latex
@@ -514,17 +623,7 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
 参考资料： [[https://blog.csdn.net/fenxian2011/article/details/19254949]]
 #+name: prepare-for-texlive 
 #+BEGIN_SRC emacs-lisp 
-(defun wttr/prepend-to-exec-path (path)  
-  "push the path to the emacs internal `exec-path' and \"PATH\" env variable.  
-Return the updated `exec-path'"  
-  (setenv "PATH" (concat (expand-file-name path)  
-                         path-separator  
-                         (getenv "PATH")))  
-  (setq exec-path  
-        (cons (expand-file-name path)  
-              exec-path)))
-
-(wttr/prepend-to-exec-path "C:\\texlive\\2018\\bin\\win32")
+(rw/prepend-to-exec-path "C:\\texlive\\2018\\bin\\win32")
 #+END_SRC
 
 **** prepare-for-pdf-viewer 
@@ -804,6 +903,8 @@ Return the updated `exec-path'"
                                  rice-wine-package-dir))
   :mode ("\\.v\\'" . coq-mode)
   :config
+  (rw/prepend-to-exec-path (expand-file-name "bin/Coq8.4/bin" "~"))
+
   (setq
    proof-splash-enable nil
    coq-indent-semicolon-tactical 0
@@ -909,16 +1010,20 @@ Return the updated `exec-path'"
                          :repo "lczch/aweshell")
             ))
 
+(rw-add-to-load-path (expand-file-name "aweshell" rw-straight-repos-dir))
+
 (use-package aweshell
   :init
   (autoload 'aweshell-new "aweshell" "Awesome Eshell" t nil)
-  (autoload 'aweshell-toggle "aweshell" "Awesome Eshell" t nil)
 
   ;; 定义快捷键F1是召唤出shell, F5是创建一个shell
   (global-set-key (kbd "<f5>") 'aweshell-new)
-  (global-set-key (kbd "<f1>") 'aweshell-toggle)
   :defer t 
   :config
+  (global-set-key (kbd "<f1>") 'aweshell-toggle)
+
+  ;; (define-key eshell-mode-map (kbd "M-p") 'aweshell-prev)
+  ;; (define-key eshell-mode-map (kbd "M-n") 'aweshell-next)
   (defalias 'ec 'find-file-other-frame)
   )
 #+END_SRC
