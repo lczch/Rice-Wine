@@ -67,7 +67,8 @@ Org-style emacs configuration
     #+END_SRC
 13. 在 ~.bashrc~ 中设置常用的alias, PATH和一些emacs相关的环境变量:
     #+BEGIN_SRC sh
-    alias ec='emacsclientw -c -n'
+    # need a space at tail
+    alias ec='emacsclientw -c -n '
 
     # set PATH so it includes user's private bin if it exists
     if [ -d "$HOME/bin" ] ; then
@@ -89,6 +90,9 @@ Org-style emacs configuration
 
     # emacs server file
     export EMACS_SERVER_FILE="$HOME/rice-wine/server/server"
+
+    # specify editor used for git
+    export editor=ec
     #+END_SRC
 
 补充资料：[[https://emacs-china.org/t/windows-emacs/7907][Windows 上面 Emacs 简易入门最佳实践]]
