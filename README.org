@@ -67,7 +67,7 @@ Org-style emacs configuration
     #+END_SRC
 13. 在 ~.bashrc~ 中设置常用的alias, PATH和一些emacs相关的环境变量:
     #+BEGIN_SRC sh
-    alias ec='emacsclientw -c'
+    alias ec='emacsclientw -c -n'
 
     # set PATH so it includes user's private bin if it exists
     if [ -d "$HOME/bin" ] ; then
@@ -237,12 +237,12 @@ Org-style emacs configuration
 (defvar rw-main-emacs-p nil
   "Whether this emacs is the main emacs?")
 
-;; (use-package server
-;;   :config
-;;   (unless (server-running-p)
-;;     (server-start)
-;;     (setq rw-main-emacs-p t)
-;;     (message "rw: success start server!")))
+(use-package server
+  :config
+  (unless (server-running-p)
+    (server-start)
+    (setq rw-main-emacs-p t)
+    (message "rw: success start server!")))
 
 ;; global key bindings
 (use-package evil-leader
