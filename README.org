@@ -40,13 +40,7 @@ Org-style emacs configuration
    #+BEGIN_SRC sh
    pacman -S make
    #+END_SRC
-6. 安装openssh（是为了使用ssh）, 并配置目录让ssh能找到key:
-   在 ~c:/msys64/etc/fstab~ 中，写入：
-   #+BEGIN_SRC sh
-   C:/cygwin64/home/lzh /home/lzh ntfs noacl,binary,posix=1,user 0 0
-   #+END_SRC
-   意思是将前者挂载到后者。
-   这应该是因为 ~git~ 只认 ~msys64~ 的环境变量。
+6. 安装openssh（是为了使用ssh）, 并配置目录让ssh能找到key, 即配置windows的环境变量 ~HOME~ 为 ~c:/msys64/home/lzh~.
 7. 做git相关的配置：
    #+BEGIN_SRC sh
    git config --global user.email lizhaohui1991@gmail.com
@@ -71,7 +65,32 @@ Org-style emacs configuration
     #+BEGIN_SRC emacs-lisp
     (load-file "~/rice-wine/init.el")
     #+END_SRC
-   
+13. 在 ~.bashrc~ 中设置常用的alias, PATH和一些emacs相关的环境变量:
+    #+BEGIN_SRC sh
+    alias ec='emacsclientw -c'
+
+    # set PATH so it includes user's private bin if it exists
+    if [ -d "$HOME/bin" ] ; then
+        echo "Add ~/bin to PATH"
+        PATH="$HOME/bin:$PATH"
+    fi
+
+    # my elisp script
+    if [ -d "$HOME/rice-wine/script" ] ; then
+        echo "Add ~/rice-wine/script dir to PATH"
+        PATH="$HOME/rice-wine/script:$PATH"
+    fi
+
+    if [ -d "$HOME/bin/Coq8.4/bin" ] ; then
+        PATH="$HOME/bin/Coq8.4/bin:$PATH"
+    fi
+
+    PATH="c:/texlive/2018/bin/win32:$PATH"
+
+    # emacs server file
+    export EMACS_SERVER_FILE="$HOME/rice-wine/server/server"
+    #+END_SRC
+
 补充资料：[[https://emacs-china.org/t/windows-emacs/7907][Windows 上面 Emacs 简易入门最佳实践]]
 ** 配置的主文件： ~init.el~ 
 #+BEGIN_SRC emacs-lisp :tangle "init.el" 
@@ -593,10 +612,10 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
                         charset zh-font))))
-(when (display-graphic-p)
-  (qiang-set-font
-   '("Consolas" "Monaco" "DejaVu Sans Mono" "Monospace" "Courier New") ":pixelsize=18"
-   '("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体")))
+;; (when (display-graphic-p))
+(qiang-set-font
+'("Consolas" "Monaco" "DejaVu Sans Mono" "Monospace" "Courier New") ":pixelsize=18"
+'("Microsoft Yahei" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体"))
 
 (set-language-info
      "UTF-8"
