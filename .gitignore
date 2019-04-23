@@ -3,6 +3,9 @@
 # Now, whitelist anything that's a directory
 !*/
 
+# ignore straight
+straight/
+
 # And all the file types you're interested in.
 !*.org
 !Makefile
