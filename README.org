@@ -67,32 +67,12 @@ Org-style emacs configuration
     #+END_SRC
 13. 在 ~.bashrc~ 中设置常用的alias, PATH和一些emacs相关的环境变量:
     #+BEGIN_SRC sh
-    # need a space at tail
-    alias ec='emacsclientw -c -n '
-
-    # set PATH so it includes user's private bin if it exists
-    if [ -d "$HOME/bin" ] ; then
-        echo "Add ~/bin to PATH"
-        PATH="$HOME/bin:$PATH"
-    fi
-
     # my elisp script
     if [ -d "$HOME/rice-wine/script" ] ; then
         echo "Add ~/rice-wine/script dir to PATH"
         PATH="$HOME/rice-wine/script:$PATH"
+        source "$HOME/rice-wine/script/bashrc"
     fi
-
-    if [ -d "$HOME/bin/Coq8.4/bin" ] ; then
-        PATH="$HOME/bin/Coq8.4/bin:$PATH"
-    fi
-
-    PATH="c:/texlive/2018/bin/win32:$PATH"
-
-    # emacs server file
-    export EMACS_SERVER_FILE="$HOME/rice-wine/server/server"
-
-    # specify editor used for git
-    export editor=ec
     #+END_SRC
 
 补充资料：[[https://emacs-china.org/t/windows-emacs/7907][Windows 上面 Emacs 简易入门最佳实践]]
@@ -286,6 +266,7 @@ Return the updated `exec-path'"
 <<programming>>
 <<latex>>
 <<eshell>>
+<<English>>
 #+END_SRC
 *** straight 
 #+name: straight
@@ -306,19 +287,22 @@ Return the updated `exec-path'"
 ;; straight默认自动build的功能是我不需要的，我其实只需要它的下载功能
 (defvar rw-straight-repos-dir (expand-file-name "straight/repos" rice-wine-dir))
 
-
+;; let straight use ssh instead of https
+(setq straight-vc-git-default-protocol 'ssh)
 #+END_SRC
 *** yasnippet 
 #+name: yasnippet 
 #+BEGIN_SRC emacs-lisp 
-(straight-use-package
- '(yasnippet-snippets :type git :host github :repo "AndreaCrotti/yasnippet-snippets"
-                      :no-build t
-                      :fork (:host github
-                                   :repo "lczch/yasnippet-snippets")
-                      ))
 
-(setq andrea-snippets-dir (expand-file-name "yasnippet-snippets/snippets" rw-straight-repos-dir))
+;; examples for writing a new snippet
+;; (straight-use-package
+;;  '(yasnippet-snippets :type git :host github :repo "AndreaCrotti/yasnippet-snippets"
+;;                       :no-build t
+;;                       :fork (:host github
+;;                                    :repo "lczch/yasnippet-snippets")
+;;                       ))
+
+;; (setq andrea-snippets-dir (expand-file-name "yasnippet-snippets/snippets" rw-straight-repos-dir))
 
 (use-package yasnippet
   :commands (yas-on yas-off)
@@ -328,7 +312,7 @@ Return the updated `exec-path'"
          )
     (setq yas-snippet-dirs
           `(,rice-wine-yas-dir
-            ,andrea-snippets-dir
+            ;; ,andrea-snippets-dir
             ;; ,yas-official-dir
             )))
 
@@ -1044,12 +1028,49 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
   :defer t 
   :config
   (global-set-key (kbd "<f1>") 'aweshell-toggle)
-
+  (setq eshell-prefer-lisp-functions t)
+  ;; (defalias 'ec 'find-file-other-frame)
+  (use-package em-alias
+    :config
+    (eshell/alias "ec" "emacsclient -c $1"))
   ;; (define-key eshell-mode-map (kbd "M-p") 'aweshell-prev)
-  ;; (define-key eshell-mode-map (kbd "M-n") 'aweshell-next)
-  (defalias 'ec 'find-file-other-frame)
+  ;; (eshell/alias "econf" (concat "emacsclient -c "
+  ;;                               (expand-file-name "README.org" rice-wine-dir)
+  ;;                               " -e (org-babel-goto-named-src-block $1)"))
   )
 #+END_SRC
+*** English 
+#+name: English
+#+BEGIN_SRC emacs-lisp 
+<<insert-translated-name>>
+#+END_SRC
+**** insert-translated-name 
+#+name: insert-translated-name
+#+BEGIN_SRC emacs-lisp 
+(straight-use-package
+ '(insert-translated-name :type git :host github :repo "manateelazycat/insert-translated-name"
+            :no-build t
+            :fork (:host github
+                         :repo "lczch/insert-translated-name")
+            ))
+
+(rw-add-to-load-path (expand-file-name "insert-translated-name" rw-straight-repos-dir))
+
+(use-package insert-translated-name
+  :init
+  (evil-leader/set-key
+    "tr" 'insert-translated-name-replace
+    "ti" 'insert-translated-name-insert)
+  :commands (insert-translated-name-insert
+             insert-translated-name-replace)
+  :config
+  (setq insert-translated-name-default-style "origin")
+  (setq insert-translated-name-line-style-mode-list '())
+  (setq insert-translated-name-camel-style-mode-list '())
+  (setq insert-translated-name-underline-style-mode-list '())
+  )
+#+END_SRC
+
 ** epilogue
 #+name: epilogue
 #+BEGIN_SRC emacs-lisp 
@@ -1103,8 +1124,6 @@ It's important to understand that shells are not (or should not be) semantically
 #+END_QUOTE
 
 *** terminal和shell的区别
-** 在windows下使用同一的文件分隔符
-~cygwin-mount~ 是不是干这件事情的？
 ** font 
 也许可以试试这个中英文混编字体？
 链接： [[https://github.com/GitHubNull/YaHei-Consolas-Hybrid-1.12][YaHei-Consolas-Hybrid-1.12]]
@@ -1117,7 +1136,7 @@ It's important to understand that shells are not (or should not be) semantically
 [[http://web2.uconn.edu/ahking/How_to_Summarize_a_Research_Article.pdf]]
 [[http://www.columbia.edu/cu/biology/ug/research/paper.html][WRITING A SCIENTIFIC RESEARCH ARTICLE]]
 
-** package管理的方式
-~straight~ 可以从github上直接获取。
+** 为aweshell提issue,报bug
+是eshell-prompt-extras的问题, 不用修正过的命令行外观就可以了.
 
-地址： [[https://github.com/raxod502/straight.el]]
+** emacs china上还有个关于reftex的问题,我还没回答.
