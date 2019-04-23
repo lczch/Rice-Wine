@@ -213,7 +213,18 @@ Org-style emacs configuration
 (use-package rw-file-lib)
 (use-package rw-misc-lib)
 
+;; global key bindings
+(use-package evil-leader
+  :config
+  (global-evil-leader-mode)
+  (setq evil-leader/leader ","))
 
+<<server>>
+
+#+END_SRC
+*** server 
+#+name: server 
+#+BEGIN_SRC emacs-lisp
 ;;------------------------------------------------------------------------------
 ;; start server: if a emacs starts with server, it must be the main emacs!
 ;;------------------------------------------------------------------------------
@@ -225,15 +236,29 @@ Org-style emacs configuration
   (unless (server-running-p)
     (server-start)
     (setq rw-main-emacs-p t)
-    (message "rw: success start server!")))
+    (message "rw: success start server!"))
 
-;; global key bindings
-(use-package evil-leader
-  :config
-  (global-evil-leader-mode)
-  (setq evil-leader/leader ","))
+  ;; 如果在emacs是启动了server的时候(我保证全局只有一个server), 那么"C-x C-s"不会杀掉这个emacs,
+  ;; 需要手动执行`kill-emacs', 才会杀掉最后一个emacs.
+  (defun rw-save-buffers-kill-terminal (&optional arg)
+  "Offer to save each buffer, then kill the current connection.
+If the current frame has no client and `rw-main-emacs-p' is nil, kill Emacs itself using
+`save-buffers-kill-emacs'.
 
+With prefix ARG, silently save all file-visiting buffers, then kill.
 
+If emacsclient was started with a list of filenames to edit, then
+only these files will be asked to be saved."
+  (interactive "P")
+  (if (frame-parameter nil 'client)
+      (server-save-buffers-kill-terminal arg)
+    ;; 只有在此emacs没有开启server时(我只会打开一个server), 杀掉它. 否则什么都不做.
+    (if rw-main-emacs-p
+        (message "This emacs is the MAIN emacs! You should not kill it!")
+      (save-buffers-kill-emacs arg))))
+
+  (global-set-key (kbd "C-x C-c") 'rw-save-buffers-kill-terminal)
+  )
 #+END_SRC
 
 *** base-lib 
@@ -1021,17 +1046,38 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
 (use-package aweshell
   :init
   (autoload 'aweshell-new "aweshell" "Awesome Eshell" t nil)
-
+  (autoload 'aweshell-toggle "aweshell" "Awesome Eshell" t nil)
   ;; 定义快捷键F1是召唤出shell, F5是创建一个shell
   (global-set-key (kbd "<f5>") 'aweshell-new)
+  (global-set-key (kbd "<f1>") 'aweshell-toggle)
   :defer t 
   :config
-  (global-set-key (kbd "<f1>") 'aweshell-toggle)
   (setq eshell-prefer-lisp-functions t)
   ;; (defalias 'ec 'find-file-other-frame)
   (use-package em-alias
     :config
-    (eshell/alias "ec" "emacsclient -c $1"))
+    (eshell/alias "ec" "emacsclient -c $1")
+    (eshell/alias "gis" "git status")
+    )
+  
+  (defun eshell-mode-func ()
+    (smartparens-strict-mode 1)
+
+    ;; `company-capf'在括号内不能启动补全, 那我还要它干么?
+    ;; 看来backend是要看过代码,自己修改后才能使用的. 费劲.
+    ;; (company-mode 1)
+    ;; (setq-local company-minimum-prefix-length 2)
+    ;; (setq-local company-idle-delay 0)
+    ;; (setq-local company-backends '(company-capf))
+
+    ;; 这样的改键方式必须要加入到hook中才会生效, 好久不配, 忘记了.
+    (define-key eshell-mode-map (kbd "M-p") 'aweshell-prev)
+    (define-key eshell-mode-map (kbd "M-n") 'aweshell-next)
+    )
+  
+  (add-hook 'eshell-mode-hook 'eshell-mode-func)
+
+
   ;; (define-key eshell-mode-map (kbd "M-p") 'aweshell-prev)
   ;; (eshell/alias "econf" (concat "emacsclient -c "
   ;;                               (expand-file-name "README.org" rice-wine-dir)
