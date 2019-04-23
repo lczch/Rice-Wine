@@ -67,11 +67,10 @@ Org-style emacs configuration
     #+END_SRC
 13. 在 ~.bashrc~ 中设置常用的alias, PATH和一些emacs相关的环境变量:
     #+BEGIN_SRC sh
-    # my elisp script
-    if [ -d "$HOME/rice-wine/script" ] ; then
-        echo "Add ~/rice-wine/script dir to PATH"
-        PATH="$HOME/rice-wine/script:$PATH"
-        source "$HOME/rice-wine/script/bashrc"
+    # my .bashrc
+    if [ -f "$HOME/rice-wine/bash/.bashrc" ] ; then
+        echo "Load $HOME/rice-wine/bash/.bahsrc."
+        source "$HOME/rice-wine/bash/.bashrc"
     fi
     #+END_SRC
 

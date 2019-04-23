@@ -1,10 +1,20 @@
 ## bash settings
 
+
+if [ -d "$HOME/rice-wine/bin" ] ; then
+    echo "Add ~/rice-wine/bin dir to PATH"
+    PATH="$HOME/rice-wine/bin:$PATH"
+fi
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     echo "Add ~/bin to PATH"
     PATH="$HOME/bin:$PATH"
 fi
+
+# git flow completion
+# echo "turn on git completion."
+# source "$HOME/rice-wine/bash/git-completion"
 
 # coq
 if [ -d "$HOME/bin/Coq8.4/bin" ] ; then
