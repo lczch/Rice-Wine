@@ -22,10 +22,17 @@ if [ -d "$HOME/bin/Coq8.4/bin" ] ; then
 fi
 
 # texlive for latex
-PATH="c:/texlive/2018/bin/win32:$PATH"
+# windows中的绝对路径必须使用window的路径方式, 不知道为什么
+PATH="C:\\texlive\\2018\\bin\\win32:$PATH"
 
 # specify emacs server file manually, necessary on windows
 export EMACS_SERVER_FILE="$HOME/rice-wine/server/server"
 
 # specify editor used for git
 export editor=et
+
+# cargo of rust
+if [ -d "C:\\Users\\lzh\\.cargo\\bin" ] ; then
+    echo "Add .cargo/bin to PATH"
+    PATH="C:\\Users\\lzh\\.cargo\\bin:$PATH"
+fi
