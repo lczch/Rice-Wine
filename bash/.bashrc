@@ -17,10 +17,13 @@ fi
 # source "$HOME/rice-wine/bash/git-completion"
 
 # coq
-if [ -d "$HOME/bin/Coq8.4/bin" ] ; then
-    PATH="$HOME/bin/Coq8.4/bin:$PATH"
-fi
+# if [ -d "$HOME/bin/Coq8.4/bin" ] ; then
+#     PATH="$HOME/bin/Coq8.4/bin:$PATH"
+# fi
 
+if [ -d "$HOME/bin/Coq8.6.1/bin" ] ; then
+    PATH="$HOME/bin/Coq8.6.1/bin:$PATH"
+fi
 # texlive for latex
 # windows中的绝对路径必须使用window的路径方式, 不知道为什么
 PATH="C:\\texlive\\2018\\bin\\win32:$PATH"
