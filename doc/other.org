@@ -1,3 +1,6 @@
 ** 要小心系统自动装上的defaut.el和site-start文件
 这种文件会在一开始被emacs读入, 会破坏自己的配置, 还很难查错.
 所以, 用emacs --no-site-file 启动会比较好.
+** TODO 想看的书: Anatomy of Lisp
+   据说其中会有编译器实现, 内部表示, GC实现这些深度主题. 
+   听起来很有意思. 
