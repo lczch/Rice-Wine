@@ -1386,4 +1386,8 @@ It's important to understand that shells are not (or should not be) semantically
    据说其中会有编译器实现, 内部表示, GC实现这些深度主题. 
    听起来很有意思. 
 ** 可以用gdb或者lldb启动emacs, 进行调试?
-** 想要ivy中TAB的行为从"ivy-partial-or-done"去掉最后的"-or-done"
+** 学会用bookmarks
+   counsel-bookmarks 
+** 编译Remacs 
+** use magit pacakge 
+** get new version of "straight" with shallow clone. 
