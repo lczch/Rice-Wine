@@ -36,6 +36,12 @@ export editor=et
 
 # cargo of rust
 if [ -d "C:\\Users\\lzh\\.cargo\\bin" ] ; then
-    echo "Add .cargo/bin to PATH"
+    echo "Rust: Add .cargo/bin to PATH"
     PATH="C:\\Users\\lzh\\.cargo\\bin:$PATH"
+fi
+
+# Launch Zsh
+if [ -t 1 ]; then
+    echo "Start zsh"
+    exec zsh
 fi

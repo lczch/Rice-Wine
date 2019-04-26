@@ -224,7 +224,7 @@ Org-style emacs configuration
   :commands (rw-test-new-config)
   :config 
   (evil-leader/set-key
-    "rt" 'rw-test-new-config))
+    "rwt" 'rw-test-new-config))
 
 <<server>>
 
@@ -455,11 +455,24 @@ Return the updated `exec-path'"
 (use-package ivy
   :config
 
-  (defun ivy-func ()
-    ;; I can enter endless TAB without select anything!
-    (define-key ivy-mode-map (kbd "TAB") 'ivy-partial))
+  ;;; make ivy bebave similarly with ido
+  ;; Don't open directory mode: https://github.com/abo-abo/swiper/wiki/Dont-open-directory-mode
+  (setq ivy-extra-directories nil)
 
-  (add-hook 'ivy-mode-hook 'ivy-func)
+  (defun eh-ivy-open-current-typed-path ()
+    (interactive)
+    (when ivy--directory
+      (let* ((dir ivy--directory)
+             (text-typed ivy-text)
+             (path (concat dir text-typed)))
+        (delete-minibuffer-contents)
+        (ivy--done path))))
+
+  (define-key ivy-minibuffer-map (kbd "<return>") 'ivy-alt-done)
+  (define-key ivy-minibuffer-map (kbd "C-f") 'eh-ivy-open-current-typed-path)
+  ;; I can enter endless TAB without select anything!
+  (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
+  (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-immediate-done)
   
   (use-package amx)
   (use-package swiper)
@@ -1391,3 +1404,4 @@ It's important to understand that shells are not (or should not be) semantically
 ** 编译Remacs 
 ** use magit pacakge 
 ** get new version of "straight" with shallow clone. 
+** install htmlize (warning of org-mode)
