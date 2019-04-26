@@ -473,6 +473,16 @@ Return the updated `exec-path'"
   ;; I can enter endless TAB without select anything!
   (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-immediate-done)
+
+  ;; hide dired buffers, from ivy's wiki in github.
+  (defun d/ignore-dired-buffers (str)
+    "Return non-nil if STR names a Dired buffer.
+This function is intended for use with `ivy-ignore-buffers'."
+    (let ((buf (get-buffer str)))
+      (and buf (eq (buffer-local-value 'major-mode buf) 'dired-mode))))
+
+  (add-to-list 'ivy-ignore-buffers #'d/ignore-dired-buffers)
+
   
   (use-package amx)
   (use-package swiper)
@@ -490,7 +500,7 @@ Return the updated `exec-path'"
        ("r" counsel-find-file-as-root "open as root"))))
 
   ;; not good experience
-  (setq ivy-use-virtual-buffers t)
+  ;; (setq ivy-use-virtual-buffers t)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
 
@@ -509,6 +519,7 @@ Return the updated `exec-path'"
   (global-set-key (kbd "C-h f") 'counsel-describe-function)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-r") 'counsel-recentf)
   ;; (global-set-key (kbd "<f3> i") 'counsel-info-lookup-symbol)
   ;; (global-set-key (kbd "<f3> u") 'counsel-unicode-char)
   
