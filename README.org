@@ -630,16 +630,48 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
      "UTF-8"
      'coding-priority
      '(utf-8 gb18030 gbk gb2312 iso-2022-cn chinese-big5 chinese-iso-8bit iso-8859-1))
-    (prefer-coding-system 'cp950)
-    (prefer-coding-system 'gb2312)
-    (prefer-coding-system 'cp936)
-    (prefer-coding-system 'gb18030)
-    (prefer-coding-system 'utf-16)
-    (prefer-coding-system 'utf-8-dos)
-    (prefer-coding-system 'utf-8-unix)
-    (prefer-coding-system 'utf-8)
 
-    (setq file-name-coding-system 'gb18030)
+(prefer-coding-system 'cp950)
+(prefer-coding-system 'gb2312)
+(prefer-coding-system 'cp936)
+(prefer-coding-system 'gb18030)
+(prefer-coding-system 'utf-16)
+(prefer-coding-system 'utf-8-dos)
+(prefer-coding-system 'utf-8-unix)
+(prefer-coding-system 'utf-8)
+
+(when (eq system-type 'windows-nt)
+  (set-default 'process-coding-system-alist
+               '(("[pP][lL][iI][nN][kK]" gbk-dos . gbk-dos)
+	         ("[cC][mM][dD][pP][rR][oO][xX][yY]" gbk-dos . gbk-dos))))
+
+(setq file-name-coding-system 'gb18030)
+
+(defun rw-proced-coding-transform ()
+  (with-current-buffer "*Proced*"
+    ;; if there are "\324" "\302", then the data of buffer is raw bytes before any coding interpratation
+    (when (eq system-type 'windows-nt)
+      (decode-coding-region (point-min) (point-max) 'gbk)))
+  )
+
+(use-package proced)
+(add-hook 'proced-post-display-hook 'rw-proced-coding-transform)
+
+;; (defun rw-proce-test ()
+;;   (interactive)
+;;   (encode-coding-region (point-min) (point-max) 'gbk)
+;;   (decode-coding-region (point-min) (point-max) 'utf-8)
+;;   )
+
+;; (encode-coding-string "asdfasdfasdfasdf" 'gbk)
+;; (encode-coding-string "月" 'utf-8)
+
+;; (decode-coding-string "")
+
+;; (let ((coding-system-for-read 'gb18030))
+;;   (proced))
+;; (let ((coding-system-for-read 'gb18030))
+;;   (proced))
 #+END_SRC
 *** latex 
 #+name: latex
@@ -1416,3 +1448,4 @@ It's important to understand that shells are not (or should not be) semantically
 ** use magit pacakge 
 ** get new version of "straight" with shallow clone. 
 ** install htmlize (warning of org-mode)
+** proced输出乱码, 因为没有使用gbk

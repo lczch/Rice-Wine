@@ -1,5 +1,7 @@
 ## bash settings
 
+# set locale
+export LANG=zh_CN.UTF8
 
 if [ -d "$HOME/rice-wine/bin" ] ; then
     echo "Add ~/rice-wine/bin dir to PATH"
