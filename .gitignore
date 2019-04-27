@@ -6,6 +6,9 @@
 # ignore straight
 straight/
 
+# ignore my private directory
+private/
+
 # And all the file types you're interested in.
 !*.org
 !Makefile

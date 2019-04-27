@@ -338,52 +338,6 @@ Return the updated `exec-path'"
   )
 
 #+END_SRC
-*** yasnippet 
-#+name: yasnippet 
-#+BEGIN_SRC emacs-lisp 
-
-;; examples for writing a new snippet
-;; (straight-use-package
-;;  '(yasnippet-snippets :type git :host github :repo "AndreaCrotti/yasnippet-snippets"
-;;                       :no-build t
-;;                       :fork (:host github
-;;                                    :repo "lczch/yasnippet-snippets")
-;;                       ))
-
-;; (setq andrea-snippets-dir (expand-file-name "yasnippet-snippets/snippets" rw-straight-repos-dir))
-
-(use-package yasnippet
-  :commands (yas-on yas-off)
-  :config
-  (let* ((rice-wine-yas-dir (expand-file-name "snippets" rice-wine-dir))
-         ;; (yas-official-dir (expand-file-name "standard-snippets" rice-wine-yas-dir))
-         )
-    (setq yas-snippet-dirs
-          `(,rice-wine-yas-dir
-            ;; ,andrea-snippets-dir
-            ;; ,yas-official-dir
-            )))
-
-  (yas-reload-all)
-
-  (defun yas-on ()
-    (interactive)
-    (yas-minor-mode 1))
-  
-  (defun yas-off ()
-    (interactive)
-    (yas-minor-mode 0))
-
-  (define-key evil-insert-state-map (kbd "M-/") 'yas-expand)
-  (define-key evil-emacs-state-map (kbd "M-/") 'yas-expand)
-  )
-
-
-
-
-
-#+END_SRC
-
 *** company-mode 
 #+name: company-mode 
 #+BEGIN_SRC emacs-lisp
@@ -520,8 +474,9 @@ This function is intended for use with `ivy-ignore-buffers'."
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-r") 'counsel-recentf)
+  (global-set-key (kbd "<f2>") 'counsel-imenu)
   ;; (global-set-key (kbd "<f3> i") 'counsel-info-lookup-symbol)
-  ;; (global-set-key (kbd "<f3> u") 'counsel-unicode-char)
+  ;; (global-set-kqey (kbd "<f3> u") 'counsel-unicode-char)
   
   ;; Press C-p and Enter to select current input as candidate
   ;; https://oremacs.com/2017/11/30/ivy-0.10.0/
@@ -541,6 +496,61 @@ This function is intended for use with `ivy-ignore-buffers'."
   (ivy-mode 1) ; it enables ivy UI for `kill-buffer'
   )
 #+END_SRC
+*** yasnippet 
+#+name: yasnippet 
+#+BEGIN_SRC emacs-lisp 
+
+;; examples for writing a new snippet
+;; I find ivy-yasnippet, then I will never use yas-expand-key to insert snippet.
+
+(straight-use-package
+ '(yasnippet-snippets :type git :host github :repo "AndreaCrotti/yasnippet-snippets"
+                      :no-build t
+                      :fork (:host github
+                                   :repo "lczch/yasnippet-snippets")
+                      ))
+
+(setq andrea-snippets-dir (expand-file-name "yasnippet-snippets/snippets" rw-straight-repos-dir))
+
+(rw-straight-use-package 'ivy-yasnippet "mkcms" "lczch")
+
+(use-package yasnippet
+  :commands (yas-on yas-off)
+  :config
+  (use-package ivy-yasnippet
+    :config
+    (setq ivy-yasnippet-expand-keys nil)
+    (advice-add #'ivy-yasnippet--preview :override #'ignore)
+    (global-set-key (kbd "M-\\") 'ivy-yasnippet)
+    )
+  
+  (let* ((rice-wine-yas-dir (expand-file-name "snippets" rice-wine-dir))
+         ;; (yas-official-dir (expand-file-name "standard-snippets" rice-wine-yas-dir))
+         )
+    (setq yas-snippet-dirs
+          `(,rice-wine-yas-dir
+            ,andrea-snippets-dir
+            ;; ,yas-official-dir
+            )))
+
+  (yas-reload-all)
+
+  (defun yas-on ()
+    (interactive)
+    (yas-minor-mode 1))
+  
+  (defun yas-off ()
+    (interactive)
+    (yas-minor-mode 0))
+
+  )
+
+
+
+
+
+#+END_SRC
+
 *** evil-escape 
 用快速输入"kj"来做escape, 真是天才的想法.
 #+name: evil-escape
@@ -654,8 +664,14 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
       (decode-coding-region (point-min) (point-max) 'gbk)))
   )
 
-(use-package proced)
-(add-hook 'proced-post-display-hook 'rw-proced-coding-transform)
+;; Changes representation of time from Chinese to English.
+;; Someone says it may bug Chinese Input Method in Linux. 
+(when (eq system-type 'window-nt)
+  (setq system-time-locale "C"))
+;; (use-package proced)
+;; I learn how to manually encode/decode raw data. 
+;; (add-hook 'proced-post-display-hook 'rw-proced-coding-transform)
+
 
 ;; (defun rw-proce-test ()
 ;;   (interactive)
@@ -1433,19 +1449,3 @@ It's important to understand that shells are not (or should not be) semantically
 配置可以见： [[https://emacs-china.org/t/windows-emacs/7907/38]]
 
 暂时不会折腾这个.
-* Todo 
-** 更方便的书写snippet
-** 为aweshell提issue,报bug
-是eshell-prompt-extras的问题, 不用修正过的命令行外观就可以了.
-
-** 想看的书: Anatomy of Lisp
-   据说其中会有编译器实现, 内部表示, GC实现这些深度主题. 
-   听起来很有意思. 
-** 可以用gdb或者lldb启动emacs, 进行调试?
-** 学会用bookmarks
-   counsel-bookmarks 
-** 编译Remacs 
-** use magit pacakge 
-** get new version of "straight" with shallow clone. 
-** install htmlize (warning of org-mode)
-** proced输出乱码, 因为没有使用gbk

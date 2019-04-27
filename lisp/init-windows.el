@@ -45,8 +45,8 @@
     (delete-other-windows)
     (funcall (split-window-func-with-other-buffer 'split-window-vertically))))
 
-(global-set-key "\C-x|" 'split-window-horizontally-instead)
-(global-set-key "\C-x_" 'split-window-vertically-instead)
+;; (global-set-key "\C-x|" 'split-window-horizontally-instead)
+;; (global-set-key "\C-x_" 'split-window-vertically-instead)
 
 ;; Borrowed from http://postmomentum.ch/blog/201304/blog-on-emacs
 (defun sanityinc/split-window()
@@ -60,7 +60,7 @@ Call a second time to restore the original window configuration."
     (window-configuration-to-register :sanityinc/split-window)
     (switch-to-buffer-other-window nil)))
 
-(global-set-key (kbd "<f7>") 'sanityinc/split-window)
+;; (global-set-key (kbd "<f7>") 'sanityinc/split-window)
 
 
 (defun sanityinc/toggle-current-window-dedication ()
@@ -95,8 +95,8 @@ Call a second time to restore the original window configuration."
     (select-frame-set-input-focus xframe)
     (select-frame-set-input-focus cframe)))
 
-(global-set-key (kbd "<f1>") 'rw/lift-frame-in-other-monitor)
-(global-set-key (kbd "<f2>") 'pop-to-mark-command)
+;; (global-set-key (kbd "<f1>") 'rw/lift-frame-in-other-monitor)
+;; (global-set-key (kbd "<f2>") 'pop-to-mark-command)
 
 (defun rw/switch-to-next-frame-in-same-monitor (&optional frame)
   (interactive)
