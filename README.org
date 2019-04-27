@@ -666,8 +666,9 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
 
 ;; Changes representation of time from Chinese to English.
 ;; Someone says it may bug Chinese Input Method in Linux. 
-(when (eq system-type 'window-nt)
+(when (eq system-type 'windows-nt)
   (setq system-time-locale "C"))
+
 ;; (use-package proced)
 ;; I learn how to manually encode/decode raw data. 
 ;; (add-hook 'proced-post-display-hook 'rw-proced-coding-transform)
