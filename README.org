@@ -191,7 +191,7 @@ Org-style emacs configuration
 ;;------------------------------------------------------------------------------
 (eval-and-compile
   (require 'cl)
-  (defvar use-package-verbose nil) ;; debug message
+  (defvar use-package-verbose t) ;; debug message
   (require 'use-package))
 
 (require 'diminish)                ;; if you use :diminish
@@ -301,6 +301,7 @@ Return the updated `exec-path'"
 <<latex>>
 <<eshell>>
 <<English>>
+<<magit>>
 #+END_SRC
 *** straight 
 #+name: straight
@@ -324,15 +325,18 @@ Return the updated `exec-path'"
 ;; let straight use ssh instead of https
 (setq straight-vc-git-default-protocol 'ssh)
 
+;; Give --depth=1 for git clone, make cloning faster. 
+(setq straight-vc-git-default-clone-depth 1)
+
 ;; 定义一个wrapper
 (defun rw-straight-use-package (repo origin fork)
   "ORIGIN and FORK are users in github, like \"lczch\". REPO is a name (symbol)"
   (let ((repo-name (symbol-name repo)))
     (straight-use-package
      `(,repo :type git :host github :repo ,(concat origin "/" repo-name)
-                :no-build t
-                :fork (:host github
-                             :repo ,(concat fork "/" repo-name))
+             :no-build t
+             :fork (:host github
+                          :repo ,(concat fork "/" repo-name))
                 ))
     
     (rw-add-to-load-path (expand-file-name repo-name rw-straight-repos-dir)))
@@ -1102,8 +1106,9 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
 #+BEGIN_SRC emacs-lisp 
 ;; auctex
 (use-package tex-site
-  ;; 不知道出了什么问题, 导致下面这一行用不了. 这次配置出现的问题都是功能的封装不好, 每次都要回忆起最细节的东西, 很伤.
-  ;; :mode ("\\.tex\\'" . Tex-latex-mode)
+  :init
+  (require 'auto-loads)
+  :defer t
   :config
   <<prepare-for-texlive>>
 
@@ -1510,6 +1515,32 @@ rustup set default-host x86_64-pc-windows-gnu
   (setq insert-translated-name-line-style-mode-list '())
   (setq insert-translated-name-camel-style-mode-list '())
   (setq insert-translated-name-underline-style-mode-list '())
+  )
+#+END_SRC
+
+*** magit 
+#+name: magit
+#+BEGIN_SRC emacs-lisp 
+(rw-straight-use-package 'with-editor "magit" "lczch")
+(rw-straight-use-package 'transient "magit" "lczch")
+(rw-straight-use-package 'lv "llvilanova" "lczch")
+;;(rw-straight-use-package 'magit "magit" "lczch")
+
+(rw-add-to-load-path (expand-file-name "transient/lisp" rw-straight-repos-dir))
+(rw-add-to-load-path (expand-file-name "magit/lisp" rw-straight-repos-dir))
+
+;; (load (expand-file-name "magit/lisp/magit-autoloads" rw-straight-repos-dir))
+
+(use-package magit
+  :commands (magit-status)
+  :config 
+  (use-package with-editor)
+  (use-package transient)
+  (use-package lv)
+
+  (setq magit-refresh-status-buffer nil)
+  (remove-hook 'server-switch-hook 'magit-commit-diff)
+  (setq vc-handled-backends nil)
   )
 #+END_SRC
 
