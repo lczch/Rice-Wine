@@ -1107,8 +1107,8 @@ If set/leave chinese-font-size to nil, it will follow english-font-size"
 ;; auctex
 (use-package tex-site
   :init
-  (require 'auto-loads)
-  :defer t
+  ;; (require 'auto-loads)
+  ;; :defer t
   :config
   <<prepare-for-texlive>>
 
