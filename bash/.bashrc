@@ -42,6 +42,10 @@ if [ -d "C:\\Users\\lzh\\.cargo\\bin" ] ; then
     PATH="C:\\Users\\lzh\\.cargo\\bin:$PATH"
 fi
 
+if [ -d "$HOME/bin/nodejs" ] ; then
+    PATH="$HOME/bin/nodejs:$HOME/bin/nodejs/node_global:$PATH"
+fi
+
 # Launch Zsh
 if [ -t 1 ]; then
     echo "Start zsh"
