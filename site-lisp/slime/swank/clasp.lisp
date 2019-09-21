@@ -13,9 +13,13 @@
 
 (in-package swank/clasp)
 
+#+(or)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (setq swank::*log-output* (open "/tmp/slime.log" :direction :output))
+  (setq swank:*log-events* t))
 
-(defmacro cslime-log (fmt &rest fmt-args)
-  `(format t ,fmt ,@fmt-args))
+(defmacro slime-dbg (fmt &rest args)
+  `(swank::log-event "slime-dbg ~a ~a~%" mp:*current-process* (apply #'format nil ,fmt ,args)))
 
 ;; Hard dependencies.
 (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -35,14 +39,7 @@
 ;;; Swank-mop
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (import-swank-mop-symbols
-   :clos
-   `(:eql-specializer
-     :eql-specializer-object
-     :generic-function-declarations
-     :specializer-direct-methods
-     ,@(unless (fboundp 'clos:compute-applicable-methods-using-classes)
-               '(:compute-applicable-methods-using-classes)))))
+  (import-swank-mop-symbols :clos nil))
 
 (defimplementation gray-package-name ()
   "GRAY")
@@ -51,10 +48,10 @@
 ;;;; TCP Server
 
 (defimplementation preferred-communication-style ()
-  ;; CLASP does not provide threads yet.
-  ;; ECLs swank implementation says that CLOS is not thread safe and
-  ;; I use ECLs CLOS implementation - this is a worry for the future.
-  nil
+  :spawn
+#|  #+threads :spawn
+  #-threads nil
+|#
   )
 
 (defun resolve-hostname (name)
@@ -219,44 +216,46 @@
 (defvar *buffer-name* nil)
 (defvar *buffer-start-position*)
 
-(defun signal-compiler-condition (&rest args)
-  (apply #'signal 'compiler-condition args))
+(defun condition-severity (condition)
+  (etypecase condition
+    (cmp:redefined-function-warning :redefinition)
+    (style-warning                  :style-warning)
+    (warning                        :warning)
+    (reader-error                   :read-error)
+    (error                          :error)))
 
-#-clasp-bytecmp
-(defun handle-compiler-message (condition)
-  ;; CLASP emits lots of noise in compiler-notes, like "Invoking
-  ;; external command".
-  (unless (typep condition 'c::compiler-note)
-    (signal-compiler-condition
-     :original-condition condition
-     :message (princ-to-string condition)
-     :severity (etypecase condition
-                 (cmp:compiler-fatal-error :error)
-                 (cmp:compiler-error       :error)
-                 (error                  :error)
-                 (style-warning          :style-warning)
-                 (warning                :warning))
-     :location (condition-location condition))))
-
-#-clasp-bytecmp
-(defun condition-location (condition)
-  (let ((file     (cmp:compiler-message-file condition))
-        (position (cmp:compiler-message-file-position condition)))
-    (if (and position (not (minusp position)))
+(defun condition-location (origin)
+  (if (null origin)
+      (make-error-location "No error location available")
+      (let ((location (core:source-pos-info-filepos origin)))
         (if *buffer-name*
             (make-buffer-location *buffer-name*
                                   *buffer-start-position*
-                                  position)
-            (make-file-location file position))
-        (make-error-location "No location found."))))
+                                  location)
+            (make-file-location
+             (core:file-scope-pathname
+              (core:file-scope origin))
+             location)))))
+
+(defun signal-compiler-condition (condition origin)
+  (signal 'compiler-condition
+          :original-condition condition
+          :severity (condition-severity condition)
+          :message (princ-to-string condition)
+          :location (condition-location origin)))
+
+(defun handle-compiler-condition (condition)
+  ;; First resignal warnings, so that outer handlers - which may choose to
+  ;; muffle this - get a chance to run.
+  (when (typep condition 'warning)
+    (signal condition))
+  (signal-compiler-condition (cmp:deencapsulate-compiler-condition condition)
+                             (cmp:compiler-condition-origin condition)))
 
 (defimplementation call-with-compilation-hooks (function)
-  (funcall function))
-#||  #-clasp-bytecmp
-  (handler-bind ((c:compiler-message #'handle-compiler-message))
+  (handler-bind
+      (((or error warning) #'handle-compiler-condition))
     (funcall function)))
-||#
-
 
 (defimplementation swank-compile-file (input-file output-file
                                        load-p external-format
@@ -286,8 +285,8 @@
 (defun tmpfile-to-buffer (tmp-file)
   (gethash tmp-file *tmpfile-map*))
 
-(defimplementation swank-compile-string (string &key buffer position filename policy)
-  (declare (ignore policy))
+(defimplementation swank-compile-string (string &key buffer position filename line column policy)
+  (declare (ignore line column policy)) ;; We will use line and column in the future
   (with-compilation-hooks ()
     (let ((*buffer-name* buffer)        ; for compilation hooks
           (*buffer-start-position* position))
@@ -303,7 +302,7 @@
                (multiple-value-setq (fasl-file warnings-p failure-p)
                  (let ((truename (or filename (note-buffer-tmpfile tmp-file buffer))))
                    (compile-file tmp-file
-                                 :source-debug-namestring truename
+                                 :source-debug-pathname (pathname truename)
                                  :source-debug-offset (1- position)))))
           (when fasl-file (load fasl-file))
           (when (probe-file tmp-file)
@@ -328,6 +327,33 @@
 (defimplementation macroexpand-all (form &optional env)
   (declare (ignore env))
   (macroexpand form))
+
+;;; modified from sbcl.lisp
+(defimplementation collect-macro-forms (form &optional environment)
+  (let ((macro-forms '())
+        (compiler-macro-forms '())
+        (function-quoted-forms '()))
+    (format t "In collect-macro-forms~%")
+    (cmp:code-walk
+     form environment
+     :code-walker-function
+     (lambda (form environment)
+       (when (and (consp form)
+                  (symbolp (car form)))
+         (cond ((eq (car form) 'function)
+                (push (cadr form) function-quoted-forms))
+               ((member form function-quoted-forms)
+                nil)
+               ((macro-function (car form) environment)
+                (push form macro-forms))
+               ((not (eq form (core:compiler-macroexpand-1 form environment)))
+                (push form compiler-macro-forms))))
+       form))
+    (values macro-forms compiler-macro-forms)))
+
+
+
+
 
 (defimplementation describe-symbol-for-emacs (symbol)
   (let ((result '()))
@@ -428,30 +454,31 @@
 
 (defimplementation call-with-debugging-environment (debugger-loop-fn)
   (declare (type function debugger-loop-fn))
-  (let* ((*ihs-top* (or #+#.(swank/backend:with-symbol '*stack-top-hint* 'core)
-                        core:*stack-top-hint*
-                        (ihs-top)))
+  (let* ((*ihs-top* 0)
          (*ihs-current* *ihs-top*)
-#+frs         (*frs-base* (or (sch-frs-base *frs-top* *ihs-base*) (1+ (frs-top))))
-#+frs         (*frs-top* (frs-top))
-         (*tpl-level* (1+ *tpl-level*))
-         (*backtrace* (loop for ihs from 0 below *ihs-top*
-                            collect (list (si::ihs-fun ihs)
-                                          (si::ihs-env ihs)
-                                          ihs))))
-    (declare (special *ihs-current*))
-#+frs    (loop for f from *frs-base* until *frs-top*
-          do (let ((i (- (si::frs-ihs f) *ihs-base* 1)))
-               (when (plusp i)
-                 (let* ((x (elt *backtrace* i))
-                        (name (si::frs-tag f)))
-                   (unless (si::fixnump name)
-                     (push name (third x)))))))
-    (setf *backtrace* (nreverse *backtrace*))
-    (set-break-env)
-    (set-current-ihs)
-    (let ((*ihs-base* *ihs-top*))
-      (funcall debugger-loop-fn))))
+         #+frs         (*frs-base* (or (sch-frs-base *frs-top* *ihs-base*) (1+ (frs-top))))
+         #+frs         (*frs-top* (frs-top))
+         (*tpl-level* (1+ *tpl-level*)))
+    (core:call-with-backtrace
+     (lambda (raw-backtrace)
+       (let ((*backtrace*
+               (let ((backtrace (core::common-lisp-backtrace-frames
+                                 raw-backtrace
+                                 :gather-start-trigger
+                                 (lambda (frame)
+                                   (let ((function-name (core::backtrace-frame-function-name frame)))
+                                     (and (symbolp function-name)
+                                          (eq function-name 'core::universal-error-handler))))
+                                 :gather-all-frames nil)))
+                 (unless backtrace
+                   (setq backtrace (core::common-lisp-backtrace-frames
+                                    :gather-all-frames nil)))
+                 backtrace)))
+         (declare (special *ihs-current*))
+         (set-break-env)
+         (set-current-ihs)
+         (let ((*ihs-base* *ihs-top*))
+           (funcall debugger-loop-fn)))))))
 
 (defimplementation compute-backtrace (start end)
   (subseq *backtrace* start
@@ -459,29 +486,40 @@
                (min end (length *backtrace*)))))
 
 (defun frame-name (frame)
-  (let ((x (first frame)))
+  (let ((x (core::backtrace-frame-function-name frame)))
     (if (symbolp x)
       x
       (function-name x))))
 
 (defun frame-function (frame-number)
-  (let ((x (first (elt *backtrace* frame-number))))
+  (let ((x (core::backtrace-frame-function-name (elt *backtrace* frame-number))))
     (etypecase x
       (symbol
        (and (fboundp x)
             (fdefinition x)))
+      (cons
+       (if (eq (car x) 'cl:setf)
+           (fdefinition x)
+           nil))
       (function
        x))))
 
 (defimplementation print-frame (frame stream)
-  (format stream "(~s~{ ~s~})" (function-name (first frame))
-          #+#.(swank/backend:with-symbol 'ihs-arguments 'core)
-          (coerce (core:ihs-arguments (third frame)) 'list)
-          #-#.(swank/backend:with-symbol 'ihs-arguments 'core)
-          nil))
+  (if (core::backtrace-frame-arguments frame)
+      (format stream "(~a~{ ~s~})" (core::backtrace-frame-print-name frame)
+              (coerce (core::backtrace-frame-arguments frame) 'list))
+      (format stream "~a" (core::backtrace-frame-print-name frame))))
 
 (defimplementation frame-source-location (frame-number)
-  (source-location (frame-function frame-number)))
+  (let* ((address (core::backtrace-frame-return-address (elt *backtrace* frame-number)))
+         (code-source-location (ext::code-source-position address)))
+    (format t "code-source-location ~s~%" code-source-location)
+    ;; (core::source-info-backtrace *backtrace*)
+    (if (ext::code-source-line-source-pathname code-source-location)
+        (make-location (list :file (namestring (ext::code-source-line-source-pathname code-source-location)))
+                       (list :line (ext::code-source-line-line-number code-source-location))
+                       '(:align t))
+        `(:error ,(format nil "No source for frame: ~a" frame-number)))))
 
 #+clasp-working
 (defimplementation frame-catch-tags (frame-number)
@@ -492,36 +530,46 @@
 
 (defimplementation frame-locals (frame-number)
   (let* ((frame (elt *backtrace* frame-number))
-         (env (second frame))
+         (env nil) ; no env yet
          (locals (loop for x = env then (core:get-parent-environment x)
                        while x
                        nconc (loop for name across (core:environment-debug-names x)
                                    for value across (core:environment-debug-values x)
                                    collect (list :name name :id 0 :value value)))))
     (nconc
-     (loop for arg across (core:ihs-arguments (third frame))
+     (loop for arg across (core::backtrace-frame-arguments frame)
            for i from 0
-           collect (list :name (intern (format nil "ARG~d" i) #.*package*)
+           collect (list :name (intern (format nil "ARG~d" i) :cl-user)
                          :id 0
                          :value arg))
      locals)))
 
 (defimplementation frame-var-value (frame-number var-number)
   (let* ((frame (elt *backtrace* frame-number))
-         (env (second frame))
-         (args (core:ihs-arguments (third frame))))
+         (env nil)
+         (args (core::backtrace-frame-arguments frame)))
     (if (< var-number (length args))
         (svref args var-number)
         (elt (frame-locals frame-number) var-number))))
 
-#+clasp-working
 (defimplementation disassemble-frame (frame-number)
   (let ((fun (frame-function frame-number)))
     (disassemble fun)))
 
 (defimplementation eval-in-frame (form frame-number)
-  (let ((env (second (elt *backtrace* frame-number))))
-    (core:compile-form-and-eval-with-env form env)))
+  (let* ((frame (elt *backtrace* frame-number))
+         (raw-arg-values (coerce (core::backtrace-frame-arguments frame) 'list)))
+    (if (and (= (length raw-arg-values) 2) (core:vaslistp (car raw-arg-values)))
+        (let* ((arg-values (core:list-from-va-list (car raw-arg-values)))
+               (bindings (append (loop for i from 0 for value in arg-values collect `(,(intern (core:bformat nil "ARG%d" i) :cl-user) ',value))
+                                 (list (list (intern "NEXT-METHODS" :cl-user) (cadr raw-arg-values))))))
+          (eval
+           `(let (,@bindings) ,form)))
+        (let* ((arg-values raw-arg-values)
+               (bindings (loop for i from 0 for value in arg-values collect `(,(intern (core:bformat nil "ARG%d" i) :cl-user) ',value))))
+          (eval
+           `(let (,@bindings) ,form))))))
+
 
 #+clasp-working
 (defimplementation gdb-initial-commands ()
@@ -684,7 +732,7 @@
 
   (defstruct (mailbox (:conc-name mailbox.))
     thread
-    (mutex (mp:make-lock))
+    (mutex (mp:make-lock :name "SLIMELCK"))
     (cvar  (mp:make-condition-variable))
     (queue '() :type list))
 
@@ -696,29 +744,56 @@
             (push mb *mailboxes*)
             mb))))
 
+  (defimplementation wake-thread (thread)
+    (let* ((mbox (mailbox thread))
+           (mutex (mailbox.mutex mbox)))
+      (format t "About to with-lock in wake-thread~%")
+      (mp:with-lock (mutex)
+        (format t "In wake-thread~%")
+        (mp:condition-variable-broadcast (mailbox.cvar mbox)))))
+  
   (defimplementation send (thread message)
     (let* ((mbox (mailbox thread))
            (mutex (mailbox.mutex mbox)))
+      (swank::log-event "clasp.lisp: send message ~a    mutex: ~a~%" message mutex)
+      (swank::log-event "clasp.lisp:    (lock-owner mutex) -> ~a~%" (mp:lock-owner mutex))
+      (swank::log-event "clasp.lisp:    (lock-count mutex) -> ~a~%" (mp:lock-count mutex))
       (mp:with-lock (mutex)
+        (swank::log-event "clasp.lisp:  in with-lock   (lock-owner mutex) -> ~a~%" (mp:lock-owner mutex))
+        (swank::log-event "clasp.lisp:  in with-lock   (lock-count mutex) -> ~a~%" (mp:lock-count mutex))
         (setf (mailbox.queue mbox)
               (nconc (mailbox.queue mbox) (list message)))
+        (swank::log-event "clasp.lisp: send about to broadcast~%")
         (mp:condition-variable-broadcast (mailbox.cvar mbox)))))
 
+  
   (defimplementation receive-if (test &optional timeout)
+    (slime-dbg "Entered receive-if")
     (let* ((mbox (mailbox (current-thread)))
            (mutex (mailbox.mutex mbox)))
+      (slime-dbg "receive-if assert")
       (assert (or (not timeout) (eq timeout t)))
       (loop
+         (slime-dbg "receive-if check-slime-interrupts")
          (check-slime-interrupts)
+         (slime-dbg "receive-if with-lock")
          (mp:with-lock (mutex)
            (let* ((q (mailbox.queue mbox))
                   (tail (member-if test q)))
              (when tail
                (setf (mailbox.queue mbox) (nconc (ldiff q tail) (cdr tail)))
                (return (car tail))))
-           (when (eq timeout t) (return (values nil t)))
-           (mp:condition-variable-timedwait (mailbox.cvar mbox)
-                                            mutex
-                                            0.2)))))
+           (slime-dbg "receive-if when (eq")
+           (when (eq timeout t) (return (values nil t))) 
+           (slime-dbg "receive-if condition-variable-timedwait")
+           (mp:condition-variable-wait (mailbox.cvar mbox) mutex) ; timedwait 0.2
+           (slime-dbg "came out of condition-variable-timedwait")
+           (core:check-pending-interrupts)))))
 
   ) ; #+threads (progn ...
+
+
+(defmethod emacs-inspect ((object core:cxx-object))
+  (let ((encoded (core:encode object)))
+    (loop for (key . value) in encoded
+       append (list (string key) ": " (list :value value) (list :newline)))))

@@ -46,6 +46,12 @@ if [ -d "$HOME/bin/nodejs" ] ; then
     PATH="$HOME/bin/nodejs:$HOME/bin/nodejs/node_global:$PATH"
 fi
 
+# java
+PATH="C:\\Program Files\\Java\\jdk-11.0.2\\bin:$PATH"
+
+# sbcl
+export SBCL_HOME=~/bin
+
 # Launch Zsh
 if [ -t 1 ]; then
     echo "Start zsh"

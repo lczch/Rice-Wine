@@ -61,6 +61,14 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   (company-mode)
   (rice-wine-lisp-repl-mode))
 
+(use-package ielm
+  :commands (ielm)
+  :config
+  (defun ielm-func ()
+    (rice-wine-lisp-repl-func)
+    (setup-company-mode '(company-elisp)))
+  (add-hook 'ielm-mode-hook 'ielm-func))
+
 ;;------------------------------------------------------------------------------
 ;; common-lisp and elisp
 ;;------------------------------------------------------------------------------
@@ -110,8 +118,8 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
           ))
 
   :config
-  ;; (setq inferior-lisp-program "sbcl")
-  (setq inferior-lisp-program "ros -Q run")
+  (setq inferior-lisp-program "sbcl")
+  ;; (setq inferior-lisp-program "ros -Q run")
   (setq slime-net-coding-system 'utf-8-unix)
 
   (defun rice-wine-slime-repl-func ()
@@ -185,6 +193,12 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
          ("\\.cljx\\'" . clojurex-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
+  (when sys/win32p
+    ;; lein
+    (rw/prepend-to-exec-path (expand-file-name "~/bin"))
+    ;; java
+    (rw/prepend-to-exec-path "C:\\Program Files\\Java\\jdk-11.0.2\\bin"))
+  
   (defvar clojure-company-backends
     '(company-capf company-files))
   

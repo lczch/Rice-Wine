@@ -107,12 +107,12 @@ Org-style emacs configuration
 ;;------------------------------------------------------------------------------
 ;; prepare work: set working directory and load-path
 ;;------------------------------------------------------------------------------
-
+(setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+                         ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 ;; Disable auto-load of packages. I prefer requiring them manually.
 ;; use pacakge `straight` instead 
 (setq package-enable-at-startup nil)
 
-<<base-lib>>
 
 (defun rw-add-to-load-path (dir)
   "add DIR to the head of load-path"
@@ -226,8 +226,29 @@ Org-style emacs configuration
   (evil-leader/set-key
     "rwt" 'rw-test-new-config))
 
-<<server>>
 
+
+
+#+END_SRC
+** misc
+#+name: misc
+#+BEGIN_SRC emacs-lisp 
+(use-package init-const)
+
+<<base-lib>>
+<<server>>
+<<straight>>
+<<yasnippet>>
+<<org-mode>>
+<<company-mode>>
+<<ivy>>
+<<bulk>> 
+<<evil-escape>>
+<<chinese-font>>
+<<programming>>
+<<latex>>
+<<eshell>>
+<<English>>
 #+END_SRC
 *** server 
 #+name: server 
@@ -286,22 +307,6 @@ Return the updated `exec-path'"
               exec-path)))
 #+END_SRC
 
-** misc
-#+name: misc
-#+BEGIN_SRC emacs-lisp 
-<<straight>>
-<<yasnippet>>
-<<org-mode>>
-<<company-mode>>
-<<ivy>>
-<<bulk>> 
-<<evil-escape>>
-<<chinese-font>>
-<<programming>>
-<<latex>>
-<<eshell>>
-<<English>>
-#+END_SRC
 *** straight 
 #+name: straight
 #+BEGIN_SRC emacs-lisp 
@@ -796,8 +801,15 @@ This function is intended for use with `ivy-ignore-buffers'."
     "oa" 'org-archive-subtree-default
     "oci" 'org-clock-in
     "oco" 'org-clock-out)
+  ;;------------------------------------------------------------------------------
+  ;; set colors for various blocks
+  ;;------------------------------------------------------------------------------
+  (setq org-fontify-quote-and-verse-blocks t)
+  (add-to-list 'org-emphasis-alist
+               '("/" (:foreground "yellow")))
   )
 #+END_SRC
+
 
 *** yasnippet 
 #+name: yasnippet 
