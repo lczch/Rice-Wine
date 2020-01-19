@@ -147,6 +147,8 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
 ;;------------------------------------------------------------------------------
 
 (use-package geiser
+  ;; :init
+  ;; (rw-add-to-load-path (expand-file-name "geiser/elisp" rice-wine-package-dir))
   :commands (geiser run-racket geiser-mode)
   :config
   (defvar geiser-company-backends
@@ -157,7 +159,11 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
     (setup-company-mode geiser-company-backends)
     )
   
-  (add-hook 'geiser-repl-mode-hook 'rice-wine-geiser-repl-func))
+  (add-hook 'geiser-repl-mode-hook 'rice-wine-geiser-repl-func)
+
+
+  ;; (setq geiser-repl-skip-version-check-p t)
+  )
 
 (use-package scheme
   :mode (("\\.scm\\'" . scheme-mode))
@@ -174,6 +180,7 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
 (use-package racket-mode
   :mode (("\\.rkt\\'" . racket-mode))
   :config
+  (setq geiser-racket-binary "C:\\Program Files\\Racket\\Racket.exe")
   ;; use racket-mode's font-lock, and geiser's repl
   (setq racket-mode-map (make-sparse-keymap))
 

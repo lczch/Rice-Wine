@@ -186,6 +186,8 @@ Org-style emacs configuration
 
 ;; (print-load-path)
 
+(defvar sys/win32p (eq system-type 'windows-nt))
+
 ;;------------------------------------------------------------------------------
 ;; use-package: wonderful organization tool of emacs configuration 
 ;;------------------------------------------------------------------------------
