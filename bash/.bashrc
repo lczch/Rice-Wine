@@ -47,7 +47,7 @@ if [ -d "$HOME/bin/nodejs" ] ; then
 fi
 
 # java
-PATH="C:\\Program Files\\Java\\jdk-11.0.2\\bin:$PATH"
+PATH="C:\\Program Files\\Java\\jdk1.8.0_211\\bin:$PATH"
 
 # sbcl
 export SBCL_HOME=~/bin

@@ -1,9 +1,7 @@
+#+title: Emacs Stable Configuration
 #+PROPERTY: header-args :noweb no-export :comments noweb
 
-* Prologue 
-Org-style emacs configuration 
-
-* Configuration
+* Operation System Prepair 
 ** windows上的前置配置
 1. 安装msys2： [[https://www.msys2.org/]]
 2. 修改软件源：
@@ -75,17 +73,67 @@ Org-style emacs configuration
     #+END_SRC
 
 补充资料：[[https://emacs-china.org/t/windows-emacs/7907][Windows 上面 Emacs 简易入门最佳实践]]
-** 配置的主文件： ~init.el~ 
+* Configuration
+** ~init.el-main~ 
 #+BEGIN_SRC emacs-lisp :tangle "init.el" 
-<<prologue>>
+;; -*- coding: utf-8 -*-
+(defconst emacs-start-time (current-time))
 
-<<misc>>
+<<global-variables>>
 
-<<epilogue>>
+<<pre-init>>
+
+<<layers>>
+
+;;------------------------------------------------------------------------------
+;; Post initialization: get init-time
+;;------------------------------------------------------------------------------
+(when window-system
+  (let ((elapsed (float-time (time-subtract (current-time)
+                                            emacs-start-time))))
+    (message "Loading %s...done (%.3fs)" load-file-name elapsed))
+
+  (add-hook 'after-init-hook
+            `(lambda ()
+               (let ((elapsed (float-time (time-subtract (current-time)
+                                                         emacs-start-time))))
+                 (message "Loading %s...done (%.3fs) [after-init]"
+                          ,load-file-name elapsed)))
+            t))
 #+END_SRC
 
-** prologue
-#+name: prologue
+** global-variables
+#+name: global-variables
+#+BEGIN_SRC emacs-lisp
+;; add needed dirs to load-path
+(defvar rice-wine-dir (file-name-directory load-file-name)
+  "top directory of configuration")
+
+;; 修改emacs默认的directory到自定义的目录
+(setq user-emacs-directory rice-wine-dir)
+
+(defvar rice-wine-lisp-dir (expand-file-name "lisp" rice-wine-dir)
+  "configurations of packages")
+
+(defvar rice-wine-package-dir
+  (expand-file-name "site-lisp" rice-wine-dir)
+  "local packages")
+
+(defvar rice-wine-git-package-dir
+  (expand-file-name "git-lisp" rice-wine-dir)
+  "packages from git, which have higher priority than pakages in `rice-wine-package-dir'")
+
+(defvar rice-wine-lib-dir
+  (expand-file-name "lib" rice-wine-dir)
+  "library packages, mostly for emacs-lisp programming")
+
+(defvar rice-wine-configure-file 
+  (expand-file-name "README.org" rice-wine-dir)
+  "Store the path of \"README.org\"")
+#+END_SRC
+
+** pre-init
+#+name: pre-init
 #+BEGIN_SRC emacs-lisp 
 ;; -*- coding: utf-8 -*-
 (defconst emacs-start-time (current-time))
@@ -132,31 +180,6 @@ Org-style emacs configuration
   (rw-add-to-load-path dir)
   (rw-add-subdirs-to-load-path dir))
 
-;; add needed dirs to load-path
-(defvar rice-wine-dir (file-name-directory load-file-name)
-  "top directory of configuration")
-
-;; 修改emacs默认的directory到自定义的目录
-(setq user-emacs-directory rice-wine-dir)
-
-(defvar rice-wine-lisp-dir (expand-file-name "lisp" rice-wine-dir)
-  "configurations of packages")
-
-(defvar rice-wine-package-dir
-  (expand-file-name "site-lisp" rice-wine-dir)
-  "local packages")
-
-(defvar rice-wine-git-package-dir
-  (expand-file-name "git-lisp" rice-wine-dir)
-  "packages from git, which have higher priority than pakages in `rice-wine-package-dir'")
-
-(defvar rice-wine-lib-dir
-  (expand-file-name "lib" rice-wine-dir)
-  "library packages, mostly for emacs-lisp programming")
-
-(defvar rice-wine-configure-file 
-  (expand-file-name "README.org" rice-wine-dir)
-  "Store the path of \"README.org\"")
 ;; (defvar rice-wine-app-dir
 ;;   (expand-file-name "app" rice-wine-dir)
 ;;   "Some apps writing in emacs-lisp.")
@@ -232,8 +255,8 @@ Org-style emacs configuration
 
 
 #+END_SRC
-** misc
-#+name: misc
+** layers
+#+name: layers
 #+BEGIN_SRC emacs-lisp 
 (use-package init-const)
 
@@ -252,6 +275,26 @@ Org-style emacs configuration
 <<eshell>>
 <<English>>
 #+END_SRC
+*** language-layers 
+    
+*** base-lib 
+抄自以下文章，问好看起见，改了个名字。
+
+参考资料： [[https://blog.csdn.net/fenxian2011/article/details/19254949]]
+
+#+name: base-lib 
+#+BEGIN_SRC emacs-lisp 
+(defun rw/prepend-to-exec-path (path)  
+  "push the path to the emacs internal `exec-path' and \"PATH\" env variable.  
+Return the updated `exec-path'"  
+  (setenv "PATH" (concat (expand-file-name path)  
+                         path-separator  
+                         (getenv "PATH")))  
+  (setq exec-path  
+        (cons (expand-file-name path)  
+              exec-path)))
+#+END_SRC
+
 *** server 
 #+name: server 
 #+BEGIN_SRC emacs-lisp
@@ -289,24 +332,6 @@ only these files will be asked to be saved."
 
   (global-set-key (kbd "C-x C-c") 'rw-save-buffers-kill-terminal)
   )
-#+END_SRC
-
-*** base-lib 
-抄自以下文章，问好看起见，改了个名字。
-
-参考资料： [[https://blog.csdn.net/fenxian2011/article/details/19254949]]
-
-#+name: base-lib 
-#+BEGIN_SRC emacs-lisp 
-(defun rw/prepend-to-exec-path (path)  
-  "push the path to the emacs internal `exec-path' and \"PATH\" env variable.  
-Return the updated `exec-path'"  
-  (setenv "PATH" (concat (expand-file-name path)  
-                         path-separator  
-                         (getenv "PATH")))  
-  (setq exec-path  
-        (cons (expand-file-name path)  
-              exec-path)))
 #+END_SRC
 
 *** straight 
@@ -1703,34 +1728,18 @@ rustup set default-host x86_64-pc-windows-gnu
 
 #+END_SRC
 
-** epilogue
-#+name: epilogue
-#+BEGIN_SRC emacs-lisp 
-;;------------------------------------------------------------------------------
-;; Post initialization
-;;------------------------------------------------------------------------------
-(when window-system
-  (let ((elapsed (float-time (time-subtract (current-time)
-                                            emacs-start-time))))
-    (message "Loading %s...done (%.3fs)" load-file-name elapsed))
-
-  (add-hook 'after-init-hook
-            `(lambda ()
-               (let ((elapsed (float-time (time-subtract (current-time)
-                                                         emacs-start-time))))
-                 (message "Loading %s...done (%.3fs) [after-init]"
-                          ,load-file-name elapsed)))
-            t))
-#+END_SRC
-
-* Material 
-** 怎样可以把问题表达的更清晰？
+* TODO 
+** CANCELLED 怎样可以把问题表达的更清晰？
+   CLOSED: [2020-01-23 Thu 10:01]
 见链接：[[https://emacs.stackexchange.com/questions/19355/buffer-local-tangle-in-org-mode][a question about org-mode]]
-** How to Summarize a Research Article 
+** CANCELLED How to Summarize a Research Article 
+   CLOSED: [2020-01-23 Thu 10:01]
 [[http://web2.uconn.edu/ahking/How_to_Summarize_a_Research_Article.pdf]]
 [[http://www.columbia.edu/cu/biology/ug/research/paper.html][WRITING A SCIENTIFIC RESEARCH ARTICLE]]
 
-** 我想要一个好用的terminal
+** DONE 我想要一个好用的terminal
+   CLOSED: [2020-01-23 Thu 10:01]
+   - State "DONE"       from              [2020-01-23 Thu 10:01]
 现在配置emacs，不仅要配置emacs的字体啊， ~exec-path~ ，之类的，还要给terminal同样配置一遍，比如 ~PATH~ 啊什么的，很麻烦。
 
 我能不能再emacs中使用terminal提供给我的功能呢？
@@ -1752,10 +1761,30 @@ It's important to understand that shells are not (or should not be) semantically
 #+END_QUOTE
 
 *** terminal和shell的区别
-** font 
+** DONE font 
+   CLOSED: [2020-01-23 Thu 10:01]
+   - State "DONE"       from              [2020-01-23 Thu 10:01]
 也许可以试试这个中英文混编字体？
 链接： [[https://github.com/GitHubNull/YaHei-Consolas-Hybrid-1.12][YaHei-Consolas-Hybrid-1.12]]
 等距更纱黑体也可以试试，据说中英文等高，而且两个英文字符宽度等于一个中文字符。
 配置可以见： [[https://emacs-china.org/t/windows-emacs/7907/38]]
 
 暂时不会折腾这个.
+** DONE 尝试windows专用的emacs build 
+   CLOSED: [2020-01-23 Thu 10:01]
+   - State "DONE"       from              [2020-01-23 Thu 10:01]
+   https://github.com/m-parashar/emax64
+   原版本: 5.118s 
+   emax64: 5.137s 
+   感觉不出差别. 
+** TODO 当package需要更新时 
+   今天必须要跟新clojure的配置, 因为原来的配置已经不能用了.
+   然后我把原来的包删除之后, 发现cider增加了一大堆依赖, 而这些依赖的包我都必须手动下载, 很麻烦.
+   不仅下载麻烦, 我还要在配置中对每个包增添use-package的语句, 用来require他们, 这也是麻烦.
+   
+   所以, 我想要方便的自动下载包的功能, 特别是那些依赖. 而且, 我现在也不想一个一个手动的require包了. 
+
+   懒猫的git-submodule是一个解决方案. 
+   
+   我可以写一个从package-manager直接下载一个包, 并放到我想要的位置的函数, 类似于package-install, 但我主要下载, 不要其他乌七八糟的事情. 
+   当然, 是把所有的依赖都下载了. 

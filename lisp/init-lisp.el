@@ -152,7 +152,9 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   :commands (geiser run-racket geiser-mode)
   :config
   (defvar geiser-company-backends
-    '(company-capf company-dabbrev))
+    ;; '(company-capf company-dabbrev)
+    ;; very slow
+    '())
 
   (defun rice-wine-geiser-repl-func ()
     (rice-wine-lisp-repl-func)
@@ -195,16 +197,12 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
 ;; clojure: not very complete
 ;;------------------------------------------------------------------------------
 (use-package clojure-mode
+  :disable t
   :mode (("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
          ("\\.cljc\\'" . clojurec-mode)
          ("\\.cljx\\'" . clojurex-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
-  (when sys/win32p
-    ;; lein
-    (rw/prepend-to-exec-path (expand-file-name "~/bin"))
-    ;; java
-    (rw/prepend-to-exec-path "C:\\Program Files\\Java\\jdk-11.0.2\\bin"))
   
   (defvar clojure-company-backends
     '(company-capf company-files))
@@ -215,16 +213,14 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
     (eldoc-mode)
     (local-set-key (kbd "C-j") 'cider-eval-print-last-sexp)
     )
-
+  
   (use-package cider
     :config
     (defun rice-wine-cider-repl-func ()
       (rice-wine-lisp-repl-func)
       (setup-company-mode clojure-company-backends)
       (eldoc-mode))
-
     (add-hook 'cider-repl-mode-hook 'rice-wine-cider-repl-func))
-  
   (add-hook 'clojure-mode-hook 'rice-wine-clojure-func)
   )
 
