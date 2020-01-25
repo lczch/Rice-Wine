@@ -5,16 +5,14 @@
 ;; and move it to site-lisp/, or get the description of a package.
 (use-package package
   :config
-  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
-                           ("melpa-stable" . "http://stable.melpa.org/packages/")
-                           ;; uncomment below line if you need use GNU ELPA
-                           ("gnu" . "http://elpa.gnu.org/packages/")
-                           ))
-  
-  (defvar rice-wine-package-temp-dir
-    (expand-file-name "temp" rice-wine-dir)
-    "temp dir saving packages from elpa")
+  ;; use mirror in China
+  (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+                           ("melpa" . "http://elpa.emacs-china.org/melpa/")))
   
   (setq package-user-dir rice-wine-package-temp-dir))
+
+;; set NO-ACTIVATE of the function to t, don't activate packages, but prepare for downloading packages
+(package-initialize t)
+
 
 (provide 'init-elpa)

@@ -290,4 +290,4 @@
   "oci" 'org-clock-in
   "oco" 'org-clock-out)
 
-(provide 'init-org)
+(provide 'init-org-mode)
