@@ -1,6 +1,3 @@
-;; (require 'init-const)
-
-
 ;; 抄自以下文章，问好看起见，改了个名字。
 ;; 参考资料： [[https://blog.csdn.net/fenxian2011/article/details/19254949]]
 (defun rw/prepend-to-exec-path (path)  
@@ -21,7 +18,8 @@ Return the updated `exec-path'"
 (require 'init-straight)
 (require 'init-locales)
 ;; configure the appearance of emacs
-(require 'init-gui-frame)
+(require 'init-modeline)
+(require 'init-theme)
 (require 'init-fonts)
 ;; (require 'init-isearch)
 (require 'init-minibuff)

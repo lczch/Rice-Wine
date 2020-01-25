@@ -1,6 +1,3 @@
-;;; modeline
-(require 'init-modeline)
-
 ;;; color theme
 (use-package color-theme-sanityinc-solarized
   :config
@@ -62,4 +59,4 @@
 
 (add-hook 'after-make-window-system-frame-hooks 'rw-maximize-frame)
 
-(provide 'init-gui-frame)
+(provide 'init-theme)
