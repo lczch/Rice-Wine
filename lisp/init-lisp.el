@@ -197,7 +197,6 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
 ;; clojure: not very complete
 ;;------------------------------------------------------------------------------
 (use-package clojure-mode
-  :disable t
   :mode (("\\.\\(clj\\|dtm\\|edn\\)\\'" . clojure-mode)
          ("\\.cljc\\'" . clojurec-mode)
          ("\\.cljx\\'" . clojurex-mode)
