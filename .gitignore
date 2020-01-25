@@ -10,6 +10,7 @@ straight/
 private/
 
 # And all the file types you're interested in.
+!init.el
 !*.org
 !Makefile
 !init-script.el
