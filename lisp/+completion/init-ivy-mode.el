@@ -69,6 +69,7 @@ This function is intended for use with `ivy-ignore-buffers'."
   (global-set-key (kbd "C-h f") 'counsel-describe-function)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   (global-set-key (kbd "M-x") 'counsel-M-x)
+  (setq recentf-max-saved-items 100)
   (global-set-key (kbd "C-x C-r") 'counsel-recentf)
   (global-set-key (kbd "<f2>") 'counsel-imenu)
   ;; (global-set-key (kbd "<f3> i") 'counsel-info-lookup-symbol)

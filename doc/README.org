@@ -1,4 +1,4 @@
-#+title: Emacs Stable Configuration
+#+title: doc 
 #+PROPERTY: header-args :noweb no-export :comments noweb
 
 * Operation System Prepair 
@@ -73,256 +73,54 @@
     #+END_SRC
 
 补充资料：[[https://emacs-china.org/t/windows-emacs/7907][Windows 上面 Emacs 简易入门最佳实践]]
-* Configuration
-** ~init.el-main~ 
-#+BEGIN_SRC emacs-lisp :tangle "init.el" 
-#+END_SRC
+** 从msys2延伸出的win上的命令行工具
+*** CANCELLED 字符集
+    CLOSED: [2020-01-27 Mon 07:44]
+    - State "CANCELLED"  from              [2020-01-27 Mon 07:44] \\
+      不能这样设, 用了GBK后某些utf-8编码的字符就又乱码了, 得不偿失.
+    字符集: 在option中设置为
+   - locale: zh_CN 
+   - character set: GBK
+*** DONE 更好用的终端 
+    CLOSED: [2020-01-26 Sun 20:17]
+    - State "DONE"       from "CANCELLED"  [2020-01-27 Mon 07:42]
+    conemu: [[https://conemu.github.io/]]
+    为什么要选这个? 因为有标签页啊. 
+    但我看到网上有人提出, 这会导致gcc链接时出错.
+    但我的path设置好的. 配置很可读.
 
-** global-variables
-#+name: global-variables
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
+    path设置好了. 
 
-** pre-init
-#+name: pre-init
-#+BEGIN_SRC emacs-lisp 
-;; -*- coding: utf-8 -*-
-
-
-
-
-#+END_SRC
-** layers
-#+name: layers
-#+BEGIN_SRC emacs-lisp 
-(use-package init-const)
-
-<<evil-escape>>
-<<chinese-font>>
-<<latex>>
-<<eshell>>
-<<English>>
-#+END_SRC
+    但字符集又出现了问题, 用tree又会显示乱码....
+    但是, 使用:
+    #+BEGIN_SRC sh
+    chcp 54936
+    #+END_SRC
+    这是Windows更改字符集的指令, 54936这个number代表GB18030, 是一个中文字符集.
+    再来回忆一下字符集的内容, 字符集: 编码 -> 字符, 而字符是一套符号的集合, 每个符号有一个相应的序号. 
+    字符集之间的差别是符号的多少, 和符号的序号. 
+    这是unicode和GBK的差别. 
+    UTF8, UTF16, UTF32是编码方案. 
     
-*** latex 
-#+name: latex
-#+BEGIN_SRC emacs-lisp 
-<<latex-main>>
-#+END_SRC
-**** prepare-for-texlive 
-#+name: prepare-for-texlive 
-#+BEGIN_SRC emacs-lisp 
-#+END_SRC
+    但这一句设定怎么设置成自动启动嗯?
+    我是通过.bashrc启动项设定的, 不过要在执行前将chcp.com的位置加入path. 
 
-**** prepare-for-pdf-viewer 
+    做了这一设置后, 反而还有些中文文件名乱码了, 不过没关系.
 
-#+name: prepare-for-pdf-viewer
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
+    通过文档的描述, 我觉得GB18030更普遍, 因为它是国家标准. 
 
-**** latex-functions
-这是在做项目时，处理coq代码时使用的，其实不能算是配置的一部分，不应该导出。
+    但这个字符集会导致在终端中无法输入中文, 大概是因为输入法和其他的中文都是utf8的.
+    损失太大了, 准备放弃这种修改. 
+    
+    又出现了一个问题, 当输入pacman -S后紧接一个空格, zsh会提供一些辅助信息, 但此光标适应不良, 乱跑.
 
-#+name: latex-functions
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
-**** latex-main
-#+name: latex-main
-#+BEGIN_SRC emacs-lisp 
-;; auctex
-#+END_SRC
-*** programming 
-#+name: programming 
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-**** coq 
-#+name: coq 
-#+BEGIN_SRC emacs-lisp
-(defun coq-mode-func ()
-  "features needed by coq mode"
-  (rice-wine-prog-func)
-  (yas-on)
-  (company-coq-on)
-  (cscope-minor-mode))
-
-(use-package proof-site
-  :load-path (lambda ()
-               (expand-file-name "PG/generic"
-                                 rice-wine-package-dir))
-  :mode ("\\.v\\'" . coq-mode)
-  :config
-  ;; (rw/prepend-to-exec-path (expand-file-name "bin/Coq8.4/bin" "~"))
-
-  (setq
-   proof-splash-enable nil
-   coq-indent-semicolon-tactical 0
-   coq-match-indent 4
-   coq-one-command-per-line t
-   proof-auto-raise-buffers nil ;; prevent closing the other frame when it only show *goals* and *responds*
-   proof-multiple-frames-enable nil ;; this feature is buggy...
-   proof-keep-response-history nil
-   proof-next-command-insert-space t)
-
-  (defun pg-debug-on ()
-    (interactive)
-    (setq proof-general-debug t))
-
-  (defun pg-debug-off ()
-    (interactive)
-    (setq proof-general-debug nil))
-
-  (use-package rw-frame-lib)
-
-  (defun rw/pg-show-goals-and-responds-in-other-frame ()
-    "show buffer *goals* and *responds* in other frame.
-     1. if there is frame in other monitor exists, then switch to that
-        frame, rearrange it to show  *goals* and *responds* horizontally
-     2. if there is only one frame, then create one, and
-        perform same action as 1"
-    (interactive)
-    (delete-other-windows) ;; delete auto generate layout
-    (let ((cframe (selected-frame))
-          (xframe (or (rw-select-frame-in-other-monitor)
-                      (make-frame))))
-      (select-frame xframe)
-      ;; now we in new frame
-      (switch-to-buffer "*goals*")
-      (delete-other-windows)
-      (split-window-horizontally)
-      (other-window 1)
-      (switch-to-buffer "*response*")
-      (other-window 1)
-      (select-frame cframe)))
-
-  ;; improve pg's *goals* and *respons* display
-  (evil-leader/set-key
-    "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
-
-  (use-package company-coq
-    :commands (company-coq-mode company-coq-initialize)
-    :init
-    (defun company-coq-on ()
-      (interactive)
-      (company-coq-initialize))
-    (defun company-coq-off ()
-      (interacitve)
-      (company-coq-mode 0))
-
-    :config
-    (setq company-coq-disabled-features
-          '(
-            ;; snippets
-            outline
-            code-folding
-            company-defaults
-            ;;refman-ltac-abbrevs-backend
-            ;;refman-tactic-abbrevs-backend
-            ;;refman-vernac-abbrevs-backend
-            refman-scope-abbrevs-backend
-            pg-backend
-            dynamic-symbols-backend
-            obsolete-settings))
-    (setq company-coq-prettify-symbols-alist
-          '(("|-" . 8866)
-            ("->" . 8594)
-            ("=>" . 8658)
-            ("fun" . 955)
-            ("forall" . 8704)
-            ("exists" . 8707)
-            ("/\\" . 8743)
-            ("\\/" . 8744)
-            ("~" . 172)
-            ("+-" . 177)
-            (">->" . 8611))))
-
-
-  (add-hook 'coq-mode-hook 'coq-mode-func)
-
-  (use-package rw-pg-project-file)
+    problem: [[https://github.com/Maximus5/ConEmu/issues/1873]]
+*** DONE Far: windows file manager 
+    CLOSED: [2020-01-27 Mon 07:44]
+    - State "DONE"       from              [2020-01-27 Mon 07:44]
+    虽然没有ranger在linux下和emacs联系的那么紧密, 但是漂亮啊. 
+    虽然是完全另一套快捷键, 但和ConEmu在一起还行. 
   
-  (use-package rw-coq-lib
-    :config
-    (evil-leader/set-key
-      "ap" 'lzh/coq-trans)
-    ))
-
-#+END_SRC
-
-**** rust 
-#+name: rust 
-#+BEGIN_SRC emacs-lisp
-(rw-straight-use-package 'rust-mode "rust-lang" "lczch")
-(rw-straight-use-package 'cargo.el "kwrooijen" "lczch")
-;; flycheck下次再配
-;; (rw-straight-use-package 'flycheck "flycheck" "lczch")
-;; (rw-straight-use-package 'flycheck-rust "flycheck" "lczch")
-
-(use-package rust-mode
-  :init 
-  (autoload 'rust-mode "rust-mode" nil t)
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-  :defer t
-  :config
-  (use-package cargo)
-
-  (defun rust-mode-func ()
-    (smartparens-mode 1)
-    (rainbow-delimiters-mode 1)
-    (cargo-minor-mode 1)
-    )
-  
-  (add-hook 'rust-mode-hook 'rust-mode-func)
-  )
-#+END_SRC
-*** eshell 
-#+name: eshell
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-*** English 
-#+name: English
-#+BEGIN_SRC emacs-lisp 
-<<insert-translated-name>>
-#+END_SRC
-**** insert-translated-name 
-#+name: insert-translated-name
-#+BEGIN_SRC emacs-lisp 
-#+END_SRC
-
-*** bulk
-#+name: bulk
-#+BEGIN_SRC emacs-lisp
-;;------------------------------------------------------------------------------
-;; individual package configuration
-;;------------------------------------------------------------------------------
-(use-package cygwin-mount
-  :config
-  (cygwin-mount-activate))
-
-(use-package init-elpa)
-(use-package init-locales)
-;; configure the appearance of emacs
-(use-package init-gui-frame)
-(use-package init-fonts)
-;; (use-package init-isearch)
-(use-package init-minibuff)
-(use-package init-windows)
-
-
-(use-package init-evil)
-(use-package init-dired)
-(use-package init-ibuffer)
-
-
-;; (use-package init-ido)
-
-
-
-<<yasnippet>>
-
-
-#+END_SRC
-
 * TODO 
 ** CANCELLED 怎样可以把问题表达的更清晰？
    CLOSED: [2020-01-23 Thu 10:01]

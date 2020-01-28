@@ -67,7 +67,6 @@
              rice-wine-lib-dir)))
   (mapc #'rw-add-dir-and-subdirs-to-load-path dirs))
 
-(message "%s\n" load-path)
 ;;------------------------------------------------------------------------------
 ;; other init settings which should set before any functional packages 
 ;;------------------------------------------------------------------------------

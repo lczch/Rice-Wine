@@ -129,19 +129,6 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   (add-hook 'slime-repl-mode-hook 'rice-wine-slime-repl-func))
 
 
-;; (use-package racket-mode
-;;   :mode (("\\.rkt\\'" . racket-mode))
-;;   :disabled t
-;;   :init
-;;   (use-package s
-;;     :defer t)
-;;   :config
-;;   (defun rice-wine-racket-func ()
-;;     (rice-wine-lisp-func)
-;;     (company-mode 1))
-  
-;;   (add-hook 'racket-mode-hook 'rice-wine-racket-func))
-
 ;;------------------------------------------------------------------------------
 ;; scheme and racket
 ;;------------------------------------------------------------------------------
@@ -152,9 +139,10 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   :commands (geiser run-racket geiser-mode)
   :config
   (defvar geiser-company-backends
+    '(company-capf)
     ;; '(company-capf company-dabbrev)
     ;; very slow
-    '())
+    )
 
   (defun rice-wine-geiser-repl-func ()
     (rice-wine-lisp-repl-func)

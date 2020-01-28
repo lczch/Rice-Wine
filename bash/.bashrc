@@ -2,7 +2,9 @@
 
 # set locale
 export LANG=zh_CN.UTF8
+# export LANG=zh_CN.GB18030
 
+# including scripts in emacs-lisp
 if [ -d "$HOME/rice-wine/bin" ] ; then
     echo "Add ~/rice-wine/bin dir to PATH"
     PATH="$HOME/rice-wine/bin:$PATH"
@@ -17,7 +19,6 @@ fi
 # git flow completion
 # echo "turn on git completion."
 # source "$HOME/rice-wine/bash/git-completion"
-
 # coq
 # if [ -d "$HOME/bin/Coq8.4/bin" ] ; then
 #     PATH="$HOME/bin/Coq8.4/bin:$PATH"
@@ -46,14 +47,18 @@ if [ -d "$HOME/bin/nodejs" ] ; then
     PATH="$HOME/bin/nodejs:$HOME/bin/nodejs/node_global:$PATH"
 fi
 
+# haskell
+export STACK_ROOT="C:\\msys64\\home\\lzh\\.stack"
+
 # java
 PATH="C:\\Program Files\\Java\\jdk1.8.0_211\\bin:$PATH"
 
 # sbcl
-export SBCL_HOME=~/bin
+export SBCL_HOME=~bin
 
 # Launch Zsh
 if [ -t 1 ]; then
     echo "Start zsh"
     exec zsh
 fi
+

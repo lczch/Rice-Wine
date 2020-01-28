@@ -32,13 +32,54 @@
 ;; (add-hook 'haskell-mode-hook 'rice-wine-haskell-func)
 
 
-(use-package haskell-mode-autoloads
-  :init
-  (setq rice-wine-haskell-mode-dir
-        (expand-file-name "haskell-mode/" rice-wine-git-package-dir ))
-  (add-to-list 'Info-default-directory-list rice-wine-haskell-mode-dir)
+;; (use-package haskell-mode-autoloads
+;;   :init
 
-  :config
+;;   :config
+;;   (defun rice-wine-haskell-func ()
+;;     (rice-wine-prog-func)
+;;     (yas-on)
+;;     (setup-company-mode '(company-capf company-dabbrev-code))
+;;     (interactive-haskell-mode)
+;;     )
+
+;;   (defun rice-wine-haskell-interactive-func ()
+;;     (rice-wine-prog-func)
+;;     (setup-company-mode '(company-capf)))
+  
+;;   (add-hook 'haskell-mode-hook 'rice-wine-haskell-func)
+
+;;   (require 'haskell-interactive-mode)
+;;   (require 'haskell-process)
+
+;;   (add-hook 'haskell-interactive-mode-hook 'rice-wine-haskell-interactive-func)
+  
+;;   (custom-set-variables
+;;    '(haskell-process-suggest-remove-import-lines t)
+;;    '(haskell-process-auto-import-loaded-modules t)
+;;    '(haskell-process-log t))
+  
+;;   )
+(use-package haskell-mode 
+  :ensure t
+  :init
+  (setq auto-mode-alist
+        ;; copy from package info
+        (append '(("\\.hsc\\'" . haskell-mode)
+                  ("\\.l[gh]s\\'" . literate-haskell-mode)
+                  ("\\.[gh]s\\'" . haskell-mode)
+                  ("\\.cabal\\'" . haskell-cabal-mode)
+                  ("\\.chs\\'" . haskell-c2hs-mode)
+                  ("\\.ghci\\'" . ghci-script-mode)
+                  ("\\.dump-simpl\\'" . ghc-core-mode)
+                  ("\\.hcr\\'" . ghc-core-mode))
+                auto-mode-alist))
+
+  (setq rice-wine-haskell-mode-dir
+        (expand-file-name "haskell-mode/" rice-wine-package-temp-dir))
+  (require 'haskell-mode-autoloads)
+  (add-to-list 'Info-default-directory-list rice-wine-haskell-mode-dir)
+  :config 
   (defun rice-wine-haskell-func ()
     (rice-wine-prog-func)
     (yas-on)
@@ -46,22 +87,20 @@
     (interactive-haskell-mode)
     )
 
-  (defun rice-wine-haskell-interactive-func ()
-    (rice-wine-prog-func)
-    (setup-company-mode '(company-capf)))
-  
-  (add-hook 'haskell-mode-hook 'rice-wine-haskell-func)
-
   (require 'haskell-interactive-mode)
   (require 'haskell-process)
 
-  (add-hook 'haskell-interactive-mode-hook 'rice-wine-haskell-interactive-func)
+  (defun rice-wine-inferior-haskell-func ()
+    (rice-wine-prog-func)
+    (setup-company-mode '(company-capf)))
+
+  (add-hook 'inferior-haskell-hook 'rice-wine-inferior-haskell-func)
   
   (custom-set-variables
+   '(haskell-process-type 'stack-ghci)
    '(haskell-process-suggest-remove-import-lines t)
    '(haskell-process-auto-import-loaded-modules t)
    '(haskell-process-log t))
-  
   )
 
 (provide 'init-haskell-mode)
