@@ -5,6 +5,16 @@
   ;; 从melpa上安装的目录结构和git上的目录结构有差别.
   ;; 这个autoloads没有provide feature, 所以只能这样load
   (load-library "magit-autoloads")
+  
+  ;; key bindings
+  (evil-leader/set-key
+   ;; "gb"  'spacemacs/git-blame-micro-state
+   "gfh" 'magit-log-buffer-file
+   "gm"  'magit-dispatch-popup
+   "gs"  'magit-status
+   "gS"  'magit-stage-file
+   "gU"  'magit-unstage-file)
+  
   :config
   ;; from redguardtoo
   (ivy-mode 1)
@@ -15,14 +25,6 @@
   ;; See: https://github.com/magit/magit/wiki/FAQ#windows-cannot-push-via-https
   (when (eq window-system 'w32)
     (setenv "GIT_ASKPASS" "git-gui--askpass"))
-  ;; key bindings
-  (evil-leader/set-key
-   ;; "gb"  'spacemacs/git-blame-micro-state
-   "gfh" 'magit-log-buffer-file
-   "gm"  'magit-dispatch-popup
-   "gs"  'magit-status
-   "gS"  'magit-stage-file
-   "gU"  'magit-unstage-file)
 
   (use-package evil-magit
     ;; 这个包会导致安装evil, 而evil是我可能做了略微魔改的陈年stable版本, 不知道会不会出问题...
