@@ -63,18 +63,9 @@
 (use-package haskell-mode 
   :ensure t
   :init
-  (setq auto-mode-alist
-        ;; copy from package info
-        (append '(("\\.hsc\\'" . haskell-mode)
-                  ("\\.l[gh]s\\'" . literate-haskell-mode)
-                  ("\\.[gh]s\\'" . haskell-mode)
-                  ("\\.cabal\\'" . haskell-cabal-mode)
-                  ("\\.chs\\'" . haskell-c2hs-mode)
-                  ("\\.ghci\\'" . ghci-script-mode)
-                  ("\\.dump-simpl\\'" . ghc-core-mode)
-                  ("\\.hcr\\'" . ghc-core-mode))
-                auto-mode-alist))
-
+  ;; stack的安装目录在"C:\Users\lzh\AppData\Local\Programs\stack\x86_64-windows",
+  ;; 还不知道怎么配置.
+  ;; 不过stack下载ghc的速度比那个plateform更快.
   (setq rice-wine-haskell-mode-dir
         (expand-file-name "haskell-mode/" rice-wine-package-temp-dir))
   (require 'haskell-mode-autoloads)
@@ -87,8 +78,8 @@
     (interactive-haskell-mode)
     )
 
-  (require 'haskell-interactive-mode)
-  (require 'haskell-process)
+  ;; (require 'haskell-interactive-mode)
+  ;; (require 'haskell-process)
 
   (defun rice-wine-inferior-haskell-func ()
     (rice-wine-prog-func)
