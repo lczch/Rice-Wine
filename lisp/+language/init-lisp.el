@@ -78,7 +78,7 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
          ("\\.asd\\'" . lisp-mode))
   :config
   (defvar elisp-company-backends
-    '(company-elisp
+    '((company-elisp company-tabnine)
       ;; 在笔记本上用时很慢, 不知道为什么...
       ;; company-files
       ))

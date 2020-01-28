@@ -162,7 +162,7 @@
   (smartparens-mode)
   (yas-minor-mode)
   ;; company
-  (setup-company-mode '((company-dabbrev
+  (setup-company-mode '((company-tabnine
                          company-math-symbols-unicode)
                         ))
 
