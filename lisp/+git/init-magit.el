@@ -27,6 +27,8 @@
     (setenv "GIT_ASKPASS" "git-gui--askpass"))
 
   (use-package evil-magit
+    ;; 有两个问题: 1. ALT+[1..9]的快捷键被莫名其妙占用了; 2. help buffer显示的信息和keymap不符, 并没有修改.
+    :disabled
     ;; 这个包会导致安装evil, 而evil是我可能做了略微魔改的陈年stable版本, 不知道会不会出问题...
     ;; 先试试吧. 如果出问题, 那就用straight安装这个包.
     :ensure t
