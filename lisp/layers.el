@@ -121,6 +121,8 @@ Return the updated `exec-path'"
 
 (use-package init-haskell-mode)
 
+(use-package init-magit)
+
 ;; (use-package tex-mode
 ;;   :init
 ;;   (add-hook 'latex-mode-hook 'smartparens-mode)
