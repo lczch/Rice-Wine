@@ -6,7 +6,7 @@
 ;;; TODO:
 ;; 以后还可以试一试tabnine, 大概感觉像是dabbrev的超级升级版.
 ;; 话说我是不是应该把company的架构改一下, 改成全局开启, 然后配置一个大多数mode都能用的backends, 而不要每次都要手动. 我看的配置好像全部都是全开的. 可能有道理.
-
+;; 现在会自动下载company-mode(因为依赖), 但不会被使用
 
 (use-package company
   :config

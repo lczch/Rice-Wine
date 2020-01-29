@@ -99,6 +99,13 @@ Return the updated `exec-path'"
   ;; g => update/refresh
   )
 
+;; recentf
+(use-package recentf
+  :config
+  ;; (setq recentf-max-menu-items 50) ; 和ivy无关
+  (setq recentf-max-saved-items 100)
+  )
+
 ;; TODO: may switch to gtags?
 (use-package init-xcscope)
 

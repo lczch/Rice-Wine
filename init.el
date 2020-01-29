@@ -59,7 +59,7 @@
              rice-wine-lisp-dir
              ;; packages from elpa
              rice-wine-package-temp-dir
-             ;; local packages
+             ;; local packages, local pacakge的优先级更高
              rice-wine-package-dir
              ;; I think useless
              rice-wine-git-package-dir
