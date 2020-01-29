@@ -4,11 +4,50 @@
 
 (use-package ivy
   :config
+  (use-package amx)
+  
+  (use-package swiper
+    :config
+    (evil-leader/set-key
+      "ss" 'swiper
+      "sb" 'swiper-all)
+    )
+  
+  (use-package counsel
+    :config
+    ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
+    ;; press "M-o" to choose ivy action
+    (ivy-set-actions
+     'counsel-find-file
+     '(("j" find-file-other-frame "other frame")
+       ("b" counsel-find-file-cd-bookmark-action "cd bookmark")
+       ("x" counsel-find-file-extern "open externally")
+       ("d" delete-file "delete")
+       ("r" counsel-find-file-as-root "open as root"))))
 
-  ;;; make ivy bebave similarly with ido
-  ;; Don't open directory mode: https://github.com/abo-abo/swiper/wiki/Dont-open-directory-mode
+  (use-package projectile
+    :ensure t
+    :config
+    (use-package counsel-projectile
+      :ensure t
+      :config
+      (setq projectile-switch-project-action 'counsel-projectile-find-file)
+      (evil-leader/set-key
+        "p SPC" 'counsel-projectile
+        "pb"    'counsel-projectile-switch-to-buffer
+        "pd"    'counsel-projectile-find-dir
+        "pp"    'counsel-projectile-switch-project
+        "pf"    'counsel-projectile-find-file
+        "pr"    'projectile-recentf))
+
+    (setq projectile-completion-system 'ivy)
+    (projectile-mode +1)
+    )
+ 
+  ;;; make ivy bebavior similarly with ido
+   ;; Don't open directory mode: https://github.com/abo-abo/swiper/wiki/Dont-open-directory-mode
   (setq ivy-extra-directories nil)
-
+  
   (defun eh-ivy-open-current-typed-path ()
     (interactive)
     (when ivy--directory
@@ -24,6 +63,25 @@
   (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-immediate-done)
 
+  (evil-leader/set-key
+    ;; files
+    "ff"  'counsel-find-file
+    "fL"  'counsel-locate
+    ;; help
+    "?"   'counsel-descbinds
+    "hdf" 'counsel-describe-function
+    "hdv" 'counsel-describe-variable
+    ;; insert
+    "iu"  'counsel-unicode-char
+    ;; jump
+    ;; register/ring
+    "ry"  'counsel-yank-pop
+    ;; jumping
+    "sj"  'counsel-imenu
+    ;; themes
+    "Ts"  'counsel-load-theme
+    )
+  
   ;; hide dired buffers, from ivy's wiki in github.
   (defun d/ignore-dired-buffers (str)
     "Return non-nil if STR names a Dired buffer.
@@ -34,21 +92,7 @@ This function is intended for use with `ivy-ignore-buffers'."
   (add-to-list 'ivy-ignore-buffers #'d/ignore-dired-buffers)
 
   
-  (use-package amx)
-  (use-package swiper)
-  (use-package counsel
-    :config
-
-    ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
-    ;; press "M-o" to choose ivy action
-    (ivy-set-actions
-     'counsel-find-file
-     '(("j" find-file-other-frame "other frame")
-       ("b" counsel-find-file-cd-bookmark-action "cd bookmark")
-       ("x" counsel-find-file-extern "open externally")
-       ("d" delete-file "delete")
-       ("r" counsel-find-file-as-root "open as root"))))
-
+  
   ;; not good experience
   ;; (setq ivy-use-virtual-buffers t)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)

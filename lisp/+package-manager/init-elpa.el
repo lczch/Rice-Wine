@@ -6,7 +6,9 @@
 (use-package package
   :config
   ;; use mirror in China
-  (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+  (setq package-archives `(("site-lisp" . ,rice-wine-package-dir)
+                           ("straight-repo" . ,rw-straight-repos-dir)
+                           ("gnu"   . "http://elpa.emacs-china.org/gnu/")
                            ("melpa" . "http://elpa.emacs-china.org/melpa/")))
   
   (setq package-user-dir rice-wine-package-temp-dir))

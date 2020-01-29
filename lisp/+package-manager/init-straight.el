@@ -11,8 +11,8 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; straight默认自动build的功能是我不需要的，我其实只需要它的下载功能
-(defvar rw-straight-repos-dir (expand-file-name "straight/repos" rice-wine-dir))
+;; straight默认自动build的功能是我不需要的，我其实只需要它的下载功能. move to init.el
+;; (defvar rw-straight-repos-dir (expand-file-name "straight/repos" rice-wine-dir))
 
 ;; let straight use ssh instead of https
 (setq straight-vc-git-default-protocol 'ssh)
