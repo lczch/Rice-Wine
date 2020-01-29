@@ -1,3 +1,6 @@
+;;; TODO:
+;; 把straight简化出一个我想要的? 现在的功能也太复杂了.
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))

@@ -49,6 +49,9 @@
     ;; disable auto insert of "'" 
     (sp-local-pair "'" nil :actions nil)
     (sp-local-pair "`" nil :actions nil))
+  
+  ;; Don't pair lifetime specifiers
+  (sp-local-pair 'rust-mode "'" nil :actions nil)
 
   (sp-with-modes 'minibuffer-inactive-mode
     (sp-local-pair "'" nil :actions nil))
