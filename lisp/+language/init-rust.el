@@ -19,16 +19,20 @@
   (use-package cargo)
 
   (use-package racer
+    ;; it is very slow on windows.
+    :disabled 
     :ensure t)
 
   (defun rust-mode-func ()
     (smartparens-mode 1)
     (rainbow-delimiters-mode 1)
-    (setup-company-mode '((company-capf company-tabnine)))
-    (setq-local company-tooltip-align-annotations t)
+    (setup-company-mode '(company-tabnine
+                          ;; (company-capf company-tabnine)
+                          ))
+    ;; (setq-local company-tooltip-align-annotations t)
+    ;; (racer-mode 1)
     (cargo-minor-mode 1)
-    (racer-mode 1)
-    (eldoc-mode 1)
+    ;; (eldoc-mode 1)
     )
   
   (add-hook 'rust-mode-hook 'rust-mode-func)

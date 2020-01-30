@@ -55,6 +55,11 @@
 
   (sp-with-modes 'minibuffer-inactive-mode
     (sp-local-pair "'" nil :actions nil))
+
+  ;; add newline and indent when enter {|}
+  (sp-with-modes
+      '(c-mode rust-mode)
+    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
   )
 
 

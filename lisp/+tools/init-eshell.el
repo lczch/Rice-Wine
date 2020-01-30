@@ -1,3 +1,6 @@
+;;; TODO
+;; 输入"&"会花费很长时间反应. 没找到原因.
+
 (straight-use-package
  '(aweshell :type git :host github :repo "manateelazycat/aweshell"
             :no-build t
@@ -32,6 +35,7 @@
 
     ;; `company-capf'在括号内不能启动补全, 那我还要它干么?
     ;; 看来backend是要看过代码,自己修改后才能使用的. 费劲.
+    ;; 2020/1/29, capf简直有毒, 输入"&"卡住了
     (company-mode 1)
     (setq-local company-minimum-prefix-length 2)
     (setq-local company-idle-delay 0)

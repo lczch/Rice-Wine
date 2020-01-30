@@ -15,6 +15,7 @@
   (setq company-dabbrev-downcase nil)
   (setq company-dabbrev-ignore-case nil)
   ;; 原来一直是3, 我觉得2可能更合理一些.
+  ;; update: 2020/1/29 2不行, 因为我习惯在每个单词后输入一个空格, 而2会导致空格都会引发补全
   (setq company-minimum-prefix-length 2)
   (setq company-show-numbers t)
   ;; If I actually get the point, this variable `company-begin-commands` controls

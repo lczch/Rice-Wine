@@ -54,7 +54,7 @@ export STACK_ROOT="C:\\msys64\\home\\lzh\\.stack"
 PATH="C:\\Program Files\\Java\\jdk1.8.0_211\\bin:$PATH"
 
 # sbcl
-export SBCL_HOME=~bin
+export SBCL_HOME=~/bin
 
 # Launch Zsh
 if [ -t 1 ]; then

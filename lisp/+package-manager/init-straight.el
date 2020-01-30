@@ -30,8 +30,19 @@
                 :fork (:host github
                              :repo ,(concat fork "/" repo-name))
                 ))
-    
+    ;; git clone and add the repo to load-path
     (rw-add-to-load-path (expand-file-name repo-name rw-straight-repos-dir)))
   )
 
 (provide 'init-straight)
+
+;;; example
+
+;; (rw-straight-use-package 'swiper "abo-abo" "lczch")
+
+;; (straight-use-package
+;;  '(aweshell :type git :host github :repo "manateelazycat/aweshell"
+;;             :no-build t
+;;             :fork (:host github
+;;                          :repo "lczch/aweshell")
+;;             ))
