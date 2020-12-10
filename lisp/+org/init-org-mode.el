@@ -6,7 +6,8 @@
 ;; {{ NO spell check for embedded snippets
 
 
-(use-package htmlize)
+(use-package htmlize
+  :ensure t)
 
 (defun org-mode-is-code-snippet ()
   (let (rlt
@@ -162,7 +163,9 @@
   (smartparens-mode)
   (yas-minor-mode)
   ;; company
-  (setup-company-mode '((company-tabnine
+  (setup-company-mode '((
+                         ;; 补全太慢了
+                         ;; company-tabnine
                          company-math-symbols-unicode)
                         ))
 

@@ -121,4 +121,6 @@
 
 (require 'init-rust)
 
+(require 'init-lua)
+
 (provide 'init-programming)
