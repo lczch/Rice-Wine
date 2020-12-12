@@ -66,7 +66,7 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   :config
   (defun ielm-func ()
     (rice-wine-lisp-repl-func)
-    (setup-company-mode '(company-elisp)))
+    (setup-company-mode elisp-company-backends))
   (add-hook 'ielm-mode-hook 'ielm-func))
 
 ;;------------------------------------------------------------------------------
@@ -77,14 +77,6 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
          ("\\.lisp\\'" . lisp-mode)
          ("\\.asd\\'" . lisp-mode))
   :config
-  (defvar elisp-company-backends
-    '((company-elisp company-tabnine)
-      ;; 在笔记本上用时很慢, 不知道为什么...
-      ;; company-files
-      ))
-
-  (defvar slime-company-backends
-    '(company-slime company-files))
   
   (defun rice-wine-emacs-lisp-func ()
     (rice-wine-lisp-func)
@@ -138,11 +130,6 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
   ;; (rw-add-to-load-path (expand-file-name "geiser/elisp" rice-wine-package-dir))
   :commands (geiser run-racket geiser-mode)
   :config
-  (defvar geiser-company-backends
-    '(company-capf)
-    ;; '(company-capf company-dabbrev)
-    ;; very slow
-    )
 
   (defun rice-wine-geiser-repl-func ()
     (rice-wine-lisp-repl-func)
@@ -191,9 +178,6 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
          ("\\.cljx\\'" . clojurex-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
   :config
-  
-  (defvar clojure-company-backends
-    '(company-capf company-files))
   
   (defun rice-wine-clojure-func ()
     (rice-wine-lisp-func)

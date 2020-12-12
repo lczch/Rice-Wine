@@ -33,15 +33,19 @@
     (define-key map (kbd "C-M-/") 'company-filter-candidates)
     (define-key map (kbd "C-d")   'company-show-doc-buffer))
 
-;; Customize company backends.
-  (setq company-backends (delete 'company-xcode company-backends))
-  (setq company-backends (delete 'company-bbdb company-backends))
-  (setq company-backends (delete 'company-eclim company-backends))
-  (setq company-backends (delete 'company-gtags company-backends))
-  (setq company-backends (delete 'company-etags company-backends))
-  (setq company-backends (delete 'company-oddmuse company-backends))
-  (add-to-list 'company-backends 'company-files)
-  (add-to-list 'company-backends #'company-tabnine)
+
+  ;; NOT to load company-mode for certain major modes.
+  ;; Ironic that I suggested this feature but I totally forgot it
+  ;; until two years later.
+  ;; https://github.com/company-mode/company-mode/issues/29
+  ;; (setq company-global-modes
+  ;;       '(not
+  ;;         eshell-mode
+  ;;         comint-mode
+  ;;         erc-mode
+  ;;         gud-mode
+  ;;         rcirc-mode
+  ;;         minibuffer-inactive-mode))
   
   (use-package company-statistics
     :commands (company-statistics-mode))
@@ -60,16 +64,66 @@
     :ensure t
     :commands (company-tabnine))
   
+  ;; Customize company backends.
+  (setq company-backends (delete 'company-xcode company-backends))
+  (setq company-backends (delete 'company-bbdb company-backends))
+  (setq company-backends (delete 'company-eclim company-backends))
+  (setq company-backends (delete 'company-gtags company-backends))
+  (setq company-backends (delete 'company-etags company-backends))
+  (setq company-backends (delete 'company-oddmuse company-backends))
+  (setq company-backends (delete 'company-ropemacs company-backends))
+  (push 'company-cmake company-backends)
+  (push 'company-c-headers company-backends)
+  (add-to-list 'company-backends 'company-files)
+  ;; tabnine on windows is slow. 
+  ;; (add-to-list 'company-backends #'company-tabnine) 
+  ;; Specific backends for various modes: 
+
+  (defvar elisp-company-backends
+    '(company-elisp 
+      ;; (company-elisp company-tabnine)
+      ;; 在笔记本上用时很慢, 不知道为什么...
+      ;; company-files
+      ))
   
+  (defvar slime-company-backends
+    '(company-slime company-files))
+
+  (defvar geiser-company-backends
+    '(company-capf)
+    ;; '(company-capf company-dabbrev)
+    ;; very slow
+    )
+
+  (defvar clojure-company-backends
+    '(company-capf company-files))
+
+  (defvar cc-mode-company-backends
+    '(company-clang company-dabbrev))
+
+  (defvar tex-mode-company-backends
+    ;; `company-math-symbols-unicode' is used to enter unicode symbols, which in not useful in latex mode. 
+    '((company-math-symbols-latex
+       ;; company-math-symbols-unicode
+       company-auctex-macros
+       company-auctex-symbols
+       company-auctex-environments
+       company-dabbrev)
+      ;; company-auctex-labels
+      ;; company-auctex-bibs
+      ))
+  
+
   ;; use company-statistics to arrange the order of candidates, show more probably selected one to the first
   ;; 这其实是个没什么用的函数, 还不如直接手写. 每次我都要想backends的语法是什么, 创造了一个DSL, 找事.
-  (defun setup-company-mode (backends)
-    "turn-on company-mode, then make variable company-backends to buffer local, and set it to BACKENDS.
+  (defun setup-company-mode (&optional backends)
+    "turn-on company-mode, then make variable company-backends to buffer local, and set it to BACKENDS. If BACKENDS is nil, then `company-backends' keeps its original value. 
      Example: for elisp, (setup-company-mode '(company-elisp))"
     (company-mode 1)
     (company-statistics-mode)
     (make-local-variable 'company-backends)
-    (setq company-backends backends))
+    (unless (null backends)
+      (setq company-backends backends)))
   )
 
 

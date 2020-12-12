@@ -14,10 +14,6 @@
     :config
     (setq company-clang-insert-arguments nil))
   
-  (use-package company-dabbrev)
-  (defvar cc-mode-company-backends
-    '(company-clang company-dabbrev))
-
   ;; eldoc
   (use-package c-eldoc)
 

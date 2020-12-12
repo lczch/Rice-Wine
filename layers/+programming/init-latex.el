@@ -17,25 +17,25 @@
   (use-package company-auctex)
   (use-package reftex)
   
-  (defun tex-company ()
-    ;; `company-math-symbols-unicode' is used to enter unicode symbols, which in not useful in latex mode. 
-    (setup-company-mode '((company-math-symbols-latex
-                           ;; company-math-symbols-unicode
-                           company-auctex-macros
-                           company-auctex-symbols
-                           company-auctex-environments
-                           company-dabbrev)
-                          ;; company-auctex-labels
-                          ;; company-auctex-bibs
-                          ))
-    ;; (company-auctex-init)
-    )
+  ;; (defun tex-company ()
+  ;;   ;; `company-math-symbols-unicode' is used to enter unicode symbols, which in not useful in latex mode. 
+  ;;   (setup-company-mode '((company-math-symbols-latex
+  ;;                          ;; company-math-symbols-unicode
+  ;;                          company-auctex-macros
+  ;;                          company-auctex-symbols
+  ;;                          company-auctex-environments
+  ;;                          company-dabbrev)
+  ;;                         ;; company-auctex-labels
+  ;;                         ;; company-auctex-bibs
+  ;;                         ))
+  ;;   ;; (company-auctex-init)
+  ;;   )
 
   (defun tex-func ()
     (rainbow-delimiters-mode)
     (smartparens-strict-mode)
     (yas-on)
-    (tex-company)
+    (setup-company-mode tex-mode-company-backends)
     (LaTeX-math-mode)
     (reftex-mode)
     ;; (setq TeX-command-default "LaTeX")
