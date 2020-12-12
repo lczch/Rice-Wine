@@ -10,7 +10,7 @@
 ;; 修改emacs默认的directory到自定义的目录
 (setq user-emacs-directory rice-wine-dir)
 
-(defvar rice-wine-lisp-dir (expand-file-name "lisp" rice-wine-dir)
+(defvar rice-wine-lisp-dir (expand-file-name "layers" rice-wine-dir)
   "configurations of packages")
 
 (defvar rice-wine-package-dir

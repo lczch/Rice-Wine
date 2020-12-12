@@ -27,7 +27,7 @@
 (defvar rice-wine-dir (expand-directory-name (file-name-directory load-file-name))
   "top directory of configuration")
 
-(defvar rice-wine-lisp-dir (expand-directory-name "lisp" rice-wine-dir)
+(defvar rice-wine-lisp-dir (expand-directory-name "layers" rice-wine-dir)
   "configurations of packages")
 
 (defvar rice-wine-package-dir

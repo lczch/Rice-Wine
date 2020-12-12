@@ -60,9 +60,13 @@
   (use-package company-math
     :commands (company-math-symbols-latex
                company-math-symbols-unicode))
-  (use-package company-tabnine
+  ;; (use-package company-tabnine 
+  ;;   :ensure t
+  ;;   :commands (company-tabnine))
+  ;; Recommended from Chen Bing. 
+  (use-package company-ctags
     :ensure t
-    :commands (company-tabnine))
+    :commands (company-ctags))
   
   ;; Customize company backends.
   (setq company-backends (delete 'company-xcode company-backends))
@@ -74,6 +78,7 @@
   (setq company-backends (delete 'company-ropemacs company-backends))
   (push 'company-cmake company-backends)
   (push 'company-c-headers company-backends)
+  (push 'company-ctags company-backends)
   (add-to-list 'company-backends 'company-files)
   ;; tabnine on windows is slow. 
   ;; (add-to-list 'company-backends #'company-tabnine) 
@@ -109,6 +114,7 @@
        company-auctex-symbols
        company-auctex-environments
        company-dabbrev)
+      company-ctags
       ;; company-auctex-labels
       ;; company-auctex-bibs
       ))
