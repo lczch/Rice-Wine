@@ -135,6 +135,10 @@ Return the updated `exec-path'"
 ;;   (add-hook 'latex-mode-hook 'smartparens-mode)
 ;;   (add-hook 'latex-mode-hook 'rainbow-delimiters-mode))
 
+(use-package so-long
+  :ensure t
+  :config (global-so-long-mode 1))
+
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------

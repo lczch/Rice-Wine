@@ -1,8 +1,7 @@
 ;; (rw-straight-use-package 'lua-mode "immerrr" "lczch")
 
 (use-package lua-mode
-  :disabled 
-  ;; :ensure t
+  :ensure t
   :mode ("\\.lua\\'" . lua-mode)
   :interpreter ("lua" . lua-mode)
   :config 
