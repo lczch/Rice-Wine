@@ -85,7 +85,8 @@
   ;; Specific backends for various modes: 
 
   (defvar elisp-company-backends
-    '(company-elisp 
+    '(company-elisp
+      company-ctags
       ;; (company-elisp company-tabnine)
       ;; 在笔记本上用时很慢, 不知道为什么...
       ;; company-files
@@ -104,7 +105,9 @@
     '(company-capf company-files))
 
   (defvar cc-mode-company-backends
-    '(company-clang company-dabbrev))
+    '(company-ctags
+      ;; company-clang
+      company-dabbrev))
 
   (defvar tex-mode-company-backends
     ;; `company-math-symbols-unicode' is used to enter unicode symbols, which in not useful in latex mode. 
@@ -114,11 +117,9 @@
        company-auctex-symbols
        company-auctex-environments
        company-dabbrev)
-      company-ctags
       ;; company-auctex-labels
       ;; company-auctex-bibs
       ))
-  
 
   ;; use company-statistics to arrange the order of candidates, show more probably selected one to the first
   ;; 这其实是个没什么用的函数, 还不如直接手写. 每次我都要想backends的语法是什么, 创造了一个DSL, 找事.

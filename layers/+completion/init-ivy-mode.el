@@ -1,12 +1,15 @@
-(rw-straight-use-package 'swiper "abo-abo" "lczch")
+;; (rw-straight-use-package 'swiper "abo-abo" "lczch")
 
-(rw-straight-use-package 'amx "DarwinAwardWinner" "lczch")
+;; (rw-straight-use-package 'amx "DarwinAwardWinner" "lczch")
 
 (use-package ivy
+  :ensure t
   :config
-  (use-package amx)
+  (use-package amx
+    :ensure t)
   
   (use-package swiper
+    :ensure t
     :config
     (evil-leader/set-key
       "ss" 'swiper
@@ -14,6 +17,7 @@
     )
   
   (use-package counsel
+    :ensure t
     :config
     ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
     ;; press "M-o" to choose ivy action

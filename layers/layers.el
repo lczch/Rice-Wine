@@ -139,6 +139,37 @@ Return the updated `exec-path'"
   :ensure t
   :config (global-so-long-mode 1))
 
+;; jump to a tag
+(use-package counsel-etags
+  :ensure t
+  :commands (counsel-etags-find-tag-at-point)
+  :init
+  (global-set-key (kbd "C-\\") 'counsel-etags-find-tag-at-point)
+  (add-hook 'prog-mode-hook
+        (lambda ()
+          (add-hook 'after-save-hook
+            'counsel-etags-virtual-update-tags 'append 'local)))
+  :config
+  
+  (setq counsel-etags-update-interval 60)
+  (push "build" counsel-etags-ignore-directories)
+
+  ;; counsel-etags-ignore-directories does NOT support wildcast
+  (push "build_clang" counsel-etags-ignore-directories)
+  (push "build_clang" counsel-etags-ignore-directories)
+  ;; counsel-etags-ignore-filenames supports wildcast
+  (push "TAGS" counsel-etags-ignore-filenames)
+  (push "*.json" counsel-etags-ignore-filenames)
+
+  
+  ;; Don't ask before rereading the TAGS files if they have changed
+  (setq tags-revert-without-query t)
+  ;; Do case-sensitive tag searches
+  (setq tags-case-fold-search nil) ;; t=case-insensitive, nil=case-sensitive
+  ;; Don't warn when TAGS files are large
+  (setq large-file-warning-threshold nil)
+  )
+
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
