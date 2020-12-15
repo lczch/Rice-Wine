@@ -9,6 +9,9 @@ straight/
 # ignore my private directory
 private/
 
+# ignore packages from on-line
+temp/
+
 # And all the file types you're interested in.
 !init.el
 !*.org
@@ -16,7 +19,7 @@ private/
 !init-script.el
 !init-header.el
 !site-lisp/**
-!lisp/**
+!layers/**
 
 !script/**
 !snippets/**

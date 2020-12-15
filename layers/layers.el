@@ -38,6 +38,8 @@ Return the updated `exec-path'"
 (require 'init-ivy-mode)
 
 (require 'init-evil-escape)
+(require 'init-pairs)
+
 (require 'init-programming)
 (require 'init-chinese-font)
 (require 'init-latex)

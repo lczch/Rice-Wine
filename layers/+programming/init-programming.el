@@ -1,17 +1,6 @@
 ;; I always want return to perform newline automaticly
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
-;; rainbow-delimiters
-(use-package rainbow-delimiters
-  :commands (rainbow-delimiters-mode)
-  :config
-  ;; (define-globalized-minor-mode rainbow-delimiters-global-mode
-  ;;   rainbow-delimiters-mode
-  ;;   rainbow-delimiters-mode)
-  ;; (rainbow-delimiters-global-mode)
-  ;; active rainbow-delimiters minor mode globally 
-  )
-
 ;; fic-mode: highlight TODO/FIXME/BUG in comment
 (use-package fic-mode
   :commands fic-mode)
@@ -34,43 +23,14 @@
   (setq eldoc-idle-delay 0.2)
   (setq eldoc-echo-area-use-multiline-p t))
 
-;; smartparens
-(use-package smartparens
-  ;; :init
-  ;; (add-hook 'minibuffer-setup-hook 'turn-on-smartparens-strict-mode)
-  :commands (smartparens-mode smartparens-strict-mode turn-on-smartparens-strict-mode)
-  :config
-  (require 'smartparens-config)
-
-  (setq sp-autoskip-closing-pair 'always)
-  (sp-use-smartparens-bindings)
-
-  (sp-with-modes 'tuareg-mode
-    ;; disable auto insert of "'" 
-    (sp-local-pair "'" nil :actions nil)
-    (sp-local-pair "`" nil :actions nil))
-  
-  ;; Don't pair lifetime specifiers
-  (sp-local-pair 'rust-mode "'" nil :actions nil)
-
-  (sp-with-modes 'minibuffer-inactive-mode
-    (sp-local-pair "'" nil :actions nil))
-
-  ;; add newline and indent when enter {|}
-  (sp-with-modes
-      '(c-mode rust-mode)
-    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET"))))
-  )
-
-
 ;;------------------------------------------------------------------------------
 ;; common features shared by all programming language
 ;;------------------------------------------------------------------------------
 (defun rice-wine-prog-func ()
   "common features of all programming mode"
-  (rainbow-delimiters-mode)
+  ;; (rainbow-delimiters-mode)
   (fic-mode)
-  (smartparens-mode)
+  ;; (smartparens-mode)
   ;; (cscope-minor-mode)
   )
 
