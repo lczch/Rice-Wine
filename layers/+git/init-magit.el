@@ -6,15 +6,6 @@
   ;; 这个autoloads没有provide feature, 所以只能这样load
   (load-library "magit-autoloads")
   
-  ;; key bindings
-  (evil-leader/set-key
-   ;; "gb"  'spacemacs/git-blame-micro-state
-   "gfh" 'magit-log-buffer-file
-   "gm"  'magit-dispatch-popup
-   "gs"  'magit-status
-   "gS"  'magit-stage-file
-   "gU"  'magit-unstage-file)
-  
   :config
   ;; from redguardtoo
   (ivy-mode 1)

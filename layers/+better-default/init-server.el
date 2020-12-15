@@ -30,7 +30,6 @@ only these files will be asked to be saved."
         (message "This emacs is the MAIN emacs! You should not kill it!")
       (save-buffers-kill-emacs arg))))
 
-  (global-set-key (kbd "C-x C-c") 'rw-save-buffers-kill-terminal)
   )
 
 (provide 'init-server)

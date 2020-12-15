@@ -56,19 +56,11 @@ Return the updated `exec-path'"
   :mode (("\\.info\\'" . info-mode)))
 
 (use-package visual-regexp
-  :commands (vr/query-replace)
-  :init 
-  (evil-leader/set-key
-    "rr" 'vr/query-replace
-    ;; "vm" 'vr/mc-mark
-    ))
+  :commands (vr/query-replace))
 
 ;; expand-region: increase selected region by semantic units
 (use-package expand-region
   :config
-  (evil-leader/set-key
-    "xx" 'er/expand-region)
-  
   (setq expand-region-contract-fast-key "z")
   (define-key evil-visual-state-map (kbd "v") 'er/expand-region)
   )
@@ -142,14 +134,13 @@ Return the updated `exec-path'"
 ;; jump to a tag
 (use-package counsel-etags
   :ensure t
-  :commands (counsel-etags-find-tag-at-point)
-  :init
-  (global-set-key (kbd "C-\\") 'counsel-etags-find-tag-at-point)
+  ;; :commands (counsel-etags-find-tag-at-point
+  ;;            counsel-etags-virtual-update-tags)
+  :config
   (add-hook 'prog-mode-hook
         (lambda ()
           (add-hook 'after-save-hook
-            'counsel-etags-virtual-update-tags 'append 'local)))
-  :config
+                    'counsel-etags-virtual-update-tags 'append 'local)))
   
   (setq counsel-etags-update-interval 60)
   (push "build" counsel-etags-ignore-directories)
@@ -173,15 +164,6 @@ Return the updated `exec-path'"
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
-;; debug on
-(global-set-key (kbd "<f12>") 'toggle-debug-on-error)
-
-(evil-leader/set-key
-  "xh" 'mark-whole-buffer
-  "do" 'rw-display-current-buffer-other-frame
-  "eb" 'eval-buffer
-  "rb" 'revert-buffer) 
-
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq history-delete-duplicates t)
 
@@ -231,5 +213,8 @@ Return the updated `exec-path'"
 ;;------------------------------------------------------------------------------
 (setq lpr-command "xpp")
 
+
+;; read global key-bindings
+(use-package init-keybindings)
 
 (provide 'layers)

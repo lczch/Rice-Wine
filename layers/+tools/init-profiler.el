@@ -1,9 +1,4 @@
 (use-package profiler
-  :init
-  (evil-leader/set-key
-    "ps" 'rw-profiler-toggle
-    "pr" 'profiler-report)
-
   :commands (rw-profiler-toggle)
   :config 
   (defun rw-profiler-toggle ()

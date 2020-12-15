@@ -15,10 +15,6 @@
     (interactive)
     (desktop-read desktop-dirname))
   
-  (evil-leader/set-key
-    "ds" 'rw-desktop-save
-    "dr" 'rw-desktop-read)
-
   (setq desktop-globals-to-save
         (append '((extended-command-history . 128)
                   (file-name-history        . 128)

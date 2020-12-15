@@ -17,8 +17,6 @@
         (unless arg
           (select-window target-window))))))
 
-(global-set-key "\C-x2" (split-window-func-with-other-buffer 'split-window-vertically))
-(global-set-key "\C-x3" (split-window-func-with-other-buffer 'split-window-horizontally))
 
 (defun sanityinc/toggle-delete-other-windows ()
   "Delete other windows in frame if any, or restore previous window config."
@@ -28,7 +26,6 @@
       (winner-undo)
     (delete-other-windows)))
 
-(global-set-key "\C-x1" 'sanityinc/toggle-delete-other-windows)
 
 ;;----------------------------------------------------------------------------
 ;; Rearrange split windows
@@ -108,9 +105,4 @@ Call a second time to restore the original window configuration."
   (let* ((frame (or frame (selected-frame))))
     (select-frame-set-input-focus (rw-previous-frame-in-same-monitor frame))))
 
-(global-set-key (kbd "C-M-<next>") 'rw/switch-to-next-frame-in-same-monitor)
-(global-set-key (kbd "C-M-<prior>") 'rw/switch-to-previous-frame-in-same-monitor)
-
-(global-set-key (kbd "C-<next>") 'next-buffer)
-(global-set-key (kbd "C-<prior>") 'previous-buffer)
 (provide 'init-windows)

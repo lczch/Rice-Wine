@@ -84,8 +84,5 @@
     (copy-yank-str (current-kill 1) t))
   )
 
-(evil-leader/set-key
-  "aa" 'copy-to-x-clipboard
-  "zz" 'paste-from-x-clipboard)
 
 (provide 'init-clipboard)
