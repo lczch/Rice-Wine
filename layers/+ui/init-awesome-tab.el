@@ -1,6 +1,7 @@
 ;;; disabled
 ;; 不太习惯, 感觉会分神.
 
+;; TODO: is it in melpa? 
 (rw-straight-use-package 'awesome-tab "manateelazycat" "lczch")
 
 (use-package awesome-tab

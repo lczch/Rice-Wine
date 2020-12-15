@@ -4,19 +4,21 @@
 ;;; TODO
 ;; 我觉得这两个包应该可以用melpa的, 不用从git hub上下. 
 
-(rw-straight-use-package 'rust-mode "rust-lang" "lczch")
-(rw-straight-use-package 'cargo.el "kwrooijen" "lczch")
+;; (rw-straight-use-package 'rust-mode "rust-lang" "lczch")
+;; (rw-straight-use-package 'cargo.el "kwrooijen" "lczch")
 ;; flycheck下次再配
 ;; (rw-straight-use-package 'flycheck "flycheck" "lczch")
 ;; (rw-straight-use-package 'flycheck-rust "flycheck" "lczch")
 
 (use-package rust-mode
+  :ensure t 
   :init
   (autoload 'rust-mode "rust-mode" nil t)
   (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
   :defer t
   :config
-  (use-package cargo)
+  (use-package cargo
+    :ensure t)
 
   (use-package racer
     ;; it is very slow on windows.
