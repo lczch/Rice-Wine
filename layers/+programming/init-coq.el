@@ -54,9 +54,6 @@
       (other-window 1)
       (select-frame cframe)))
 
-  ;; improve pg's *goals* and *respons* display
-  (evil-leader/set-key
-    "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
 
   (use-package company-coq
     :commands (company-coq-mode company-coq-initialize)
@@ -100,10 +97,7 @@
 
   (use-package rw-pg-project-file)
   
-  (use-package rw-coq-lib
-    :config
-    (evil-leader/set-key
-      "ap" 'lzh/coq-trans)
-    ))
+  (use-package rw-coq-lib)
+  )
 
 (provide 'init-coq)

@@ -9,12 +9,7 @@
     :ensure t)
   
   (use-package swiper
-    :ensure t
-    :config
-    (evil-leader/set-key
-      "ss" 'swiper
-      "sb" 'swiper-all)
-    )
+    :ensure t)
   
   (use-package counsel
     :ensure t
@@ -29,25 +24,6 @@
        ("d" delete-file "delete")
        ("r" counsel-find-file-as-root "open as root"))))
 
-  (use-package projectile
-    :ensure t
-    :config
-    (use-package counsel-projectile
-      :ensure t
-      :config
-      (setq projectile-switch-project-action 'counsel-projectile-find-file)
-      (evil-leader/set-key
-        "p SPC" 'counsel-projectile
-        "pb"    'counsel-projectile-switch-to-buffer
-        "pd"    'counsel-projectile-find-dir
-        "pp"    'counsel-projectile-switch-project
-        "pf"    'counsel-projectile-find-file
-        "pr"    'projectile-recentf))
-
-    (setq projectile-completion-system 'ivy)
-    (projectile-mode +1)
-    )
- 
   ;;; make ivy bebavior similarly with ido
    ;; Don't open directory mode: https://github.com/abo-abo/swiper/wiki/Dont-open-directory-mode
   (setq ivy-extra-directories nil)
@@ -66,25 +42,6 @@
   ;; I can enter endless TAB without select anything!
   (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-partial)
   (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-immediate-done)
-
-  (evil-leader/set-key
-    ;; files
-    "ff"  'counsel-find-file
-    "fL"  'counsel-locate
-    ;; help
-    "?"   'counsel-descbinds
-    "hdf" 'counsel-describe-function
-    "hdv" 'counsel-describe-variable
-    ;; insert
-    "iu"  'counsel-unicode-char
-    ;; jump
-    ;; register/ring
-    "ry"  'counsel-yank-pop
-    ;; jumping
-    "sj"  'counsel-imenu
-    ;; themes
-    "Ts"  'counsel-load-theme
-    )
   
   ;; hide dired buffers, from ivy's wiki in github.
   (defun d/ignore-dired-buffers (str)

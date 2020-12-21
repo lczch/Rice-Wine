@@ -59,9 +59,6 @@
 (use-package rw-buffer-lib)
 (use-package rw-file-lib)
 (use-package rw-misc-lib
-  :commands (rw-test-new-config)
-  :config 
-  (evil-leader/set-key
-    "rwt" 'rw-test-new-config))
+  :commands (rw-test-new-config))
 
 (provide 'pre-init)

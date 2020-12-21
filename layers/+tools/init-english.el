@@ -1,13 +1,14 @@
-(straight-use-package
- '(insert-translated-name :type git :host github :repo "manateelazycat/insert-translated-name"
-            :no-build t
-            :fork (:host github
-                         :repo "lczch/insert-translated-name")
-            ))
+;; (straight-use-package
+;;  '(insert-translated-name :type git :host github :repo "manateelazycat/insert-translated-name"
+;;             :no-build t
+;;             :fork (:host github
+;;                          :repo "lczch/insert-translated-name")
+;;             ))
 
-(rw-add-to-load-path (expand-file-name "insert-translated-name" rw-straight-repos-dir))
+;; (rw-add-to-load-path (expand-file-name "insert-translated-name" rw-straight-repos-dir))
 
 (use-package insert-translated-name
+  :disabled 
   :init
   (evil-leader/set-key
     "tr" 'insert-translated-name-replace

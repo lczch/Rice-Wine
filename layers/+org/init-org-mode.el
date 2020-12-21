@@ -285,12 +285,4 @@
 (add-to-list 'org-agenda-files (expand-file-name "~/org/task"))
 (define-key global-map (kbd "C-c a") 'org-agenda)
 
-;; using C-c C-w (org-refile) move finished task to the right place
-;; using `org-archive-subtree-default' quick move finished task to specific archive files.
-;; or use default key binding: C-c C-x C-a
-(evil-leader/set-key
-  "oa" 'org-archive-subtree-default
-  "oci" 'org-clock-in
-  "oco" 'org-clock-out)
-
 (provide 'init-org-mode)
