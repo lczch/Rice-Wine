@@ -177,6 +177,22 @@ Return the updated `exec-path'"
   (when (eq system-type 'windows-nt)
     (setq ffip-find-executable "c:\\\\msys64\\\\usr\\\\bin\\\\find"))
   )
+
+;; `ripgrep'
+(when (executable-find "rg")
+  (use-package rg
+    :ensure t 
+    :config
+    (setq rg-group-result t
+          rg-show-columns t)
+
+    ;; (cl-pushnew '("tmpl" . "*.tmpl") rg-custom-type-aliases)
+
+    (rg-enable-default-bindings)))
+
+;; color-rg: replace `rgrep'
+;; there exists a error. 
+;; (use-package color-rg)
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------

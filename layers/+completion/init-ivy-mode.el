@@ -14,6 +14,13 @@
   (use-package counsel
     :ensure t
     :config
+    (when (executable-find "rg")
+      ;; ripgrep says that "-n" is enabled actually not,
+      ;; so we manually add it
+      (setq counsel-grep-base-command
+            (concat (executable-find "rg")
+                    " -n -M 512 --no-heading --color never -i \"%s\" %s")))
+    
     ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
     ;; press "M-o" to choose ivy action
     (ivy-set-actions

@@ -63,6 +63,10 @@
   ;; grep-dired 
   "gd" 'grep-dired
   "tt" 'grep-dired-dwim
+  ;; rg: use "c-c c-o"(`ivy-occur') in the minibuffer can output the result to a new buffer. 
+  "rg" 'counsel-rg
+  ;; provide by "rg.el"
+  "rG" 'rg
   )
 
 ;; search: `swiper'
@@ -89,6 +93,7 @@
   "sj"  'counsel-imenu
   ;; themes
   "Ts"  'counsel-load-theme
+  "cf" 'counsel-grep ; grep current buffer
   )
 
 ;; edit: replace
