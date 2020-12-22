@@ -171,8 +171,6 @@ Return the updated `exec-path'"
 ;; use `find-file-in-project' instead of `projectile'.
 (use-package find-file-in-project
   :ensure t
-  ;; :commands (find-file-in-project-by-selected
-  ;;            find-file-in-project-at-point)
   :config
   (when (eq system-type 'windows-nt)
     ;; (setq ffip-find-executable "c:\\\\msys64\\\\usr\\\\bin\\\\find")

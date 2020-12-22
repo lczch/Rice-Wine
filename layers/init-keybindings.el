@@ -19,9 +19,9 @@
 
 
 ;; "Delete other windows in frame if any, or restore previous window config."
-(global-set-key "\C-x1" 'sanityinc/toggle-delete-other-windows)
-(global-set-key "\C-x2" (split-window-func-with-other-buffer 'split-window-vertically))
-(global-set-key "\C-x3" (split-window-func-with-other-buffer 'split-window-horizontally))
+(global-set-key (kbd "C-x 1") 'sanityinc/toggle-delete-other-windows)
+(global-set-key (kbd "C-x 2") (split-window-func-with-other-buffer 'split-window-vertically))
+(global-set-key (kbd "C-x 3") (split-window-func-with-other-buffer 'split-window-horizontally))
 
 
 ;; 如果在emacs是启动了server的时候(我保证全局只有一个server), 那么"C-x C-s"不会杀掉这个emacs,
@@ -48,8 +48,19 @@
   "sd" 'split-window-horizontally
   "oo" 'delete-other-windows
   ;; interesting 
-  ;; "xr" 'rotate-windows
-  ;; "xt" 'toggle-two-split-window
+  "xr" 'rotate-windows
+  "xt" 'toggle-two-split-window
+  ;; window numbering
+  "0" 'select-window-0
+  "1" 'select-window-1
+  "2" 'select-window-2
+  "3" 'select-window-3
+  "4" 'select-window-4
+  "5" 'select-window-5
+  "6" 'select-window-6
+  "7" 'select-window-7
+  "8" 'select-window-8
+  "9" 'select-window-9
   )
 
 ;; find and grep files 
@@ -60,9 +71,9 @@
   ;; find-file-in-project
   "kk" 'find-file-in-project-by-selected
   "jj" 'find-file-in-project-at-point
-  ;; grep-dired 
+  "tt" 'find-file-in-current-directory-by-selected
+  ;; grep-dired: use "find", not "fd", slower.  
   "gd" 'grep-dired
-  "tt" 'grep-dired-dwim
   ;; rg: use "c-c c-o"(`ivy-occur') in the minibuffer can output the result to a new buffer. 
   "rg" 'counsel-rg
   ;; provide by "rg.el"
