@@ -175,7 +175,10 @@ Return the updated `exec-path'"
   ;;            find-file-in-project-at-point)
   :config
   (when (eq system-type 'windows-nt)
-    (setq ffip-find-executable "c:\\\\msys64\\\\usr\\\\bin\\\\find"))
+    ;; (setq ffip-find-executable "c:\\\\msys64\\\\usr\\\\bin\\\\find")
+    (setq ffip-find-executable "C:\\\\Users\\\\lzh\\\\.cargo\\\\bin\\\\fd"))
+
+  (setq ffip-use-rust-fd t)
   )
 
 ;; `ripgrep'
