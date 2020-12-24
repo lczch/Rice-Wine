@@ -161,6 +161,16 @@ Return the updated `exec-path'"
   (setq tags-case-fold-search nil) ;; t=case-insensitive, nil=case-sensitive
   ;; Don't warn when TAGS files are large
   (setq large-file-warning-threshold nil)
+
+  ;; list tags by imenu.
+  (setq imenu-create-index-function 'counsel-etags-imenu-default-create-index-function)
+
+  (when (eq system-type 'windows-nt)
+    (setq counsel-etags-ctags-program "C:\\\\msys64\\\\home\\\\lzh\\\\bin\\\\ctags")
+    (setq counsel-etags-grep-program "C:\\\\Users\\\\lzh\\\\.cargo\\\\bin\\\\rg"))
+
+  ;; don't ignore files in ".gitignore": need to search for installed packages. 
+  ;; (setq counsel-etags-ignore-config-files nil)
   )
 
 ;; locate a file -- replace "rgrep"
@@ -190,6 +200,30 @@ Return the updated `exec-path'"
     ;; (cl-pushnew '("tmpl" . "*.tmpl") rg-custom-type-aliases)
 
     (rg-enable-default-bindings)))
+
+;; pinyin
+(use-package pinyinlib
+  :ensure t
+  :commands (pinyinlib-build-regexp-char
+             pinyinlib-build-regexp-string)
+  :config
+  ;; from redguardtoo
+  (defun my-pinyinlib-build-regexp-string (str)
+    "Build pinyin regexp from STR."
+    (let* (rlt (i 0) ch)
+      (while (< i (length str))
+        (setq ch (elt str i))
+        (setq rlt (concat rlt
+                          (cond
+                           ((and (<= ?a ch) (<= ch ?z))
+                            (pinyinlib-build-regexp-char ch))
+                           (t
+                            (char-to-string ch)))))
+        (setq i (1+ i)))
+      rlt))
+  )
+
+
 
 ;; color-rg: replace `rgrep'
 ;; there exists a error. 

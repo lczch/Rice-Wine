@@ -71,12 +71,56 @@ This function is intended for use with `ivy-ignore-buffers'."
   ;; @see https://github.com/abo-abo/swiper/issues/828
   (setq ivy-display-style 'fancy)
 
-  ;; use fuzzy match
-  (setq ivy-re-builders-alist
-        '((swiper . ivy--regex-plus)
-          (t      . ivy--regex-fuzzy)))
   
-  (global-set-key (kbd "C-s") 'swiper)
+  ;; {{  C-o f to toggle case sensitive, @see https://github.com/abo-abo/swiper/issues/1104
+  (defun re-builder-extended-pattern (str)
+    "Build regex compatible with pinyin from STR."
+    (let* ((len (length str)))
+      (cond
+       ;; do nothing
+       ((<= (length str) 1))
+
+       ;; If the first character of input in ivy is ":",
+       ;; remaining input is converted into Chinese pinyin regex.
+       ((string= (substring str 0 1) ":")
+        (setq str (my-pinyinlib-build-regexp-string (substring str 1 len))))
+
+       ;; If the first character of input in ivy is "/",
+       ;; remaining input is converted to pattern to search camel case word
+       ;; For example, input "/ic" match "isController" or "isCollapsed"
+       ((string= (substring str 0 1) "/")
+        (let* ((rlt "")
+               (i 0)
+               (subs (substring str 1 len))
+               c)
+          (when (> len 2)
+            (setq subs (upcase subs))
+            (while (< i (length subs))
+              (setq c (elt subs i))
+              (setq rlt (concat rlt (cond
+                                     ((and (< c ?a) (> c ?z) (< c ?A) (> c ?Z))
+                                      (format "%c" c))
+                                     (t
+                                      (concat (if (= i 0) (format "[%c%c]" (+ c 32) c)
+                                                (format "%c" c))
+                                              "[a-z]+")))))
+              (setq i (1+ i))))
+          (setq str rlt))))
+      (ivy--regex-plus str)))
+  ;; }}
+  
+  ;; ivy--regex-plus: can use "!" to exclude some keywords. 
+  (setq ivy-re-builders-alist '((t . re-builder-extended-pattern)))
+  ;; (setq ivy-re-builders-alist
+  ;;       '((swiper . ivy--regex-plus)
+  ;;         ;; fuzzy search in counsel-rg is noisy. 
+  ;;         (counsel-rg . ivy--regex-plus)
+  ;;         ;; fuzzy is not suitable for me!
+  ;;         ;; (t      . ivy--regex-fuzzy)
+  ;;         (t . ivy-regex-plus)
+  ;;         ))
+  
+  (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
   (global-set-key (kbd "C-h v") 'counsel-describe-variable)
   (global-set-key (kbd "C-h f") 'counsel-describe-function)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -86,10 +130,17 @@ This function is intended for use with `ivy-ignore-buffers'."
   ;; (global-set-key (kbd "<f3> i") 'counsel-info-lookup-symbol)
   ;; (global-set-kqey (kbd "<f3> u") 'counsel-unicode-char)
   
+  ;; better performance on everything (especially windows), ivy-0.10.0 required
+  ;; @see https://github.com/abo-abo/swiper/issues/1218
+  (setq ivy-dynamic-exhibit-delay-ms 250)
+  
   ;; Press C-p and Enter to select current input as candidate
   ;; https://oremacs.com/2017/11/30/ivy-0.10.0/
   (setq ivy-use-selectable-prompt t)
 
+
+  
+  
   (defun ivy-occur-grep-mode-hook-setup ()
     ;; no syntax highlight, I only care performance when searching/replacing
     (font-lock-mode -1)
