@@ -26,7 +26,8 @@ Return the updated `exec-path'"
 (require 'init-windows)
 
 
-(require 'init-evil)
+;; (require 'init-evil)
+;; (require 'init-evil-escape)
 (require 'init-dired)
 (require 'init-ibuffer)
 
@@ -37,7 +38,6 @@ Return the updated `exec-path'"
 (require 'init-company-mode)
 (require 'init-ivy-mode)
 
-(require 'init-evil-escape)
 (require 'init-pairs)
 
 (require 'init-programming)
@@ -61,11 +61,11 @@ Return the updated `exec-path'"
   :commands (vr/query-replace))
 
 ;; expand-region: increase selected region by semantic units
-(use-package expand-region
-  :config
-  (setq expand-region-contract-fast-key "z")
-  (define-key evil-visual-state-map (kbd "v") 'er/expand-region)
-  )
+;; (use-package expand-region
+;;   :config
+;;   (setq expand-region-contract-fast-key "z")
+;;   (define-key evil-visual-state-map (kbd "v") 'er/expand-region)
+;;   )
 
 ;; save place
 (use-package saveplace
@@ -85,7 +85,7 @@ Return the updated `exec-path'"
   ;; preview is annoying
   (setq browse-kill-ring-show-preview nil)
   (browse-kill-ring-default-keybindings)
-  (define-key evil-normal-state-map (kbd "M-y") 'browse-kill-ring)
+  ;; (define-key evil-normal-state-map (kbd "M-y") 'browse-kill-ring)
   ;; hotkeys:
   ;; n/p => next/previous
   ;; s/r => search
@@ -205,7 +205,8 @@ Return the updated `exec-path'"
 (use-package pinyinlib
   :ensure t
   :commands (pinyinlib-build-regexp-char
-             pinyinlib-build-regexp-string)
+             pinyinlib-build-regexp-string
+             my-pinyinlib-build-regexp-string)
   :config
   ;; from redguardtoo
   (defun my-pinyinlib-build-regexp-string (str)
@@ -224,13 +225,15 @@ Return the updated `exec-path'"
   )
 
 
-
+(use-package init-keyfreq)
 ;; color-rg: replace `rgrep'
 ;; there exists a error. 
 ;; (use-package color-rg)
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------
+
+(setq ring-bell-function 'ignore)
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq history-delete-duplicates t)
 
@@ -283,5 +286,9 @@ Return the updated `exec-path'"
 
 ;; read global key-bindings
 (use-package init-keybindings)
+
+;; replace evil-mode
+(use-package init-meow)
+
 
 (provide 'layers)

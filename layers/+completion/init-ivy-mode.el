@@ -63,9 +63,6 @@ This function is intended for use with `ivy-ignore-buffers'."
   
   ;; not good experience
   ;; (setq ivy-use-virtual-buffers t)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
-
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
   ;; work around ivy issue.
   ;; @see https://github.com/abo-abo/swiper/issues/828
