@@ -133,9 +133,8 @@ Return the updated `exec-path'"
   :ensure t
   :config (global-so-long-mode 1))
 
-;; jump to a tag
+;; jump to a tag. use my git version, for there is a bug on windows. 
 (use-package counsel-etags
-  :ensure t
   ;; :commands (counsel-etags-find-tag-at-point
   ;;            counsel-etags-virtual-update-tags)
   :config

@@ -56,8 +56,8 @@
      '("N" . meow-next-expand)
      '("o" . meow-block)
      '("O" . meow-block-expand)
-     '("p" . meow-prev)
-     '("P" . meow-prev-expand)
+     '("d" . meow-prev)
+     '("D" . meow-prev-expand)
      '("q" . meow-quit)
      '("r" . meow-replace)
      '("R" . meow-replace-save)
@@ -76,7 +76,8 @@
      '("Z" . meow-pop-all-selection)
      '("&" . meow-query-replace)
      '("%" . meow-query-replace-regexp)
-     '("<escape>" . meow-last-buffer)))
+     ;; '("<escape>" . meow-last-buffer)
+     ))
   
   (meow-leader-define-key
    '(",ss" . swiper)
@@ -99,8 +100,7 @@
   
   (meow-global-mode 1)
   
-  (meow-setup)
-  )
+  (meow-setup))
 
 
 
