@@ -2,7 +2,7 @@
 
 ;; find a tag 
 (global-set-key (kbd "C-\\") 'counsel-etags-find-tag-at-point)
-
+(global-set-key (kbd "C-t") 'pop-tag-mark)
 
 ;; debug on
 (global-set-key (kbd "<f12>") 'toggle-debug-on-error)
@@ -176,5 +176,13 @@
   "aa" 'copy-to-x-clipboard
   "zz" 'paste-from-x-clipboard)
 
+
+(use-package key-chord
+  :config
+  (key-chord-define-global ",."     "()\C-b")
+  (key-chord-define-global "cv"     "<>\C-b")
+  (key-chord-define-global "4r"     "$")
+  (key-chord-mode 1)
+  )
 
 (provide 'init-keybindings)
