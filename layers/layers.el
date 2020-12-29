@@ -149,9 +149,11 @@ Return the updated `exec-path'"
   ;; counsel-etags-ignore-directories does NOT support wildcast
   (push "build_clang" counsel-etags-ignore-directories)
   (push "build_clang" counsel-etags-ignore-directories)
+  (push ".git" counsel-etags-ignore-directories)
   ;; counsel-etags-ignore-filenames supports wildcast
   (push "TAGS" counsel-etags-ignore-filenames)
   (push "*.json" counsel-etags-ignore-filenames)
+  (push "#.*" counsel-etags-ignore-filenames)
 
   
   ;; Don't ask before rereading the TAGS files if they have changed
@@ -168,8 +170,9 @@ Return the updated `exec-path'"
     (setq counsel-etags-ctags-program "C:\\\\msys64\\\\home\\\\lzh\\\\bin\\\\ctags")
     (setq counsel-etags-grep-program "C:\\\\Users\\\\lzh\\\\.cargo\\\\bin\\\\rg"))
 
-  ;; don't ignore files in ".gitignore": need to search for installed packages. 
-  ;; (setq counsel-etags-ignore-config-files nil)
+  ;; don't ignore files in ".gitignore": need to search for installed packages.
+  ;; use `counsel-etags-ignore-directories' and `counsel-etags-ignore-filenames' to prevent generating tags.
+  (setq counsel-etags-ignore-config-files nil)
   )
 
 ;; locate a file -- replace "rgrep"

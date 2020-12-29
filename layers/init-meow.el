@@ -72,7 +72,7 @@
      '("O" . meow-block-expand)
      '("k" . meow-prev)
      '("K" . meow-prev-expand)
-     '("q" . previous-buffer)
+     '("q" . next-buffer)
      '("r" . meow-replace)
      '("R" . meow-replace-save)
      '("n" . meow-search)
@@ -89,7 +89,7 @@
      '("Z" . meow-pop-all-selection)
      '("&" . meow-query-replace)
      '("%" . meow-query-replace-regexp)
-     '("<escape>" . next-buffer))
+     '("<escape>" . previous-buffer))
     
     (meow-leader-define-key
      '(",ss" . swiper)

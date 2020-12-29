@@ -33,7 +33,7 @@
 
   (defun tex-func ()
     (rainbow-delimiters-mode)
-    (smartparens-strict-mode)
+    (smartparens-mode)
     (yas-on)
     (setup-company-mode tex-mode-company-backends)
     (LaTeX-math-mode)

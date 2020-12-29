@@ -27,3 +27,9 @@ temp/
 !lib/**
 !template/**
 !doc/**
+
+# ignore temp file
+*~
+\#*\#
+.\#*
+*.elc
