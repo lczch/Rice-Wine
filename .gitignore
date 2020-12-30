@@ -12,6 +12,9 @@ private/
 # ignore packages from on-line
 temp/
 
+# git packages
+git/
+
 # And all the file types you're interested in.
 !init.el
 !*.org

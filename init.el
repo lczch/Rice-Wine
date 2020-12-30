@@ -18,7 +18,7 @@
   "local packages")
 
 (defvar rice-wine-git-package-dir
-  (expand-file-name "git-lisp" rice-wine-dir)
+  (expand-file-name "git" rice-wine-dir)
   "packages from git, which have higher priority than pakages in `rice-wine-package-dir'")
 
 (defvar rice-wine-package-temp-dir
@@ -62,7 +62,6 @@
              rice-wine-package-temp-dir
              ;; local packages, local pacakge的优先级更高
              rice-wine-package-dir
-             ;; I think useless
              rice-wine-git-package-dir
              ;; library writted by myself
              rice-wine-lib-dir)))
