@@ -116,7 +116,9 @@
        company-auctex-macros
        company-auctex-symbols
        company-auctex-environments
-       company-dabbrev)
+       company-dabbrev
+       )
+      company-ctags
       ;; company-auctex-labels
       ;; company-auctex-bibs
       ))

@@ -107,7 +107,15 @@ This function is intended for use with `ivy-ignore-buffers'."
   ;; }}
   
   ;; ivy--regex-plus: can use "!" to exclude some keywords. 
-  (setq ivy-re-builders-alist '((t . re-builder-extended-pattern)))
+  (setq ivy-re-builders-alist '(
+                                (counsel-find-file . ivy--regex-fuzzy)
+                                (counsel-describe-variable . ivy--regex-fuzzy)
+                                (counsel-describe-function . ivy--regex-fuzzy)
+                                ;; (ivy-switch-buffer . ivy--regex-fuzzy)
+                                ;; (counsel-M-x . ivy--regex-fuzzy)
+                                (t . ivy--regex-plus)
+                                ;; (T . re-builder-extended-pattern)
+                                ))
   ;; (setq ivy-re-builders-alist
   ;;       '((swiper . ivy--regex-plus)
   ;;         ;; fuzzy search in counsel-rg is noisy. 

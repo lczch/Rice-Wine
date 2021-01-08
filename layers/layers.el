@@ -120,7 +120,8 @@ Return the updated `exec-path'"
 ;;------------------------------------------------------------------------------
 (use-package init-markdown)
 
-(use-package init-haskell-mode)
+(use-package init-haskell-mode
+  :disabled)
 
 (use-package init-magit)
 

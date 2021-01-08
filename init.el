@@ -29,6 +29,10 @@
   (expand-file-name "lib" rice-wine-dir)
   "library packages, mostly for emacs-lisp programming")
 
+(defvar rice-wine-org-roam-dir
+  (expand-file-name "~/org/roam")
+  "Storing roam notes")
+
 (defvar rw-straight-repos-dir (expand-file-name "straight/repos" rice-wine-dir))
 ;; (defvar rice-wine-configure-file 
 ;;   (expand-file-name "README.org" rice-wine-dir)
@@ -56,15 +60,16 @@
   (rw-add-subdirs-to-load-path dir))
 
 (let ((dirs (list
-             ;; init file for packages
+             ;; configurations for packages 
              rice-wine-lisp-dir
-             ;; packages from elpa
-             rice-wine-package-temp-dir
-             ;; local packages, local pacakge的优先级更高
+             ;; library writted by myself
+             rice-wine-lib-dir
+             ;; local packages 
              rice-wine-package-dir
              rice-wine-git-package-dir
-             ;; library writted by myself
-             rice-wine-lib-dir)))
+             ;; packages from elpa; elpa packages have highest priority, which is useful to test newest packages. 
+             rice-wine-package-temp-dir
+            )))
   (mapc #'rw-add-dir-and-subdirs-to-load-path dirs))
 
 ;;------------------------------------------------------------------------------

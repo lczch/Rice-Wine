@@ -20,6 +20,21 @@
     (interactive)
     (copy-to-x-clipboard)
     (meow--cancel-selection))
+
+  (defun rw-sync-clipboard-to-kill-ring ()
+    (interactive)
+    (current-kill 0))
+  
+  (defun my-meow-replace-clipboard ()
+    "Replace current selection from clipboard."
+    (interactive)
+    (if (not (region-active-p))
+        (meow--selection-fallback)
+      (when (meow--allow-modify-p)
+        ;; delete-region may transfer data to x clipboard
+        (delete-region (region-beginning) (region-end))
+        (paste-from-x-clipboard))))
+
   
   (defun meow-setup ()
     (meow-motion-overwrite-define-key
@@ -61,7 +76,7 @@
      '("I" . meow-open-above)
      '("m" . meow-join)
      '("M" . delete-indentation)
-     '("d" . meow-kill)
+     '("d" . meow-clipboard-kill)
      '("t" . meow-till)
      '("T" . meow-till-expand)
      '("w" . meow-mark-word)
@@ -73,8 +88,8 @@
      '("k" . meow-prev)
      '("K" . meow-prev-expand)
      '("q" . next-buffer)
-     '("r" . meow-replace)
-     '("R" . meow-replace-save)
+     '("r" . my-meow-replace-clipboard)
+     '("R" . meow-replace)
      '("n" . meow-search)
      '("N" . meow-pop-search)
      '("l" . meow-tail)
@@ -83,8 +98,8 @@
      '("v" . meow-visit)
      '("e" . meow-next-word)
      '("E" . meow-next-symbol)
-     '("y" . my-copy-to-x-clipboard)
-     '("p" . yank)
+     '("y" . meow-clipboard-save)
+     '("p" . meow-clipboard-yank)
      '("z" . meow-pop-selection)
      '("Z" . meow-pop-all-selection)
      '("&" . meow-query-replace)

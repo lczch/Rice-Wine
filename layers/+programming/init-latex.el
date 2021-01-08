@@ -1,4 +1,5 @@
-(use-package tex-site
+(use-package tex-site 
+  :ensure auctex
   ;; 不知道出了什么问题, 导致下面这一行用不了. 这次配置出现的问题都是功能的封装不好, 每次都要回忆起最细节的东西, 很伤.
   ;; :mode ("\\.tex\\'" . Tex-latex-mode)
   :config
@@ -8,14 +9,15 @@
   (rw/prepend-to-exec-path "C:\\texlive\\2018\\bin\\win32")
 
   
-  (use-package preview-latex)
+  (require 'preview-latex)
+  (require 'reftex)
 
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq-default TeX-master nil)
 
-  (use-package company-auctex)
-  (use-package reftex)
+  (use-package company-auctex
+    :ensure t)
   
   ;; (defun tex-company ()
   ;;   ;; `company-math-symbols-unicode' is used to enter unicode symbols, which in not useful in latex mode. 

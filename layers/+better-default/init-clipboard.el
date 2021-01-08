@@ -1,3 +1,5 @@
+(setq save-interprogram-paste-before-kill t)
+
 (use-package simpleclip
   :commands (copy-to-x-clipboard paste-from-x-clipboard)
   :config

@@ -49,10 +49,10 @@
 (use-package f)
 
 ;; global key bindings
-(use-package evil-leader
-  :config
-  (global-evil-leader-mode)
-  (setq evil-leader/leader ","))
+;; (use-package evil-leader
+;;   :config
+;;   (global-evil-leader-mode)
+;;   (setq evil-leader/leader ","))
 
 (use-package other-lib)
 (use-package rw-frame-lib)
@@ -61,4 +61,6 @@
 (use-package rw-misc-lib
   :commands (rw-test-new-config))
 
+;; newer version seq.el for emacs 
+(use-package my-seq)
 (provide 'pre-init)

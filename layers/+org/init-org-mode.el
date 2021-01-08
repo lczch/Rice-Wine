@@ -9,6 +9,115 @@
 (use-package htmlize
   :ensure t)
 
+(defcustom centaur-prettify-org-symbols-alist
+  '(("[ ]" . ?☐)
+    ("[X]" . ?☑)
+    ("[-]" . ?⛝)
+
+    ("#+ARCHIVE:" . ?📦)
+    ("#+AUTHOR:" . ?👤)
+    ("#+CREATOR:" . ?💁)
+    ("#+DATE:" . ?📆)
+    ("#+DESCRIPTION:" . ?⸙)
+    ("#+EMAIL:" . ?📧)
+    ("#+OPTIONS:" . ?⛭)
+    ("#+SETUPFILE:" . ?⛮)
+    ("#+TAGS:" . ?🏷)
+    ("#+TITLE:" . ?📓)
+
+    ("#+BEGIN_SRC" . ?✎)
+    ("#+END_SRC" . ?□)
+    ("#+BEGIN_QUOTE" . ?»)
+    ("#+END_QUOTE" . ?«)
+    ("#+HEADERS" . ?☰)
+    ("#+RESULTS:" . ?💻))
+  "Alist of symbol prettifications for `org-mode'."
+  :group 'centaur
+  :type '(alist :key-type string :value-type (choice character sexp)))
+
+(add-hook 'org-mode 'org-redisplay-inline-images)
+
+(add-hook 'org-mode (lambda ()
+                       "Beautify org symbols."
+                       (setq prettify-symbols-alist centaur-prettify-org-symbols-alist)
+                       (prettify-symbols-mode 1)))
+
+(add-hook 'org-indent-mode (lambda()
+                              (diminish 'org-indent-mode)
+                              ;; WORKAROUND: Prevent text moving around while using brackets
+                              ;; @see https://github.com/seagle0128/.emacs.d/issues/88
+                              (make-variable-buffer-local 'show-paren-mode)
+                              (setq show-paren-mode nil)))
+
+(use-package ox-gfm
+  :ensure t)
+(add-to-list 'org-export-backends 'md)
+
+(with-eval-after-load 'counsel
+  (bind-key [remap org-set-tags-command] #'counsel-org-tag org-mode-map))
+
+(use-package org-superstar
+  :ensure t
+  :if (char-displayable-p ?⚫)
+  :hook (org-mode . org-superstar-mode)
+  :init (setq org-superstar-headline-bullets-list '("⚫" "⚫" "⚫" "⚫")))
+
+(use-package org-fancy-priorities
+  :ensure t
+  :diminish
+  :hook (org-mode . org-fancy-priorities-mode)
+  :init (setq org-fancy-priorities-list
+              (if (char-displayable-p ?⯀)
+                  '("⯀" "⯀" "⯀" "⯀")
+                '("HIGH" "MEDIUM" "LOW" "OPTIONAL"))))
+
+(use-package org-rich-yank
+  :ensure t
+  :bind (:map org-mode-map
+              ("C-M-y" . org-rich-yank)))
+
+(use-package org-roam
+  :disabled
+  :ensure t
+  :custom (org-roam-directory rice-wine-org-roam-dir)
+  :hook (after-init . org-roam-mode)
+  :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate)))
+  :config
+  (use-package org-roam-protocol)
+  (use-package emacsql
+    :ensure t)
+  (use-package emacsql-sqlite3
+    :ensure t)
+  (unless (file-exists-p org-roam-directory)
+    (make-directory org-roam-directory)))
+
+
+
+(use-package org-roam-server
+  :disabled
+  :ensure t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 9090
+        org-roam-server-authenticate nil
+        org-roam-server-export-inline-images t
+        org-roam-server-serve-files nil
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20)
+  
+  (org-roam-server-mode)
+  )
+
 (defun org-mode-is-code-snippet ()
   (let (rlt
         (begin-regexp "^[ \t]*#\\+begin_\\(src\\|html\\|latex\\)")
@@ -32,15 +141,15 @@
     (string-match "^[ \t]+:[A-Z]+:[ \t]+" cur-line)))
 
 ;; Please note flyspell only use ispell-word
-(defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
-  (let ((run-spellcheck ad-return-value))
-    (if ad-return-value
-      (cond
-       ((org-mode-is-code-snippet)
-        (setq run-spellcheck nil))
-       ((org-mode-current-line-is-property)
-        (setq run-spellcheck nil))))
-    (setq ad-return-value run-spellcheck)))
+;; (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
+;;   (let ((run-spellcheck ad-return-value))
+;;     (if ad-return-value
+;;       (cond
+;;        ((org-mode-is-code-snippet)
+;;         (setq run-spellcheck nil))
+;;        ((org-mode-current-line-is-property)
+;;         (setq run-spellcheck nil))))
+;;     (setq ad-return-value run-spellcheck)))
 ;; }}
 
 ;; Org v8 change log:
