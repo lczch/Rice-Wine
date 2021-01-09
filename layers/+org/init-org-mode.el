@@ -76,11 +76,11 @@
   :bind (:map org-mode-map
               ("C-M-y" . org-rich-yank)))
 
+;; org-roam is too heavy!!!!
 (use-package org-roam
   :disabled
   :ensure t
   :custom (org-roam-directory rice-wine-org-roam-dir)
-  :hook (after-init . org-roam-mode)
   :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
@@ -93,9 +93,12 @@
   (use-package emacsql
     :ensure t)
   (use-package emacsql-sqlite3
-    :ensure t)
+    :ensure t
+    :custom (emacsql-sqlite-executable-path "C:\\\\msys64\\\\home\\\\lzh\\\\bin\\\\sqlite3.exe"))
   (unless (file-exists-p org-roam-directory)
-    (make-directory org-roam-directory)))
+    (make-directory org-roam-directory))
+  (org-roam-mode)
+  )
 
 
 
