@@ -57,8 +57,8 @@ PATH="C:\\Program Files\\Java\\jdk1.8.0_211\\bin:$PATH"
 export SBCL_HOME=~/bin
 
 # Launch Zsh
-if [ -t 1 ]; then
-    echo "Start zsh"
-    exec zsh
-fi
+# if [ -t 1 ]; then
+#    echo "Start zsh"
+#    exec zsh
+# fi
 
