@@ -23,6 +23,7 @@
 
 
 (use-package evil
+  :ensure t
   :init
   (use-package undo-tree
     :load-path (lambda () (expand-file-name "evil/lib" rice-wine-package-dir))
@@ -32,6 +33,12 @@
   :commands evil-mode 
   
   :config
+  ;; global key bindings
+  (use-package evil-leader
+    :config
+    (global-evil-leader-mode)
+    (setq evil-leader/leader ","))
+  
   ;; Move back the cursor one position when exiting insert mode
   (setq evil-move-cursor-back t)
 
@@ -114,10 +121,13 @@
                   (set-face-foreground 'mode-line (cdr color))))))
 
   ;; evil-nerd-commenter
-  (use-package evil-nerd-commenter)
+  (use-package evil-nerd-commenter
+    :ensure t
+    )
 
   ;; evil-matchit
   (use-package evil-matchit
+    :ensure t
     :config
     (global-evil-matchit-mode 1))
   )
