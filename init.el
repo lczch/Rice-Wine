@@ -29,10 +29,6 @@
   (expand-file-name "lib" rice-wine-dir)
   "library packages, mostly for emacs-lisp programming")
 
-(defvar rice-wine-org-roam-dir
-  (expand-file-name "~/org/roam")
-  "Storing roam notes")
-
 (defvar rw-straight-repos-dir (expand-file-name "straight/repos" rice-wine-dir))
 ;; (defvar rice-wine-configure-file 
 ;;   (expand-file-name "README.org" rice-wine-dir)

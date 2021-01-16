@@ -62,5 +62,5 @@
   :commands (rw-test-new-config))
 
 ;; newer version seq.el for emacs 
-(use-package my-seq)
+;; (use-package my-seq)
 (provide 'pre-init)

@@ -31,14 +31,14 @@ Return the updated `exec-path'"
 (require 'init-dired)
 (require 'init-ibuffer)
 
-
+(require 'init-pairs)
 (require 'init-server)
 (require 'init-yasnippet)
 (require 'init-org-mode)
 (require 'init-company-mode)
 (require 'init-ivy-mode)
 
-(require 'init-pairs)
+
 
 (require 'init-programming)
 (require 'init-chinese-font)
@@ -174,7 +174,8 @@ Return the updated `exec-path'"
   ;; don't ignore files in ".gitignore": need to search for installed packages.
   ;; use `counsel-etags-ignore-directories' and `counsel-etags-ignore-filenames' to prevent generating tags.
   (setq counsel-etags-ignore-config-files nil)
-  )
+  ;; It is wonderful that counsel-etags also prevent ripgrep to match files in `counsel-etags-ignore-directories' or `counsel-etags-ignore-filenames'
+  (setq counsel-etags-grep-extra-arguments "--no-ignore"))
 
 ;; locate a file -- replace "rgrep"
 ;; parameters for "find": find . -type f -name '*keyword*'
