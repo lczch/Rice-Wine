@@ -170,7 +170,9 @@
   "gm"  'magit-dispatch-popup
   "gs"  'magit-status
   "gS"  'magit-stage-file
-  "gU"  'magit-unstage-file)
+  "gU"  'magit-unstage-file
+  "cc"  'with-editor-finish  
+  )
 
 ;; profiler: like "top" in linux 
 (evil-leader/set-key
