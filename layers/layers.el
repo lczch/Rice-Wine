@@ -26,8 +26,15 @@ Return the updated `exec-path'"
 (require 'init-windows)
 
 
-;; (require 'init-evil)
-;; (require 'init-evil-escape)
+(require 'init-evil)
+;; global key bindings
+(use-package evil-leader
+  :config
+  (global-evil-leader-mode)
+  (setq evil-leader/leader ","))
+
+(require 'init-evil-escape)
+
 (require 'init-dired)
 (require 'init-ibuffer)
 
@@ -292,7 +299,7 @@ Return the updated `exec-path'"
 (use-package init-keybindings)
 
 ;; replace evil-mode
-(use-package init-meow)
+;; (use-package init-meow)
 
 
 (provide 'layers)

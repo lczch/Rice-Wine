@@ -48,12 +48,6 @@
 (use-package s)
 (use-package f)
 
-;; global key bindings
-;; (use-package evil-leader
-;;   :config
-;;   (global-evil-leader-mode)
-;;   (setq evil-leader/leader ","))
-
 (use-package other-lib)
 (use-package rw-frame-lib)
 (use-package rw-buffer-lib)
