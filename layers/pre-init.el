@@ -54,6 +54,7 @@
 (use-package rw-file-lib)
 (use-package rw-misc-lib
   :commands (rw-test-new-config))
+(use-package general)
 
 ;; newer version seq.el for emacs 
 ;; (use-package my-seq)

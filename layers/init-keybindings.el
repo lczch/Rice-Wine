@@ -38,7 +38,7 @@
 (global-set-key (kbd "M-y") 'browse-kill-ring)
 
 ;; window
-(evil-leader/set-key
+(my-space-leader-def
   "x0" 'delete-window
   "x1" 'delete-other-windows
   "x2" 'split-window-vertically
@@ -72,7 +72,7 @@
   )
 
 ;; find and grep files 
-(evil-leader/set-key
+(my-space-leader-def
   ;; counsel-etags 
   "rt" 'counsel-etags-recent-tag
   "ft" 'counsel-etags-find-tag
@@ -89,13 +89,13 @@
   )
 
 ;; search: `swiper'
-(evil-leader/set-key
+(my-space-leader-def
   "ss" 'swiper
   "sb" 'swiper-all)
 
 
 ;; counsel 
-(evil-leader/set-key
+(my-space-leader-def
   "rr" 'counsel-recentf
   "xm" 'counsel-M-x
   "xf" 'counsel-find-file
@@ -119,33 +119,33 @@
   )
 
 ;; edit: replace
-(evil-leader/set-key
+(my-space-leader-def
   "lq" 'vr/query-replace
   "xx" 'er/expand-region
   ;; "vm" 'vr/mc-mark
   )
 
 ;; org 
-(evil-leader/set-key
+(my-space-leader-def
   "oa" 'org-archive-subtree-default
   "oci" 'org-clock-in
   "oco" 'org-clock-out)
 
 ;; test: create a new emacs
-(evil-leader/set-key
+(my-space-leader-def
   "rwt" 'rw-test-new-config)
 
 ;; tricky use: for a specific purpose 
-;; (evil-leader/set-key
+;; (my-space-leader-def
 ;;   "ap" 'lzh/coq-trans)
 
 ;; improve pg's *goals* and *respons* display
 ;; coq's layout in multi frames.
-(evil-leader/set-key
+(my-space-leader-def
   "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
 
 ;; buffer 
-(evil-leader/set-key
+(my-space-leader-def
   "xh" 'mark-whole-buffer
   "do" 'rw-display-current-buffer-other-frame
   "eb" 'eval-buffer
@@ -153,7 +153,7 @@
   )
 
 ;; comment a line 
-(evil-leader/set-key
+(my-space-leader-def
   "ci" 'evilnc-comment-or-uncomment-lines
   "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
   ;; "cc" 'evilnc-copy-and-comment-lines
@@ -164,7 +164,7 @@
   )
 
 ;; magit
-(evil-leader/set-key
+(my-space-leader-def
   ;; "gb"  'spacemacs/git-blame-micro-state
   "gfh" 'magit-log-buffer-file
   "gm"  'magit-dispatch-popup
@@ -175,22 +175,22 @@
   )
 
 ;; profiler: like "top" in linux 
-(evil-leader/set-key
+(my-space-leader-def
   "ps" 'rw-profiler-toggle
   "pr" 'profiler-report)
 
 ;; save/read desktop (emacs的工作区概念)
-;; (evil-leader/set-key
+;; (my-space-leader-def
 ;;   "ds" 'rw-desktop-save
 ;;   "dr" 'rw-desktop-read)
 
 ;; tex
-(evil-leader/set-key
+(my-space-leader-def
  "ca" 'TeX-command-run-all
  "ce" 'LaTeX-environment)
 
 ;; common
-(evil-leader/set-key
+(my-space-leader-def
   "xb" 'ivy-switch-buffer
   "xh" 'mark-whole-buffer
   "xk" 'kill-buffer

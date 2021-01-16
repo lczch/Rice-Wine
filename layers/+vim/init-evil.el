@@ -30,15 +30,22 @@
     :config
     (setq undo-limit 800000))
 
-  :commands evil-mode 
-  
   :config
   ;; global key bindings
   (use-package evil-leader
     :config
     (global-evil-leader-mode)
-    (setq evil-leader/leader ","))
-  
+    
+    (general-create-definer
+     my-comma-leader-def
+     :prefix ","
+     :states '(normal visual))
+
+    (general-create-definer
+     my-space-leader-def
+     :prefix "SPC"
+     :states '(normal visual)))
+
   ;; Move back the cursor one position when exiting insert mode
   (setq evil-move-cursor-back t)
 
