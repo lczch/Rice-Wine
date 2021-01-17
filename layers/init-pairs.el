@@ -4,9 +4,7 @@
   :config
   (define-globalized-minor-mode rainbow-delimiters-global-mode
     rainbow-delimiters-mode
-    rainbow-delimiters-mode)
-  ;; active rainbow-delimiters minor mode globally 
-  (rainbow-delimiters-global-mode))
+    rainbow-delimiters-mode))
 
 ;; smartparens
 (use-package smartparens
@@ -84,8 +82,8 @@ respectively."
    ("C-S-b" . sp-backward-symbol)
 
    ("C-<right>" . sp-forward-slurp-sexp)
-   ("M-<right>" . sp-forward-barf-sexp)
-   ("C-<left>"  . sp-backward-slurp-sexp)
+   ("C-<left>" . sp-forward-barf-sexp)
+   ("M-<right>"  . sp-backward-slurp-sexp)
    ("M-<left>"  . sp-backward-barf-sexp)
 
    ("C-M-t" . sp-transpose-sexp)
@@ -113,7 +111,11 @@ respectively."
    ("C-c C-c _"  . wrap-with-underscores)
    ("C-c C-c `"  . wrap-with-back-quotes))
 
-  
+  (setq sp-ignore-modes-list
+        (append sp-ignore-modes-list
+                '(org-mode
+                  fundamental-mode
+                  info-mode)))
   ;; turn smartparens globally
   (smartparens-global-mode)
   )

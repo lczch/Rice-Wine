@@ -26,6 +26,7 @@
   "common features of all lisp mode"
   (rice-wine-prog-func)
   (turn-on-smartparens-strict-mode)
+  (rainbow-delimiters-mode)
   ;;(eldoc-on) ; eldoc is a killing feature, consider it seriously
   (yas-on)
   (company-mode-on))

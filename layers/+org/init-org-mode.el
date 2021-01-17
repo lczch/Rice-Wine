@@ -6,7 +6,11 @@
 ;; {{ NO spell check for embedded snippets
 
 (use-package org
-  :commands (org-mode)
+  :init
+  (rw-add-to-load-path (expand-file-name "org-mode/lisp" rice-wine-git-package-dir))
+  (rw-add-to-load-path (expand-file-name "org-mode/contrib/lisp" rice-wine-git-package-dir))
+ 
+  ;; :commands (org-mode)
   :config
   (setq org-return-follows-link t)
   
@@ -39,17 +43,19 @@
     :group 'centaur
     :type '(alist :key-type string :value-type (choice character sexp)))
 
-  (add-hook 'org-mode 'org-redisplay-inline-images)
+  (add-hook 'org-mode-hook 'org-redisplay-inline-images)
 
-  (add-hook 'org-mode (lambda ()
+  (add-hook 'org-mode-hook
+            (lambda ()
                         "Beautify org symbols."
                         (setq prettify-symbols-alist centaur-prettify-org-symbols-alist)
                         (prettify-symbols-mode 1)))
 
-  (add-hook 'org-indent-mode (lambda()
-                               (diminish 'org-indent-mode)
-                               ;; WORKAROUND: Prevent text moving around while using brackets
-                               ;; @see https://github.com/seagle0128/.emacs.d/issues/88
+  (add-hook 'org-indent-mode-hook
+            (lambda()
+                                    (diminish 'org-indent-mode)
+                                    ;; WORKAROUND: Prevent text moving around while using brackets
+                                    ;; @see https://github.com/seagle0128/.emacs.d/issues/88
                                (make-variable-buffer-local 'show-paren-mode)
                                (setq show-paren-mode nil)))
 
@@ -66,18 +72,18 @@
     :commands (org-superstar-mode)
     :init
     (setq org-superstar-headline-bullets-list '("⚫" "⚫" "⚫" "⚫"))
-    (add-hook 'org-mode 'org-superstar-mode))
+    (add-hook 'org-mode-hook 'org-superstar-mode))
 
   (use-package org-fancy-priorities
+    :disabled 
     :ensure t
-    :diminish
     :commands (org-fancy-priorities-mode)
     :init
     (setq org-fancy-priorities-list
           (if (char-displayable-p ?⯀)
               '("⯀" "⯀" "⯀" "⯀")
             '("HIGH" "MEDIUM" "LOW" "OPTIONAL")))
-    (add-hook 'org-mode 'org-fancy-priorities-mode)
+    (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
     )
 
   (use-package org-rich-yank
@@ -119,9 +125,7 @@
 
   ;; org-roam is too heavy!!!! Disableing. 
   (use-package org-roam
-    :disabled
     :ensure t
-    :custom (org-roam-directory rice-wine-org-roam-dir)
     :bind (:map org-roam-mode-map
                 (("C-c n l" . org-roam)
                  ("C-c n f" . org-roam-find-file)
@@ -130,29 +134,82 @@
                 (("C-c n i" . org-roam-insert))
                 (("C-c n I" . org-roam-insert-immediate)))
     :config
+    ;; 它需要的seq库太新了, 而seq库是emacs自带的, 所以....也许可以通过melpa下一个更新的, 但我更粗暴一些.
+    (use-package my-seq)
     (use-package org-roam-protocol)
     (use-package emacsql
       :ensure t)
     (use-package emacsql-sqlite3
       :ensure t
       :custom (emacsql-sqlite-executable-path "C:\\\\msys64\\\\home\\\\lzh\\\\bin\\\\sqlite3.exe"))
+
+    (defun my-org-roam-capture-new-task (arg)
+      "直接创造一个task, 归档在默认的在agenda文件中. 我这里是硬编码的."
+      (interactive "s work(a)|emergency(b)|fun(c)? ")
+      (let* ((title "task")
+             (org-roam-capture--info (list (cons 'title title)
+                                            (cons 'slug (funcall org-roam-title-to-slug-function title))
+                                            (cons 'file "~/zettelkasten/task.org")))
+             (org-roam-capture--context 'capture))
+        (cond
+         ((s-equals? arg "a")
+          (org-roam-capture--capture nil "ta"))
+         ((s-equals? arg "b")
+          (org-roam-capture--capture nil "tb"))
+         ((s-equals? arg "c")
+          (org-roam-capture--capture nil "tc"))
+         (t (message arg)))
+        ))
+    
+    (setq org-roam-directory "~/zettelkasten")
     (unless (file-exists-p org-roam-directory)
       (make-directory org-roam-directory))
+
+    (setq org-roam-capture-templates
+          '(("d" "default" plain #'org-roam-capture--get-point "%?"
+             :file-name "%<%Y%m%d%H%M%S>-${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n" :unnarrowed t)
+            ("t" "group")
+            ("ta" "work task" plain #'org-roam-capture--get-point
+             "* TODO %?    :work:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("tb" "emergent task" plain #'org-roam-capture--get-point
+             "* TODO %?    :emergency:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("tc" "fun task" plain #'org-roam-capture--get-point
+             "* TODO %?    :fun:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ))
+
+    (setq org-roam-capture-immediate-template
+          '("d" "default" plain #'org-roam-capture--get-point "%?"
+            :file-name "%<%Y%m%d%H%M%S>-${slug}"
+            :head "#+title: ${title}\n#+roam_tags:\n\n"
+            :unnarrowed t
+            :immediate-finish t))
     (org-roam-mode)
     )
 
   (use-package org-roam-server
-    :disabled
     :ensure t
     :config
     (setq org-roam-server-host "127.0.0.1"
           org-roam-server-port 9090
           org-roam-server-authenticate nil
           org-roam-server-export-inline-images t
-          org-roam-server-serve-files nil
-          org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+          ;; org-roam-server-serve-files nil
+          ;; org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
           org-roam-server-network-poll t
-          org-roam-server-network-arrows nil
+          ;; org-roam-server-network-arrows nil
           org-roam-server-network-label-truncate t
           org-roam-server-network-label-truncate-length 60
           org-roam-server-network-label-wrap-length 20)
@@ -357,10 +414,40 @@
   ;; using org-capture to add ad hoc thinkings to note.org
   (define-key global-map (kbd "C-c c") 'org-capture)
 
-  ;; place all tasks in "~/org", using agenda display them
-  (add-to-list 'org-agenda-files (expand-file-name "~/org/task"))
-  (define-key global-map (kbd "C-c a") 'org-agenda)
 
+
+  (use-package org-super-agenda
+    :ensure t
+    :init
+    (setq org-agenda-files `(,(expand-file-name "~/zettelkasten/task.org")))
+    (define-key global-map (kbd "C-c a") 'org-agenda)
+    :config
+    ;; (defun my-org-super-agenda-transformer (str)
+    ;;   (let* ((str1 (s-trim str))
+    ;;          (str2 (s-collapse-whitespace str1))
+    ;;          (strs (s-split " " str2))
+    ;;          (str4 (s-join " " (seq-subseq strs 1 -1))))
+    ;;     (concat "  " str4)))
+
+    ;; 用了transformer会导致从agenda定位不到task所在的文件...
+    (setq org-super-agenda-groups
+          '(;; Each group has an implicit boolean OR operator between its selectors.
+            (:name "Work"
+                   :tag "work"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Emergency"
+                   :tag "emergency"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Fun"
+                   :tag "fun"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            ))
+    (add-hook 'org-mode-hook 'org-super-agenda-mode)
+    )
+  
   ;; hook 
   (defun org-mode-hook-setup ()
     (setq truncate-lines nil)
@@ -372,6 +459,7 @@
     (setup-company-mode '((
                            ;; 补全太慢了
                            ;; company-tabnine
+                           company-capf
                            company-math-symbols-unicode)
                           ))
 

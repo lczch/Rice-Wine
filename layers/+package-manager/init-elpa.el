@@ -12,7 +12,7 @@
                            ("melpa" . "http://elpa.emacs-china.org/melpa/")
                            ("gnu"   . "http://elpa.emacs-china.org/gnu/")
                            ;; ("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
+                           ;; ("org" . "https://orgmode.org/elpa/")
                            ))
   
   (setq package-user-dir rice-wine-package-temp-dir))

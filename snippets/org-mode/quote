@@ -1,0 +1,7 @@
+# -*- mode: org-mode -*-
+# name: quote
+# key: rwq
+# --
+#+BEGIN_QUOTE
+$0
+#+END_QUOTE

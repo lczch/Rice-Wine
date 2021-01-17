@@ -56,7 +56,7 @@
   "oo" 'delete-other-windows
   ;; interesting 
   "xr" 'rotate-windows
-  "xt" 'toggle-two-split-window
+  ;; "xt" 'toggle-two-split-window
   ;; window numbering
   "0" 'select-window-0
   "1" 'select-window-1
@@ -69,71 +69,56 @@
   "8" 'select-window-8
   "9" 'select-window-9
   "xc" 'rw-save-buffers-kill-terminal
-  )
-
-;; find and grep files 
-(my-space-leader-def
-  ;; counsel-etags 
-  "rt" 'counsel-etags-recent-tag
-  "ft" 'counsel-etags-find-tag
-  ;; find-file-in-project
+  "xb" 'ivy-switch-buffer
+  "xk" 'kill-buffer
+  "xs" 'save-buffer
+  ;; buffer
+  "xh" 'mark-whole-buffer
+  "do" 'rw-display-current-buffer-other-frame
+  "eb" 'eval-buffer
+  "rb" 'revert-buffer
+  ;; org-roam
+  "rff" 'org-roam-find-file
+  "rll" 'org-roam-insert
+  "rtt" 'my-org-roam-capture-new-task
+  "cq" 'counsel-org-tag
+  ;; find-file-in-progject
   "kk" 'find-file-in-project-by-selected
   "jj" 'find-file-in-project-at-point
-  "tt" 'find-file-in-current-directory-by-selected
-  ;; grep-dired: use "find", not "fd", slower.  
-  "gd" 'grep-dired
-  ;; rg: use "c-c c-o"(`ivy-occur') in the minibuffer can output the result to a new buffer. 
-  "rg" 'counsel-rg
-  ;; provide by "rg.el"
-  "rG" 'rg
-  )
-
-;; search: `swiper'
-(my-space-leader-def
+  ;; swiper
   "ss" 'swiper
-  "sb" 'swiper-all)
-
-
-;; counsel 
-(my-space-leader-def
-  "rr" 'counsel-recentf
-  "xm" 'counsel-M-x
+  ;; counsel
+  "xr" 'counsel-recentf 
   "xf" 'counsel-find-file
-  ;; files
   "ff"  'counsel-find-file
-  "fL"  'counsel-locate
   ;; help
   "?"   'counsel-descbinds
   "hdf" 'counsel-describe-function
   "hdv" 'counsel-describe-variable
-  ;; insert
-  "iu"  'counsel-unicode-char
-  ;; jump
-  ;; register/ring
-  "ry"  'counsel-yank-pop
-  ;; jumping
-  "sj"  'counsel-imenu
-  ;; themes
-  "Ts"  'counsel-load-theme
-  "cf" 'counsel-grep ; grep current buffer
-  )
-
-;; edit: replace
-(my-space-leader-def
+  ;; replace
   "lq" 'vr/query-replace
-  "xx" 'er/expand-region
-  ;; "vm" 'vr/mc-mark
-  )
-
-;; org 
-(my-space-leader-def
-  "oa" 'org-archive-subtree-default
-  "oci" 'org-clock-in
-  "oco" 'org-clock-out)
-
-;; test: create a new emacs
-(my-space-leader-def
-  "rwt" 'rw-test-new-config)
+  ;; test
+  "rwt" 'rw-test-new-config
+  ;; comment
+  "ci" 'evilnc-comment-or-uncomment-lines
+  ;; magit 
+  "gs"  'magit-status
+  "cc"  '(lambda ()
+           (interactive)
+           (cond
+            ((eq major-mode 'org-mode)
+             (org-capture-finalize))
+            (t
+             (with-editor-finish))))  
+  ;; tex 
+  "ca" 'TeX-command-run-all
+  "ce" 'LaTeX-environment
+  ;; bookmark
+  "mm" 'counsel-bookmark
+  ;; other 
+  "vf" 'vc-rename-file-and-buffer
+  "ee" 'pp-eval-last-sexp
+ )
 
 ;; tricky use: for a specific purpose 
 ;; (my-space-leader-def
@@ -141,96 +126,7 @@
 
 ;; improve pg's *goals* and *respons* display
 ;; coq's layout in multi frames.
-(my-space-leader-def
-  "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
-
-;; buffer 
-(my-space-leader-def
-  "xh" 'mark-whole-buffer
-  "do" 'rw-display-current-buffer-other-frame
-  "eb" 'eval-buffer
-  "rb" 'revert-buffer
-  )
-
-;; comment a line 
-(my-space-leader-def
-  "ci" 'evilnc-comment-or-uncomment-lines
-  "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
-  ;; "cc" 'evilnc-copy-and-comment-lines
-  ;; "cp" 'evilnc-comment-or-uncomment-paragraphs
-  ;; "cr" 'comment-or-uncomment-region
-  ;; "cv" 'evilnc-toggle-invert-comment-line-by-line
-  ;; "\\" 'evilnc-comment-operator       ; if you prefer backslash key
-  )
-
-;; magit
-(my-space-leader-def
-  ;; "gb"  'spacemacs/git-blame-micro-state
-  "gfh" 'magit-log-buffer-file
-  "gm"  'magit-dispatch-popup
-  "gs"  'magit-status
-  "gS"  'magit-stage-file
-  "gU"  'magit-unstage-file
-  "cc"  'with-editor-finish  
-  )
-
-;; profiler: like "top" in linux 
-(my-space-leader-def
-  "ps" 'rw-profiler-toggle
-  "pr" 'profiler-report)
-
-;; save/read desktop (emacs的工作区概念)
 ;; (my-space-leader-def
-;;   "ds" 'rw-desktop-save
-;;   "dr" 'rw-desktop-read)
-
-;; tex
-(my-space-leader-def
- "ca" 'TeX-command-run-all
- "ce" 'LaTeX-environment)
-
-;; common
-(my-space-leader-def
-  "xb" 'ivy-switch-buffer
-  "xh" 'mark-whole-buffer
-  "xk" 'kill-buffer
-  "xs" 'save-buffer
-  "vf" 'vc-rename-file-and-buffer
-  ;; "vc" 'vc-copy-file-and-rename-buffer
-  "dj" 'dired-jump ;; open the dired from current file
-  "bf" 'beginning-of-defun
-  "m" 'evil-set-marker
-  "ef" 'end-of-defun
-  "eb" 'eval-buffer
-  "ee" 'pp-eval-last-sexp
-  ;; "aa" 'copy-to-x-clipboard ; used frequently
-  ;; "pp" 'paste-from-x-clipboard ; used frequently
-  )
-
-;; from http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
-(defun vc-rename-file-and-buffer ()
-  "Rename the current buffer and file it is visiting."
-  (interactive)
-  (let* ((filename (buffer-file-name)))
-    (cond
-     ((not (and filename (file-exists-p filename)))
-      (message "Buffer is not visiting a file!"))
-     (t
-      (let* ((new-name (read-file-name "New name: " filename)))
-        (cond
-         ((vc-backend filename) (vc-rename-file filename new-name))
-         (t
-          (rename-file filename new-name t)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil))))))))
-
-;; (use-package key-chord
-;;   :config
-;;   (key-chord-define-global ",."     "()\C-b")
-;;   (key-chord-define-global "cv"     "<>\C-b")
-;;   (key-chord-define-global "4r"     "$")
-;;   (key-chord-mode 1)
-;;   )
+;;   "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
 
 (provide 'init-keybindings)

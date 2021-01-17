@@ -187,6 +187,7 @@ Return the updated `exec-path'"
 ;; locate a file -- replace "rgrep"
 ;; parameters for "find": find . -type f -name '*keyword*'
 (use-package grep-dired
+  :disabled
   :commands (grep-dired-dwim grep-dired))
 
 ;; use `find-file-in-project' instead of `projectile'.
@@ -235,6 +236,32 @@ Return the updated `exec-path'"
       rlt))
   )
 
+;; from http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
+(defun vc-rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
+  (interactive)
+  (let* ((filename (buffer-file-name)))
+    (cond
+     ((not (and filename (file-exists-p filename)))
+      (message "Buffer is not visiting a file!"))
+     (t
+      (let* ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))))
+
+(use-package key-chord
+  :disabled
+  :config
+  (key-chord-define-global ",."     "()\C-b")
+  (key-chord-define-global "cv"     "<>\C-b")
+  (key-chord-define-global "4r"     "$")
+  (key-chord-mode 1)
+  )
 
 (use-package init-keyfreq)
 ;; color-rg: replace `rgrep'

@@ -111,7 +111,7 @@ This function is intended for use with `ivy-ignore-buffers'."
                                 (counsel-find-file . ivy--regex-fuzzy)
                                 (counsel-describe-variable . ivy--regex-fuzzy)
                                 (counsel-describe-function . ivy--regex-fuzzy)
-                                ;; (ivy-switch-buffer . ivy--regex-fuzzy)
+                                (ivy-switch-buffer . ivy--regex-fuzzy)
                                 (counsel-M-x . ivy--regex-fuzzy)
                                 (t . ivy--regex-plus)
                                 ;; (T . re-builder-extended-pattern)
