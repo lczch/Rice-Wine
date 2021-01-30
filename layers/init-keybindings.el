@@ -22,6 +22,7 @@
 (global-set-key (kbd "C-x 1") 'sanityinc/toggle-delete-other-windows)
 (global-set-key (kbd "C-x 2") (split-window-func-with-other-buffer 'split-window-vertically))
 (global-set-key (kbd "C-x 3") (split-window-func-with-other-buffer 'split-window-horizontally))
+(global-set-key (kbd "<f5>") 'sanityinc/toggle-current-window-dedication)
 
 
 ;; 如果在emacs是启动了server的时候(我保证全局只有一个server), 那么"C-x C-s"不会杀掉这个emacs,
@@ -115,10 +116,13 @@
   "ce" 'LaTeX-environment
   ;; bookmark
   "mm" 'counsel-bookmark
-  ;; other 
+  ;; other
+  "ll" 'evilmi-jump-items 
   "vf" 'vc-rename-file-and-buffer
-  "ee" 'pp-eval-last-sexp
+  "ee" 'eval-last-sexp
  )
+
+
 
 ;; tricky use: for a specific purpose 
 ;; (my-space-leader-def

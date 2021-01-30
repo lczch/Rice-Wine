@@ -78,12 +78,12 @@ For example, `rice-wine-lisp-repl-map' must be evaluated manually. ")
          ("\\.lisp\\'" . lisp-mode)
          ("\\.asd\\'" . lisp-mode))
   :config
-  
+
   (defun rice-wine-emacs-lisp-func ()
     (rice-wine-lisp-func)
     (eldoc-mode)
     (setup-company-mode elisp-company-backends)
-    (local-set-key (kbd "C-x C-e") 'pp-eval-last-sexp))
+    (local-set-key (kbd "C-x C-e") 'eval-last-sexp))
 
   (defun rice-wine-common-lisp-func ()
     (rice-wine-lisp-func)

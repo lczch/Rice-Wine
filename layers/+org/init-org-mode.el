@@ -9,10 +9,53 @@
   :init
   (rw-add-to-load-path (expand-file-name "org-mode/lisp" rice-wine-git-package-dir))
   (rw-add-to-load-path (expand-file-name "org-mode/contrib/lisp" rice-wine-git-package-dir))
- 
+  
   ;; :commands (org-mode)
   :config
+  (require 'org-agenda)
+  
   (setq org-return-follows-link t)
+
+  ;; 从剪贴板中粘贴图片, 现在只在windows中有效, 需要imagemagick.
+  ;; https://emacs-china.org/t/markdown/9296/3
+  (defun org-insert-picture-clipboard (&optional captionp)
+    (interactive "P")
+    (let* ((image-dir
+	    (if (not (buffer-file-name))
+	        (cond ((string-prefix-p "CAPTURE-[0-9]" (buffer-name))
+		       (let ((buffer-name (replace-regexp-in-string "CAPTURE-[0-9-]*" "" (buffer-name))))
+		         (concat (file-name-directory (buffer-file-name (get-file-buffer buffer-name))) "images")))
+		      (t (yank) (error "")))
+	      "images"))
+	   (fname (concat (make-temp-name "image-") (format-time-string "%Y%m%d-%H%M%S")))
+	   (image-file (concat image-dir "/" fname ".png"))
+	   (exit-status
+	    (call-process "convert" nil nil nil
+			  "clipboard:" image-file)))
+      (if (zerop exit-status)
+	  (progn
+	    (unless (file-exists-p image-dir) (make-directory image-dir))
+	    (if captionp
+	        (let ((rename (read-string "Filename to rename the temp images: ")))
+		  (rename-file image-file (concat image-dir "/" rename ".png") t)
+		  (insert (format "#+CAPTION: %s label:fig:%s\n" (read-string "Caption: ") rename))
+		  (kill-new (format "Fig. ref:fig:%s " rename)))
+	      (insert (format "[[file:%s]]" image-file))
+	      (org-display-inline-images)))
+        (when captionp (user-error "No images in clipboard."))
+        (yank))))
+  
+  (use-package org-download
+    :ensure t
+    :disabled 
+    :config
+    (add-hook 'dired-mode-hook 'org-download-enable)
+    (setq-default org-download-method 'directory
+                  org-download-heading-lvl nil
+                  org-download-image-dir "./images"
+                  org-download-screenshot-method "imagemagick/convert"
+                  org-download-timestamp ""
+                  org-download-screenshot-file (expand-file-name "screenshot.jpg" temporary-file-directory)))
   
   (use-package htmlize
     :ensure t)
@@ -32,11 +75,18 @@
       ("#+SETUPFILE:" . ?⛮)
       ("#+TAGS:" . ?🏷)
       ("#+TITLE:" . ?📓)
+      ("#+title:" . ?📓)
 
-      ("#+BEGIN_SRC" . ?✎)
-      ("#+END_SRC" . ?□)
-      ("#+BEGIN_QUOTE" . ?»)
-      ("#+END_QUOTE" . ?«)
+      ;; ("#+BEGIN_SRC" . ?✎)
+      ;; ("#+END_SRC" . ?□)
+      ("#+BEGIN_SRC" . ?⏠)
+      ("#+END_SRC" . ?⏡)
+      
+      ;; ("#+BEGIN_QUOTE" . ?»)
+      ;; ("#+END_QUOTE" . ?«)
+      ("#+BEGIN_QUOTE" . ?❝)
+      ("#+END_QUOTE" . ?❞)
+      
       ("#+HEADERS" . ?☰)
       ("#+RESULTS:" . ?💻))
     "Alist of symbol prettifications for `org-mode'."
@@ -47,17 +97,17 @@
 
   (add-hook 'org-mode-hook
             (lambda ()
-                        "Beautify org symbols."
-                        (setq prettify-symbols-alist centaur-prettify-org-symbols-alist)
-                        (prettify-symbols-mode 1)))
+              "Beautify org symbols."
+              (setq prettify-symbols-alist centaur-prettify-org-symbols-alist)
+              (prettify-symbols-mode 1)))
 
   (add-hook 'org-indent-mode-hook
             (lambda()
-                                    (diminish 'org-indent-mode)
-                                    ;; WORKAROUND: Prevent text moving around while using brackets
-                                    ;; @see https://github.com/seagle0128/.emacs.d/issues/88
-                               (make-variable-buffer-local 'show-paren-mode)
-                               (setq show-paren-mode nil)))
+              (diminish 'org-indent-mode)
+              ;; WORKAROUND: Prevent text moving around while using brackets
+              ;; @see https://github.com/seagle0128/.emacs.d/issues/88
+              (make-variable-buffer-local 'show-paren-mode)
+              (setq show-paren-mode nil)))
 
   (use-package ox-gfm
     :ensure t)
@@ -167,8 +217,8 @@
 
     (setq org-roam-capture-templates
           '(("d" "default" plain #'org-roam-capture--get-point "%?"
-             :file-name "%<%Y%m%d%H%M%S>-${slug}"
-             :head "#+title: ${title}\n#+roam_tags: \n\n" :unnarrowed t)
+             :file-name "%<%Y%m%d%H%M%S>"
+             :head "#+title: ${title}\n#+roam_tags: \n#+roam_alias: \n\n" :unnarrowed t)
             ("t" "group")
             ("ta" "work task" plain #'org-roam-capture--get-point
              "* TODO %?    :work:"
@@ -192,10 +242,13 @@
 
     (setq org-roam-capture-immediate-template
           '("d" "default" plain #'org-roam-capture--get-point "%?"
-            :file-name "%<%Y%m%d%H%M%S>-${slug}"
+            :file-name "%<%Y%m%d%H%M%S>"
             :head "#+title: ${title}\n#+roam_tags:\n\n"
             :unnarrowed t
             :immediate-finish t))
+
+    ;; https://emacs-china.org/t/org-roam-error-running-timer-org-roam-db-update-cache-on-timer-error-selecting-deleted-buffer/15346/2
+    (setq org-roam-db-update-method 'immediate)
     (org-roam-mode)
     )
 
@@ -282,7 +335,7 @@
         org-edit-timestamp-down-means-later t
         org-agenda-start-on-weekday nil
         org-agenda-span 14
-        org-agenda-include-diary t
+        org-agenda-include-diary nil
         org-agenda-window-setup 'current-window
         org-fast-tag-selection-single-key 'expert
         org-export-kill-product-buffer-when-displayed t
@@ -420,6 +473,12 @@
     :ensure t
     :init
     (setq org-agenda-files `(,(expand-file-name "~/zettelkasten/task.org")))
+    (setq org-indirect-buffer-display 'dedicated-frame)
+
+    (bind-keys
+     :map org-agenda-mode-map
+     ("RET" . org-agenda-tree-to-indirect-buffer))
+    
     (define-key global-map (kbd "C-c a") 'org-agenda)
     :config
     ;; (defun my-org-super-agenda-transformer (str)
@@ -446,6 +505,15 @@
                    )
             ))
     (add-hook 'org-mode-hook 'org-super-agenda-mode)
+
+    (defun rw-window-relayout (buffer1 buffer2)
+      "按 buffer1 | buffer2的方式重新组织屏幕."
+      (switch-to-buffer buffer1)
+      (delete-other-windows)
+      (split-window-horizontally)
+      (switch-to-buffer-other-window buffer2))
+
+    
     )
   
   ;; hook 

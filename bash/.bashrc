@@ -57,8 +57,13 @@ PATH="C:\\Program Files\\Java\\jdk1.8.0_211\\bin:$PATH"
 export SBCL_HOME=~/bin
 
 # Launch Zsh
-if [ -t 1 ]; then
-   echo "Start zsh"
-   exec zsh
-fi
+# if [ -t 1 ]; then
+#    echo "Start zsh"
+#    exec zsh
+# fi
 
+# turn off git information in bash, very slow
+function git_prompt_info() {
+    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    echo "$OSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$OSH_THEME_GIT_PROMPT_SUFFIX"
+}

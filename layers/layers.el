@@ -182,7 +182,9 @@ Return the updated `exec-path'"
   ;; use `counsel-etags-ignore-directories' and `counsel-etags-ignore-filenames' to prevent generating tags.
   (setq counsel-etags-ignore-config-files nil)
   ;; It is wonderful that counsel-etags also prevent ripgrep to match files in `counsel-etags-ignore-directories' or `counsel-etags-ignore-filenames'
-  (setq counsel-etags-grep-extra-arguments "--no-ignore"))
+  ;; 还是不能这样设置. 如果让ripgrep不考虑.gitignore进行搜索, 就很可能会出乎意料的慢: 文件太多. --no-ignore参数应该给rg这类异步的插件装上. 
+  ;; (setq counsel-etags-grep-extra-arguments "--no-ignore")
+  )
 
 ;; locate a file -- replace "rgrep"
 ;; parameters for "find": find . -type f -name '*keyword*'
