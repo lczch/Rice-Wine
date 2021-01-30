@@ -120,6 +120,8 @@
   "ll" 'evilmi-jump-items 
   "vf" 'vc-rename-file-and-buffer
   "ee" 'eval-last-sexp
+  ;; paste picture
+  "pfc" 'org-insert-picture-clipboard 
  )
 
 

@@ -53,6 +53,12 @@ export STACK_ROOT="C:\\msys64\\home\\lzh\\.stack"
 # java
 PATH="C:\\Program Files\\Java\\jdk1.8.0_211\\bin:$PATH"
 
+# ImageMagick
+if [ -d "$HOME/bin/ImageMagick" ] ; then
+    PATH="$HOME/bin/ImageMagick:$PATH"
+fi
+
+
 # sbcl
 export SBCL_HOME=~/bin
 

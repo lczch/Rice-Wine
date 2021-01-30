@@ -18,8 +18,9 @@
 
   ;; 从剪贴板中粘贴图片, 现在只在windows中有效, 需要imagemagick.
   ;; https://emacs-china.org/t/markdown/9296/3
-  (defun org-insert-picture-clipboard (&optional captionp)
-    (interactive "P")
+  ;; 在windows上, 使用命令`magick clipboard: test.png'可以将clipboard中的图片读取保存为test.png.
+  (defun org-insert-picture-clipboard ()
+    (interactive)
     (let* ((image-dir
 	    (if (not (buffer-file-name))
 	        (cond ((string-prefix-p "CAPTURE-[0-9]" (buffer-name))
@@ -28,22 +29,15 @@
 		      (t (yank) (error "")))
 	      "images"))
 	   (fname (concat (make-temp-name "image-") (format-time-string "%Y%m%d-%H%M%S")))
-	   (image-file (concat image-dir "/" fname ".png"))
-	   (exit-status
-	    (call-process "convert" nil nil nil
-			  "clipboard:" image-file)))
-      (if (zerop exit-status)
-	  (progn
-	    (unless (file-exists-p image-dir) (make-directory image-dir))
-	    (if captionp
-	        (let ((rename (read-string "Filename to rename the temp images: ")))
-		  (rename-file image-file (concat image-dir "/" rename ".png") t)
-		  (insert (format "#+CAPTION: %s label:fig:%s\n" (read-string "Caption: ") rename))
-		  (kill-new (format "Fig. ref:fig:%s " rename)))
-	      (insert (format "[[file:%s]]" image-file))
-	      (org-display-inline-images)))
-        (when captionp (user-error "No images in clipboard."))
-        (yank))))
+	   (image-file (concat image-dir "/" fname ".png")))
+      
+      (unless (file-exists-p image-dir) (make-directory image-dir))
+      ;; 将剪贴板中的图片保存为image-file
+      (call-process "magick" nil nil nil
+		    "convert" "clipboard:" image-file)
+      (insert (format "[[file:%s]]" image-file))
+      (org-display-inline-images)
+      ))
   
   (use-package org-download
     :ensure t

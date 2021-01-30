@@ -26,9 +26,11 @@
   :ensure t
   :init
   (use-package undo-tree
+    :disabled 
     :load-path (lambda () (expand-file-name "evil/lib" rice-wine-package-dir))
     :config
-    (setq undo-limit 800000))
+    (setq undo-limit 800000)
+    )
 
   :config
   ;; global key bindings
