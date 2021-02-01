@@ -83,6 +83,7 @@
   "rll" 'org-roam-insert
   "rtt" 'my-org-roam-capture-new-task
   "cq" 'counsel-org-tag
+  "cde" 'org-cdlatex-environment-indent
   ;; find-file-in-progject
   "kk" 'find-file-in-project-by-selected
   "jj" 'find-file-in-project-at-point
@@ -104,16 +105,11 @@
   "ci" 'evilnc-comment-or-uncomment-lines
   ;; magit 
   "gs"  'magit-status
-  "cc"  '(lambda ()
-           (interactive)
-           (cond
-            ((eq major-mode 'org-mode)
-             (org-capture-finalize))
-            (t
-             (with-editor-finish))))  
+  "cc"  'org-capture-finalize   
   ;; tex 
   "ca" 'TeX-command-run-all
   "ce" 'LaTeX-environment
+
   ;; bookmark
   "mm" 'counsel-bookmark
   ;; other

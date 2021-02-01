@@ -8,8 +8,8 @@
 
   (rw/prepend-to-exec-path "C:\\texlive\\2018\\bin\\win32")
 
-  
-  (require 'preview-latex)
+  ;; 放弃折腾preview了, 简直不能成功, 文档也很糟糕, 放弃. 
+  ;; (require 'preview-latex)
   (require 'reftex)
 
   (setq TeX-auto-save t)

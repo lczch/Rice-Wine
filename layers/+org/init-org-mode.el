@@ -13,12 +13,43 @@
   ;; :commands (org-mode)
   :config
   (require 'org-agenda)
+
+  ;; 让latex公式可以自动indent
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (use-package org-edit-latex
+    ;; 使用latex的临时buffer来edit latex公式.
+    :ensure t
+    :config)
+
+  (use-package cdlatex
+    ;; 我只需要cdlatex在org-mode中插入snippet的功能, 其他都不想要.
+    ;; 本来还想在latex里试试cdlatex, 但它竟然把我的缩进键绑定没了! 再见!
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook 'org-cdlatex-mode)
+    (define-key cdlatex-mode-map "(" nil))
+  
+  (use-package org-fragtog
+    ;; 自动preview latex
+    ;; 从git安装, 如果从melpa安装, 可能会安装org为依赖, 我不需要.
+    :config
+    (add-hook 'org-mode-hook 'org-fragtog-mode))
+  
+  ;; 尝试一下org的cdlatex
+  ;; (add-hook 'org-mode 'turn-on-org-cdlatex)
+  (use-package good-scroll
+    ;; 解决有内嵌图片时的滚动问题
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook 'good-scroll-mode))
   
   (setq org-return-follows-link t)
 
   ;; 从剪贴板中粘贴图片, 现在只在windows中有效, 需要imagemagick.
   ;; https://emacs-china.org/t/markdown/9296/3
   ;; 在windows上, 使用命令`magick clipboard: test.png'可以将clipboard中的图片读取保存为test.png.
+  (setq org-image-actual-width '(800))
+  (setq org-startup-with-inline-images t)
   (defun org-insert-picture-clipboard ()
     (interactive)
     (let* ((image-dir
@@ -34,7 +65,7 @@
       (unless (file-exists-p image-dir) (make-directory image-dir))
       ;; 将剪贴板中的图片保存为image-file
       (call-process "magick" nil nil nil
-		    "convert" "clipboard:" image-file)
+		    "clipboard:" image-file)
       (insert (format "[[file:%s]]" image-file))
       (org-display-inline-images)
       ))
@@ -438,7 +469,10 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (clojure . t)))
+     (clojure . t)
+     (latex . t)
+     (shell . t)
+     ))
 
   ;; show syntax highlighting per language native mode in *.org
   (setq org-src-fontify-natively t)
