@@ -103,13 +103,14 @@ respectively."
 
    ("C-x C-t" . sp-transpose-hybrid-sexp)
 
-   ("C-c C-c ("  . wrap-with-parens)
-   ("C-c C-c ["  . wrap-with-brackets)
-   ("C-c C-c {"  . wrap-with-braces)
-   ("C-c C-c '"  . wrap-with-single-quotes)
-   ("C-c C-c \"" . wrap-with-double-quotes)
-   ("C-c C-c _"  . wrap-with-underscores)
-   ("C-c C-c `"  . wrap-with-back-quotes))
+   ;; ("C-c C-c ("  . wrap-with-parens)
+   ;; ("C-c C-c ["  . wrap-with-brackets)
+   ;; ("C-c C-c {"  . wrap-with-braces)
+   ;; ("C-c C-c '"  . wrap-with-single-quotes)
+   ;; ("C-c C-c \"" . wrap-with-double-quotes)
+   ;; ("C-c C-c _"  . wrap-with-underscores)
+   ;; ("C-c C-c `"  . wrap-with-back-quotes)
+   )
 
   (setq sp-ignore-modes-list
         (append sp-ignore-modes-list

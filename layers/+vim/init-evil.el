@@ -21,12 +21,11 @@
 ;;   :config
 ;;   (setq undo-limit 800000))
 
-
 (use-package evil
   :ensure t
   :init
   (use-package undo-tree
-    :disabled 
+    ;; use old version undo-tree, the newest is full of bugs.
     :load-path (lambda () (expand-file-name "evil/lib" rice-wine-package-dir))
     :config
     (setq undo-limit 800000)

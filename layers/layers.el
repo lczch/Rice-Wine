@@ -269,6 +269,21 @@ Return the updated `exec-path'"
 ;; color-rg: replace `rgrep'
 ;; there exists a error. 
 ;; (use-package color-rg)
+
+;; (require 'rect)
+;; (defun clear-all-space-in-rect-line (start end)
+;;   (save-restriction
+;;     (save-match-data
+;;       (narrow-to-region (+ (point) start)
+;;                         (+ (point) end))
+;;       (while (re-search-forward "\\s-+" nil t)
+;;         (replace-match "")))))
+
+;; (defun clear-all-space-in-rect (start end)
+;;   "delete all whitespace in the rectangle"
+;;   (interactive "r")
+;;   (apply-on-rectangle 'clear-all-space-in-rect-line start end))
+
 ;;------------------------------------------------------------------------------
 ;; misc configurations
 ;;------------------------------------------------------------------------------

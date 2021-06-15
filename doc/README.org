@@ -38,11 +38,11 @@
    #+BEGIN_SRC sh
    pacman -S make
    #+END_SRC
-6. 安装openssh（是为了使用ssh）, 并配置目录让ssh能找到key, 即配置windows的环境变量 ~HOME~ 为 ~c:/msys64/home/lzh~.
+6. 安装openssh（是为了使用ssh）, 并配置目录让ssh能找到key, 即配置windows的环境变量 ~HOME~ 为 你的home(比如 ~c:/msys64/home/name~).
 7. 做git相关的配置：
    #+BEGIN_SRC sh
-   git config --global user.email lizhaohui1991@gmail.com
-   git config --global user.name lczch
+   git config --global user.email name@example.com
+   git config --global user.name name
    #+END_SRC
 8. 安装Source Code Pro:
    [[https://fonts.google.com/specimen/Source+Code+Pro?selection.family=Source+Code+Pro]]
@@ -53,11 +53,9 @@
     pacman -S mingw-w64-x86_64-emacs
     #+END_SRC
 11. 使用 ~ssh-keygen~ 产生key， 然后将 public key 上传到github中。
-    接着clone emacs的配置，并执行tangle:
+    接着clone emacs的配置:
     #+BEGIN_SRC sh
     git clone git@github.com:lczch/rice-wine.git
-    cd rice-wine 
-    make
     #+END_SRC
 12. 创建 ~.emacs~ 文件并写入：
     #+BEGIN_SRC emacs-lisp

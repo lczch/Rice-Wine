@@ -21,6 +21,9 @@
     :ensure t
     :config)
 
+  ;; preserve breaks in the org file
+  (setq org-export-preserve-breaks t)
+  
   (use-package cdlatex
     ;; 我只需要cdlatex在org-mode中插入snippet的功能, 其他都不想要.
     ;; 本来还想在latex里试试cdlatex, 但它竟然把我的缩进键绑定没了! 再见!
