@@ -498,6 +498,32 @@
   ;; using org-capture to add ad hoc thinkings to note.org
   (define-key global-map (kbd "C-c c") 'org-capture)
 
+  
+  ;;------------------------------------------------------------------------------
+  ;; 农历日期, from https://emacs-china.org/t/topic/2119/26
+  ;; 例子: <%%(my-diary-chinese-anniversary 7 14)>
+  ;;------------------------------------------------------------------------------
+  
+  (use-package cal-china
+    :config
+    ;; 原package里的这个函数, 有一个不知道干什么的, 从哪里设置的外部变量`date', 这代码也写的太垃圾了. 我也不想debug了, 自己写算了.
+    ;; 我准备用`diary-anniversary'这个函数来实现, 设计一个将农历转化成阳历的函数.
+    ;; 农历的标准格式中的"年"是由cycle*60+year来表示的, 比如, 公立1993对应的是农历第78个周期的第10年, 如果从公元前2637年算起的话.
+    ;; 太麻烦了, 我找了一个能够成功起作用的了.
+    ;; 只要不加year, 就是能起作用的.
+    
+    (defun my--diary-chinese-anniversary (lunar-month lunar-day &optional year mark)
+      (if year
+          (let* ((d-date (diary-make-date lunar-month lunar-day year))
+                 (a-date (calendar-absolute-from-gregorian d-date))
+                 (c-date (calendar-chinese-from-absolute a-date))
+                 (cycle (car c-date))
+                 (yy (cadr c-date))
+                 (y (+ (* 100 cycle) yy)))
+            (diary-chinese-anniversary lunar-month lunar-day y mark))
+        (diary-chinese-anniversary lunar-month lunar-day year mark)))
+    )
+
 
 
   (use-package org-super-agenda
@@ -505,7 +531,8 @@
     :init
     (setq org-agenda-files `(,(expand-file-name "~/zettelkasten/task.org")))
     (setq org-indirect-buffer-display 'dedicated-frame)
-
+    (setq org-agenda-include-diary nil)
+    
     (bind-keys
      :map org-agenda-mode-map
      ("RET" . org-agenda-tree-to-indirect-buffer))

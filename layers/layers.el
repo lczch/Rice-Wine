@@ -10,6 +10,18 @@ Return the updated `exec-path'"
         (cons (expand-file-name path)  
               exec-path)))
 
+;; solve "failed to verify signature archive-contents"
+;; https://emacs-china.org/t/spacemacs-gnu-key/10627
+;; 只要把disabled注释掉, 运行一次, 更新key, 最后重新注释就可以了. 
+;; (use-package gnu-elpa-keyring-update
+;;   :init
+;;   (setq package-check-signature nil)
+;;   :ensure t
+;;   :config
+;;   (gnu-elpa-keyring-update)
+;;   (setq package-check-signature 'allow-unsigned)
+;;   )
+
 (use-package cygwin-mount
   :config
   (cygwin-mount-activate))
