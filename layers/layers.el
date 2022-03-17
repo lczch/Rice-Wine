@@ -22,6 +22,8 @@ Return the updated `exec-path'"
 ;;   (setq package-check-signature 'allow-unsigned)
 ;;   )
 
+(setq package-check-signature nil)
+
 (use-package cygwin-mount
   :config
   (cygwin-mount-activate))

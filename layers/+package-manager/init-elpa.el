@@ -9,8 +9,9 @@
   (setq package-archives `(
                            ;; ("site-lisp" . ,rice-wine-package-dir)
                            ;; ("straight-repo" . ,rw-straight-repos-dir)
-                           ("melpa" . "http://elpa.emacs-china.org/melpa/")
-                           ("gnu"   . "http://elpa.emacs-china.org/gnu/")
+                           ("melpa-stable" . "http://elpa.zilongshanren.com/stable-melpa/")
+                           ("gnu"   . "http://elpa.zilongshanren.com/gnu/")
+                           ("melpa" . "http://elpa.zilongshanren.com/melpa/")
                            ;; ("melpa" . "https://melpa.org/packages/")
                            ;; ("org" . "https://orgmode.org/elpa/")
                            ))

@@ -29,7 +29,7 @@
 ;;------------------------------------------------------------------------------
 (eval-and-compile
   (require 'cl)
-  (defvar use-package-verbose nil) ;; debug message
+  (defvar use-package-verbose t) ;; debug message
   (require 'use-package))
 
 (require 'diminish)                ;; if you use :diminish

@@ -201,7 +201,6 @@
     )
 
 
-  ;; org-roam is too heavy!!!! Disableing. 
   (use-package org-roam
     :ensure t
     :bind (:map org-roam-mode-map
@@ -211,6 +210,7 @@
                 :map org-mode-map
                 (("C-c n i" . org-roam-insert))
                 (("C-c n I" . org-roam-insert-immediate)))
+    :init (org-roam)
     :config
     ;; 它需要的seq库太新了, 而seq库是emacs自带的, 所以....也许可以通过melpa下一个更新的, 但我更粗暴一些.
     (use-package my-seq)
@@ -223,7 +223,7 @@
 
     (defun my-org-roam-capture-new-task (arg)
       "直接创造一个task, 归档在默认的在agenda文件中. 我这里是硬编码的."
-      (interactive "s work(a)|emergency(b)|fun(c)? ")
+      (interactive "s work(a)|emergency(b)|love(d)|reading(r)|technique(t)|game(g)|fiction(f)|cook(o)|fun(c)|festival(z)?")
       (let* ((title "task")
              (org-roam-capture--info (list (cons 'title title)
                                             (cons 'slug (funcall org-roam-title-to-slug-function title))
@@ -234,8 +234,22 @@
           (org-roam-capture--capture nil "ta"))
          ((s-equals? arg "b")
           (org-roam-capture--capture nil "tb"))
+         ((s-equals? arg "d")
+          (org-roam-capture--capture nil "td"))
+         ((s-equals? arg "r")
+          (org-roam-capture--capture nil "tr"))
+         ((s-equals? arg "t")
+          (org-roam-capture--capture nil "tt"))
+         ((s-equals? arg "g")
+          (org-roam-capture--capture nil "tg"))
+         ((s-equals? arg "f")
+          (org-roam-capture--capture nil "tf"))
+         ((s-equals? arg "o")
+          (org-roam-capture--capture nil "to"))
          ((s-equals? arg "c")
           (org-roam-capture--capture nil "tc"))
+         ((s-equals? arg "z")
+          (org-roam-capture--capture nil "tz"))
          (t (message arg)))
         ))
     
@@ -266,6 +280,48 @@
              :head "#+title: ${title}\n#+roam_tags: \n\n"
              :unarrowed t
              :empty-lines 1)
+            ("td" "love" plain #'org-roam-capture--get-point
+             "* TODO %?    :love:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("tg" "game" plain #'org-roam-capture--get-point
+             "* TODO %?    :game:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("tr" "reading" plain #'org-roam-capture--get-point
+             "* TODO %?    :reading:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("tf" "fiction" plain #'org-roam-capture--get-point
+             "* TODO %?    :fiction:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("tt" "technique" plain #'org-roam-capture--get-point
+             "* TODO %?    :technique:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("to" "cook" plain #'org-roam-capture--get-point
+             "* TODO %?    :cook:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("tz" "festival" plain #'org-roam-capture--get-point
+             "* TODO %?    :festival:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
             ))
 
     (setq org-roam-capture-immediate-template
@@ -280,8 +336,84 @@
     (org-roam-mode)
     )
 
+  (use-package org-super-agenda
+    :ensure t
+    :init
+    (setq org-agenda-files `(,(expand-file-name "~/zettelkasten/task.org")))
+    (setq org-indirect-buffer-display 'dedicated-frame)
+    (setq org-agenda-include-diary nil)
+    
+    (bind-keys
+     :map org-agenda-mode-map
+     ("RET" . org-agenda-tree-to-indirect-buffer))
+    
+    (define-key global-map (kbd "C-c a") 'org-agenda)
+    :config
+    ;; (defun my-org-super-agenda-transformer (str)
+    ;;   (let* ((str1 (s-trim str))
+    ;;          (str2 (s-collapse-whitespace str1))
+    ;;          (strs (s-split " " str2))
+    ;;          (str4 (s-join " " (seq-subseq strs 1 -1))))
+    ;;     (concat "  " str4)))
+
+    ;; 用了transformer会导致从agenda定位不到task所在的文件...
+    (setq org-super-agenda-groups
+          '(;; Each group has an implicit boolean OR operator between its selectors.
+            (:name "Work"
+                   :tag "work"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Emergency"
+                   :tag "emergency"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Love"
+                   :tag "love"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Reading"
+                   :tag "reading"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Game"
+                   :tag "game"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Fiction"
+                   :tag "fiction"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Cook"
+                   :tag "cook"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Technique"
+                   :tag "technique"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Fun"
+                   :tag "fun"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Festival"
+                   :tag "festival"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            ))
+    (add-hook 'org-mode-hook 'org-super-agenda-mode)
+
+    (defun rw-window-relayout (buffer1 buffer2)
+      "按 buffer1 | buffer2的方式重新组织屏幕."
+      (switch-to-buffer buffer1)
+      (delete-other-windows)
+      (split-window-horizontally)
+      (switch-to-buffer-other-window buffer2))
+    )
+
+  
   (use-package org-roam-server
     :ensure t
+    :disabled
     :config
     (setq org-roam-server-host "127.0.0.1"
           org-roam-server-port 9090
@@ -522,56 +654,6 @@
                  (y (+ (* 100 cycle) yy)))
             (diary-chinese-anniversary lunar-month lunar-day y mark))
         (diary-chinese-anniversary lunar-month lunar-day year mark)))
-    )
-
-
-
-  (use-package org-super-agenda
-    :ensure t
-    :init
-    (setq org-agenda-files `(,(expand-file-name "~/zettelkasten/task.org")))
-    (setq org-indirect-buffer-display 'dedicated-frame)
-    (setq org-agenda-include-diary nil)
-    
-    (bind-keys
-     :map org-agenda-mode-map
-     ("RET" . org-agenda-tree-to-indirect-buffer))
-    
-    (define-key global-map (kbd "C-c a") 'org-agenda)
-    :config
-    ;; (defun my-org-super-agenda-transformer (str)
-    ;;   (let* ((str1 (s-trim str))
-    ;;          (str2 (s-collapse-whitespace str1))
-    ;;          (strs (s-split " " str2))
-    ;;          (str4 (s-join " " (seq-subseq strs 1 -1))))
-    ;;     (concat "  " str4)))
-
-    ;; 用了transformer会导致从agenda定位不到task所在的文件...
-    (setq org-super-agenda-groups
-          '(;; Each group has an implicit boolean OR operator between its selectors.
-            (:name "Work"
-                   :tag "work"
-                   ;; :transformer my-org-super-agenda-transformer
-                   )
-            (:name "Emergency"
-                   :tag "emergency"
-                   ;; :transformer my-org-super-agenda-transformer
-                   )
-            (:name "Fun"
-                   :tag "fun"
-                   ;; :transformer my-org-super-agenda-transformer
-                   )
-            ))
-    (add-hook 'org-mode-hook 'org-super-agenda-mode)
-
-    (defun rw-window-relayout (buffer1 buffer2)
-      "按 buffer1 | buffer2的方式重新组织屏幕."
-      (switch-to-buffer buffer1)
-      (delete-other-windows)
-      (split-window-horizontally)
-      (switch-to-buffer-other-window buffer2))
-
-    
     )
   
   ;; hook 

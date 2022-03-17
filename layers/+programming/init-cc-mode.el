@@ -5,7 +5,7 @@
          ("\\.h\\'" . c-mode))
 
   :config
-  (setq c-default-style "linux")
+  (setq c-default-style "gnu")
   ;; give me NO newline automatically after electric expressions are entered
   (setq c-auto-newline nil)
 

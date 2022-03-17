@@ -83,4 +83,6 @@
 
 (require 'init-lua)
 
+(require 'init-python)
+
 (provide 'init-programming)
