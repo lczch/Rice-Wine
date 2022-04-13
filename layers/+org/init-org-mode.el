@@ -223,7 +223,7 @@
 
     (defun my-org-roam-capture-new-task (arg)
       "直接创造一个task, 归档在默认的在agenda文件中. 我这里是硬编码的."
-      (interactive "s work(a)|emergency(b)|love(d)|reading(r)|technique(t)|game(g)|fiction(f)|cook(o)|fun(c)|festival(z)?")
+      (interactive "s work(a)|emergency(b)|love(d)|reading(r)|technique(t)|game(g)|fiction(f)|cook(o)|fun(c)|travel(e)|festival(z)?")
       (let* ((title "task")
              (org-roam-capture--info (list (cons 'title title)
                                             (cons 'slug (funcall org-roam-title-to-slug-function title))
@@ -248,6 +248,8 @@
           (org-roam-capture--capture nil "to"))
          ((s-equals? arg "c")
           (org-roam-capture--capture nil "tc"))
+         ((s-equals? arg "e")
+          (org-roam-capture--capture nil "te"))
          ((s-equals? arg "z")
           (org-roam-capture--capture nil "tz"))
          (t (message arg)))
@@ -312,6 +314,12 @@
              :empty-lines 1)
             ("to" "cook" plain #'org-roam-capture--get-point
              "* TODO %?    :cook:"
+             :file-name "${slug}"
+             :head "#+title: ${title}\n#+roam_tags: \n\n"
+             :unarrowed t
+             :empty-lines 1)
+            ("te" "travel" plain #'org-roam-capture--get-point
+             "* TODO %?    :travel:"
              :file-name "${slug}"
              :head "#+title: ${title}\n#+roam_tags: \n\n"
              :unarrowed t
@@ -393,6 +401,10 @@
                    )
             (:name "Fun"
                    :tag "fun"
+                   ;; :transformer my-org-super-agenda-transformer
+                   )
+            (:name "Travel"
+                   :tag "travel"
                    ;; :transformer my-org-super-agenda-transformer
                    )
             (:name "Festival"
