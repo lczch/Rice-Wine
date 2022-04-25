@@ -202,7 +202,10 @@
 
 
   (use-package org-roam
-    :ensure t
+    ;; use my own version
+    :commands (org-roam-find-file
+               org-roam-mode)
+    
     :bind (:map org-roam-mode-map
                 (("C-c n l" . org-roam)
                  ("C-c n f" . org-roam-find-file)
@@ -210,17 +213,41 @@
                 :map org-mode-map
                 (("C-c n i" . org-roam-insert))
                 (("C-c n I" . org-roam-insert-immediate)))
-    :init (org-roam)
+    :init
+    (org-roam)
     :config
+    (setq org-roam-db-gc-threshold most-positive-fixnum)
     ;; 它需要的seq库太新了, 而seq库是emacs自带的, 所以....也许可以通过melpa下一个更新的, 但我更粗暴一些.
     (use-package my-seq)
-    (use-package org-roam-protocol)
+    ;; (use-package org-roam-protocol)
     (use-package emacsql
       :ensure t)
     (use-package emacsql-sqlite3
       :ensure t
       :custom (emacsql-sqlite-executable-path "C:\\\\msys64\\\\home\\\\lzh\\\\bin\\\\sqlite3.exe"))
 
+    ;; my function 
+    (defun org-roam-find-file-other-window (&optional initial-prompt completions filter-fn no-confirm)
+      "Find and open an Org-roam file in other window."
+      (interactive)
+      (unless org-roam-mode (org-roam-mode))
+      (let* ((completions (funcall (or filter-fn #'identity)
+                                   (or completions (org-roam--get-title-path-completions))))
+             (title-with-tags (if no-confirm
+                                  initial-prompt
+                                (org-roam-completion--completing-read "File: " completions
+                                                                      :initial-input initial-prompt)))
+             (res (cdr (assoc title-with-tags completions)))
+             (file-path (plist-get res :path)))
+        (if file-path
+            (find-file-other-window file-path)
+          (let ((org-roam-capture--info `((title . ,title-with-tags)
+                                          (slug  . ,(funcall org-roam-title-to-slug-function title-with-tags))))
+                (org-roam-capture--context 'title))
+            (setq org-roam-capture-additional-template-props (list :finalize 'find-file))
+            (org-roam-capture--capture)))))
+
+    
     (defun my-org-roam-capture-new-task (arg)
       "直接创造一个task, 归档在默认的在agenda文件中. 我这里是硬编码的."
       (interactive "s work(a)|emergency(b)|love(d)|reading(r)|technique(t)|game(g)|fiction(f)|cook(o)|fun(c)|travel(e)|festival(z)?")
@@ -259,10 +286,13 @@
     (unless (file-exists-p org-roam-directory)
       (make-directory org-roam-directory))
 
+    ;; 导出成为html更加好看
+    (setq rw-org-html-theme "#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup\n")
+    
     (setq org-roam-capture-templates
-          '(("d" "default" plain #'org-roam-capture--get-point "%?"
+          `(("d" "default" plain #'org-roam-capture--get-point "%?"
              :file-name "%<%Y%m%d%H%M%S>"
-             :head "#+title: ${title}\n#+roam_tags: \n#+roam_alias: \n\n" :unnarrowed t)
+             :head ,(s-concat rw-org-html-theme "#+title: ${title}\n#+roam_tags: \n#+roam_alias: \n\n") :unnarrowed t)
             ("t" "group")
             ("ta" "work task" plain #'org-roam-capture--get-point
              "* TODO %?    :work:"
@@ -414,12 +444,6 @@
             ))
     (add-hook 'org-mode-hook 'org-super-agenda-mode)
 
-    (defun rw-window-relayout (buffer1 buffer2)
-      "按 buffer1 | buffer2的方式重新组织屏幕."
-      (switch-to-buffer buffer1)
-      (delete-other-windows)
-      (split-window-horizontally)
-      (switch-to-buffer-other-window buffer2))
     )
 
   

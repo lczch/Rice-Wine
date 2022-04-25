@@ -15,4 +15,11 @@
   (interactive)
   (display-buffer-other-frame (current-buffer)))
 
+(defun rw-window-relayout (buffer1 buffer2)
+  "按 buffer1 | buffer2的方式重新组织屏幕."
+  (switch-to-buffer buffer1)
+  (delete-other-windows)
+  (split-window-horizontally)
+  (switch-to-buffer-other-window buffer2))
+
 (provide 'rw-buffer-lib)

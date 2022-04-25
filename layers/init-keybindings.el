@@ -80,6 +80,7 @@
   "rb" 'revert-buffer
   ;; org-roam
   "rff" 'org-roam-find-file
+  "roff" 'org-roam-find-file-other-window
   "rll" 'org-roam-insert
   "rtt" 'my-org-roam-capture-new-task
   "cq" 'counsel-org-tag
@@ -91,8 +92,8 @@
   "ss" 'swiper
   ;; counsel
   "xr" 'counsel-recentf 
-  "xf" 'counsel-find-file
-  "ff"  'counsel-find-file
+  "ff" 'counsel-find-file
+  "off"  'counsel-find-file-other-window
   ;; help
   "?"   'counsel-descbinds
   "hdf" 'counsel-describe-function

@@ -1,9 +1,9 @@
-;;; evil-states.el --- States
+;;; evil-states.el --- States -*- lexical-binding: t -*-
 
 ;; Author: Vegard Øye <vegard_oye at hotmail.com>
 ;; Maintainer: Vegard Øye <vegard_oye at hotmail.com>
 
-;; Version: 1.2.3
+;; Version: 1.14.0
 
 ;;
 ;; This file is NOT part of GNU Emacs.
@@ -71,6 +71,40 @@ If the region is activated, enter Visual state."
 
 ;;; Insert state
 
+(defun evil-maybe-remove-spaces (&optional do-remove)
+  "Remove space from newly opened empty line.
+This function removes (indentation) spaces that have been
+inserted by opening a new empty line. The behavior depends on the
+variable `evil-maybe-remove-spaces'. If this variable is nil the
+function does nothing. Otherwise the behavior depends on
+DO-REMOVE.  If DO-REMOVE is non-nil the spaces are
+removed. Otherwise `evil-maybe-remove-spaces' is set to nil
+unless the last command opened yet another new line.
+
+This function should be added as a post-command-hook to track
+commands opening a new line."
+  (cond
+   ((not evil-maybe-remove-spaces)
+    (remove-hook 'post-command-hook #'evil-maybe-remove-spaces))
+   (do-remove
+    (when (save-excursion
+            (beginning-of-line)
+            (looking-at "^\\s-*$"))
+      (delete-region (line-beginning-position)
+                     (line-end-position)))
+    (setq evil-maybe-remove-spaces nil)
+    (remove-hook 'post-command-hook #'evil-maybe-remove-spaces))
+   ((not (memq this-command
+               '(evil-open-above
+                 evil-open-below
+                 evil-append
+                 evil-append-line
+                 newline
+                 newline-and-indent
+                 indent-and-newline)))
+    (setq evil-maybe-remove-spaces nil)
+    (remove-hook 'post-command-hook #'evil-maybe-remove-spaces))))
+
 (evil-define-state insert
   "Insert state."
   :tag " <I> "
@@ -81,19 +115,23 @@ If the region is activated, enter Visual state."
   :input-method t
   (cond
    ((evil-insert-state-p)
+    (add-hook 'post-command-hook #'evil-maybe-remove-spaces)
     (add-hook 'pre-command-hook #'evil-insert-repeat-hook)
+    (setq evil-maybe-remove-spaces t)
     (unless (eq evil-want-fine-undo t)
-      (evil-start-undo-step t)))
+      (evil-start-undo-step)))
    (t
+    (remove-hook 'post-command-hook #'evil-maybe-remove-spaces)
     (remove-hook 'pre-command-hook #'evil-insert-repeat-hook)
+    (evil-maybe-remove-spaces t)
     (setq evil-insert-repeat-info evil-repeat-info)
     (evil-set-marker ?^ nil t)
     (unless (eq evil-want-fine-undo t)
-      (evil-end-undo-step t (eq evil-want-fine-undo 'fine)))
-    (when evil-move-cursor-back
-      (when (or (evil-normal-state-p evil-next-state)
-                (evil-motion-state-p evil-next-state))
-        (evil-move-cursor-back))))))
+      (evil-end-undo-step))
+    (when (or (evil-normal-state-p evil-next-state)
+              (evil-motion-state-p evil-next-state))
+      (evil-move-cursor-back
+       (and (eolp) (not evil-move-beyond-eol)))))))
 
 (defun evil-insert-repeat-hook ()
   "Record insertion keys in `evil-insert-repeat-info'."
@@ -105,9 +143,11 @@ If the region is activated, enter Visual state."
   "Called when Insert state is about to be exited.
 Handles the repeat-count of the insertion command."
   (when evil-insert-count
-    (dotimes (i (1- evil-insert-count))
+    (dotimes (_ (1- evil-insert-count))
       (when evil-insert-lines
-        (evil-insert-newline-below))
+        (evil-insert-newline-below)
+        (when evil-auto-indent
+          (indent-according-to-mode)))
       (when (fboundp 'evil-execute-repeat-info)
         (evil-execute-repeat-info
          (cdr evil-insert-repeat-info)))))
@@ -136,7 +176,7 @@ Handles the repeat-count of the insertion command."
               (if (integerp col)
                   (move-to-column col t)
                 (funcall col))
-              (dotimes (i (or evil-insert-count 1))
+              (dotimes (_ (or evil-insert-count 1))
                 (when (fboundp 'evil-execute-repeat-info)
                   (evil-execute-repeat-info
                    (cdr evil-insert-repeat-info)))))))))))
@@ -171,12 +211,15 @@ the selection is enabled.
 
 \(fn SELECTION DOC [[KEY VAL]...] BODY...)"
   (declare (indent defun)
+           (doc-string 2)
            (debug (&define name stringp
                            [&rest keywordp sexp]
                            def-body)))
   (let* ((name (intern (format "evil-visual-%s" selection)))
          (message (intern (format "%s-message" name)))
+         (tagvar (intern (format "%s-tag" name)))
          (type selection)
+         (tag " <V> ")
          arg key string)
     ;; collect keywords
     (while (keywordp (car-safe body))
@@ -186,12 +229,15 @@ the selection is enabled.
        ((eq key :message)
         (setq string arg))
        ((eq key :type)
-        (setq type arg))))
+        (setq type arg))
+       ((eq key :tag)
+        (setq tag arg))))
     ;; macro expansion
     `(progn
        (add-to-list 'evil-visual-alist (cons ',selection ',name))
        (defvar ,name ',type ,(format "*%s" doc))
        (defvar ,message ,string ,doc)
+       (defvar ,tagvar ,tag ,doc)
        (evil-define-command ,name (&optional mark point type message)
          ,@(when doc `(,doc))
          :keep-visual t
@@ -212,15 +258,23 @@ the selection is enabled.
 (evil-define-visual-selection char
   "Characterwise selection."
   :type inclusive
-  :message "-- VISUAL --")
+  :message "-- VISUAL --"
+  :tag " <V> ")
 
 (evil-define-visual-selection line
   "Linewise selection."
-  :message "-- VISUAL LINE --")
+  :message "-- VISUAL LINE --"
+  :tag " <Vl> ")
+
+(evil-define-visual-selection screen-line
+  "Linewise selection in `visual-line-mode'."
+  :message "-- SCREEN LINE --"
+  :tag " <Vs> ")
 
 (evil-define-visual-selection block
   "Blockwise selection."
   :message "-- VISUAL BLOCK --"
+  :tag " <Vb> "
   (evil-transient-mark -1)
   ;; refresh the :corner property
   (setq evil-visual-properties
@@ -229,7 +283,7 @@ the selection is enabled.
 
 (evil-define-state visual
   "Visual state."
-  :tag " <V> "
+  :tag 'evil-visual-tag
   :enable (motion normal)
   :message 'evil-visual-message
   (cond
@@ -314,15 +368,13 @@ otherwise exit Visual state."
     (when (buffer-live-p buf)
       (with-current-buffer buf
         (when (and (evil-visual-state-p)
-                   (fboundp 'x-select-text)
-                   (or (not (boundp 'ns-initialized))
-                       (with-no-warnings ns-initialized))
+                   (display-selections-p)
                    (not (eq evil-visual-selection 'block)))
-          (x-select-text (buffer-substring-no-properties
-                          evil-visual-beginning
-                          evil-visual-end)))))))
+          (evil-set-selection 'PRIMARY (buffer-substring-no-properties
+                                        evil-visual-beginning
+                                        evil-visual-end)))))))
 
-(defun evil-visual-activate-hook (&optional command)
+(defun evil-visual-activate-hook (&optional _command)
   "Enable Visual state if the region is activated."
   (unless (evil-visual-state-p)
     (evil-delay nil
@@ -367,6 +419,15 @@ If LATER is non-nil, exit after the current command."
         (when evil-visual-region-expanded
           (evil-visual-contract-region))
         (evil-change-to-previous-state)))))
+
+(defun evil-visual-tag (&optional selection)
+  "Return a mode-line tag for SELECTION.
+SELECTION is a kind of selection as defined by
+`evil-define-visual-selection', such as `char', `line'
+or `block'."
+  (setq selection (or selection evil-visual-selection))
+  (when selection
+    (symbol-value (intern (format "evil-visual-%s-tag" selection)))))
 
 (defun evil-visual-message (&optional selection)
   "Create an echo area message for SELECTION.
@@ -568,7 +629,6 @@ Do this by putting an overlay on each line within the rectangle.
 Each overlay extends across all the columns of the rectangle.
 Reuse overlays where possible to prevent flicker."
   (let* ((point (point))
-         (mark (or (mark t) point))
          (overlays (or overlays 'evil-visual-block-overlays))
          (old (symbol-value overlays))
          (eol-col (and (memq this-command '(next-line previous-line))
@@ -605,7 +665,7 @@ Reuse overlays where possible to prevent flicker."
       ;; iterate over those lines of the rectangle which are
       ;; visible in the currently selected window
       (goto-char window-beg)
-      (dotimes (i nlines)
+      (dotimes (_ nlines)
         (let (before after row-beg row-end)
           ;; beginning of row
           (evil-move-to-column beg-col)
@@ -615,7 +675,7 @@ Reuse overlays where possible to prevent flicker."
             (setq before
                   (propertize
                    (make-string
-                    (- beg-col (current-column)) ?\ )
+                    (- beg-col (current-column)) ?\s)
                    'face
                    (or (get-text-property (1- (point)) 'face)
                        'default))))
@@ -632,7 +692,7 @@ Reuse overlays where possible to prevent flicker."
                     (if (= (point) row-beg)
                         (- end-col beg-col)
                       (- end-col (current-column)))
-                    ?\ ) 'face 'region))
+                    ?\s) 'face 'region))
             ;; place cursor on one of the virtual spaces
             (if (= point row-beg)
                 (put-text-property
@@ -812,14 +872,13 @@ CORNER defaults to `upper-left'."
     (overwrite-mode 1)
     (add-hook 'pre-command-hook #'evil-replace-pre-command nil t)
     (unless (eq evil-want-fine-undo t)
-      (evil-start-undo-step t)))
+      (evil-start-undo-step)))
    (t
     (overwrite-mode -1)
     (remove-hook 'pre-command-hook #'evil-replace-pre-command t)
     (unless (eq evil-want-fine-undo t)
-      (evil-end-undo-step t))
-    (when evil-move-cursor-back
-      (evil-move-cursor-back))))
+      (evil-end-undo-step))
+    (evil-move-cursor-back)))
   (setq evil-replace-alist nil))
 
 (defun evil-replace-pre-command ()

@@ -1,14 +1,20 @@
 ;;; evil.el --- extensible vi layer
 
-;; Authors:
+;; The following list of authors was kept up to date until the beginning of
+;; 2017, when evil moved under new maintainers. For authors since then, please
+;; consult the git logs.
+
 ;;      Alessandro Piras <laynor at gmail.com>
+;;      Alexander Baier <alexander.baier at mailbox.org>
 ;;      Antono Vasiljev <antono.vasiljev at gmail.com>
+;;      Bailey Ling <bling at live.ca>
 ;;      Barry O'Reilly <gundaetiapo at gmail.com>
 ;;      Christoph Lange <langec at web.de>
-;;      Daniel Reiter <danieltreiter@gmail.com>
-;;      Eivind Fonn <evfonn@gmail.com>
+;;      Daniel Reiter <danieltreiter at gmail.com>
+;;      Eivind Fonn <evfonn at gmail.com>
 ;;      Emanuel Evans <emanuel.evans at gmail.com>
 ;;      Eric Siegel <siegel.eric at gmail.com>
+;;      Eugene Yaremenko <w3techplayground at gmail.com>
 ;;      Frank Fischer <frank-fischer at shadow-soft.de>
 ;;      Frank Terbeck <ft at bewatermyfriend.org>
 ;;      Gordon Gustafson <gordon3.14 at gmail.com>
@@ -16,6 +22,7 @@
 ;;      Jonas Bernoulli <jonas at bernoul.li>
 ;;      Jonathan Claggett <jclaggett at lonocloud.com>
 ;;      José A. Romero L. <escherdragon at gmail.com>
+;;      Justin Burkett <justin at burkett.cc>
 ;;      Lars Andersen <expez at expez.com>
 ;;      Lintaro Ina <tarao.gnn at gmail.com>
 ;;      Lukasz Wrzosek <wrzoski at mail.com>
@@ -25,7 +32,8 @@
 ;;      Mike Gerwitz <mikegerwitz at gnu.org>
 ;;      Nikolai Weibull <now at bitwi.se>
 ;;      phaebz <phaebz at gmail.com>
-;;      ralesi <scio62@gmail.com>
+;;      ralesi <scio62 at gmail.com>
+;;      Rodrigo Setti <rodrigosetti at gmail.com>
 ;;      Sanel Zukan <sanelz at gmail.com>
 ;;      Sarah Brofeldt <sarah at thinkmonster.(none)>
 ;;      Simon Hafner <hafnersimon at gmail.com>
@@ -36,23 +44,23 @@
 ;;      Tom Willemse <tom at ryuslash.org>
 ;;      Trevor Murphy <trevor.m.murphy at gmail.com>
 ;;      Ulrich Müller <ulm at gentoo.org>
-;;      Vasilij Schneidermann <>
+;;      Vasilij Schneidermann <v.schneidermann at gmail.com>
 ;;      Vegard Øye <vegard_oye at hotmail.com>
 ;;      Winfred Lu <winfred.lu at gmail.com>
 ;;      Wolfgang Jenkner <wjenkner at inode.at>
 ;;      Xiao Hanyu <xiaohanyu1988 at gmail.com>
 ;;      York Zhao <yzhao at telecor.com>
 
-;; Maintainer: Vegard Øye <vegard_oye at hotmail.com>
+;; Maintainers: The emacs-evil team. <https://github.com/orgs/emacs-evil/people>
 ;;      To get in touch, please use the bug tracker or the
 ;;      mailing list (see below).
 ;; Created: 2011-03-01
-;; Version: 1.2.3
+;; Version: 1.14.0
 ;; Keywords: emulation, vim
-;; URL: http://gitorious.org/evil
-;;      Repository: git://gitorious.org/evil/evil.git
+;; URL: https://github.com/emacs-evil/evil
+;;      Repository: https://github.com/emacs-evil/evil.git
 ;;      EmacsWiki: http://www.emacswiki.org/emacs/Evil
-;; Bug tracker: https://bitbucket.org/lyro/evil/issues
+;; Bug tracker: https://github.com/emacs-evil/evil/issues
 ;;      If you have bug reports, suggestions or patches, please
 ;;      create an issue at the bug tracker (open for everyone).
 ;;      Other discussions (tips, extensions) go to the mailing list.
@@ -90,7 +98,7 @@
 ;;
 ;; Evil lives in a Git repository. To obtain Evil, do
 ;;
-;;      git clone git://gitorious.org/evil/evil.git
+;;      git clone git://github.com/emacs-evil/evil.git
 ;;
 ;; Move Evil to ~/.emacs.d/evil (or somewhere else in the `load-path').
 ;; Then add the following lines to ~/.emacs:
@@ -99,11 +107,8 @@
 ;;      (require 'evil)
 ;;      (evil-mode 1)
 ;;
-;; Evil requires undo-tree.el for linear undo and undo branches:
-;;
-;;      http://www.emacswiki.org/emacs/UndoTree
-;;
-;; Otherwise, Evil uses regular Emacs undo.
+;; Evil requires undo-redo (Emacs 28), undo-fu or undo-tree for redo
+;; functionality.  Otherwise, Evil uses regular Emacs undo.
 ;;
 ;; Evil requires `goto-last-change' and `goto-last-change-reverse'
 ;; function for the corresponding motions g; g, as well as the
@@ -127,14 +132,16 @@
 (require 'evil-digraphs)
 (require 'evil-types)
 (require 'evil-commands)
+(require 'evil-jumps)
 (require 'evil-maps)
-(require 'evil-integration)
+
+(when evil-want-integration
+  (require 'evil-integration))
+
+(when evil-want-keybinding
+  (require 'evil-keybindings))
 
 (run-hooks 'evil-after-load-hook)
-
-;;;###autoload
-(define-globalized-minor-mode evil-mode
-  evil-local-mode evil-initialize)
 
 (provide 'evil)
 

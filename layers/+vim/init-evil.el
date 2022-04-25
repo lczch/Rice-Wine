@@ -22,16 +22,18 @@
 ;;   (setq undo-limit 800000))
 
 (use-package evil
-  :ensure t
   :init
   (use-package undo-tree
-    ;; use old version undo-tree, the newest is full of bugs.
-    :load-path (lambda () (expand-file-name "evil/lib" rice-wine-package-dir))
     :config
+    (setq undo-tree-auto-save-history nil)
     (setq undo-limit 800000)
     )
-
+  ;; (setq evil-undo-system 'undo-fu)
+  
   :config
+  ;; (use-package undo-fu)
+  (setq evil-want-fine-undo t)
+ 
   ;; global key bindings
   (use-package evil-leader
     :config

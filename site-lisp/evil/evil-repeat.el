@@ -1,9 +1,9 @@
-;;; evil-repeat.el --- Repeat system
+;;; evil-repeat.el --- Repeat system -*- lexical-binding: t -*-
 
 ;; Author: Frank Fischer <frank.fischer at mathematik.tu-chemnitz.de>
 ;; Maintainer: Vegard Øye <vegard_oye at hotmail.com>
 
-;; Version: 1.2.3
+;; Version: 1.14.0
 
 ;;
 ;; This file is NOT part of GNU Emacs.
@@ -61,7 +61,7 @@
 ;; of all commands that are executed starting and ending in normal
 ;; state.
 ;;
-;; Not all commands are recored. There are several commands that are
+;; Not all commands are recorded. There are several commands that are
 ;; completely ignored and other commands that even abort the currently
 ;; active recording, e.g., commands that change the current buffer.
 ;;
@@ -155,9 +155,7 @@
     (let* ((range (evil-visual-range))
            (beg (evil-range-beginning range))
            (end (1- (evil-range-end range)))
-           ;; (nfwdlines (- (line-number-at-pos end)
-           ;;               (line-number-at-pos beg)))
-           (nfwdlines (count-lines beg end)))
+           (nfwdlines (evil-count-lines beg end)))
       (evil-repeat-record
        (cond
         ((eq evil-visual-selection 'char)
@@ -278,7 +276,8 @@ has :repeat nil."
         ;; called.
         (evil-repeat-abort))
        ;; ignore those commands completely
-       ((null repeat-type))
+       ((or (null repeat-type)
+            (evil-mouse-events-p (this-command-keys))))
        ;; record command
        (t
         ;; In normal-state or visual state, each command is a single
@@ -322,6 +321,16 @@ invoked the current command"
   (clear-this-command-keys t)
   (setq evil-repeat-keys ""))
 
+(defun evil-this-command-keys (&optional post-cmd)
+  "Version of `this-command-keys' with finer control over prefix args."
+  (let ((arg (if post-cmd current-prefix-arg prefix-arg)))
+    (vconcat
+     (when (and (numberp arg)
+                ;; Only add prefix if no repeat info recorded yet
+                (null evil-repeat-info))
+       (string-to-vector (number-to-string arg)))
+     (this-single-command-keys))))
+
 (defun evil-repeat-keystrokes (flag)
   "Repeation recording function for commands that are repeated by keystrokes."
   (cond
@@ -329,11 +338,11 @@ invoked the current command"
     (when evil-this-register
       (evil-repeat-record
        `(set evil-this-register ,evil-this-register)))
-    (setq evil-repeat-keys (this-command-keys)))
+    (setq evil-repeat-keys (evil-this-command-keys)))
    ((eq flag 'post)
-    (evil-repeat-record (if (zerop (length (this-command-keys)))
+    (evil-repeat-record (if (zerop (length (evil-this-command-keys t)))
                             evil-repeat-keys
-                          (this-command-keys)))
+                          (evil-this-command-keys t)))
     ;; erase commands keys to prevent double recording
     (evil-clear-command-keys))))
 
@@ -398,7 +407,7 @@ buffer between (point) and (mark)."
    ((eq flag 'post)
     (remove-hook 'after-change-functions #'evil-repeat-insert-at-point-hook t))))
 
-(defun evil-repeat-insert-at-point-hook (beg end length)
+(defun evil-repeat-insert-at-point-hook (beg end _length)
   (let ((repeat-type (evil-repeat-type this-command t)))
     (when (and (evil-repeat-recording-p)
                (eq repeat-type 'evil-repeat-insert-at-point)

@@ -1,9 +1,9 @@
-;;; evil-types.el --- Type system
+;;; evil-types.el --- Type system -*- lexical-binding: t -*-
 
 ;; Author: Vegard Øye <vegard_oye at hotmail.com>
 ;; Maintainer: Vegard Øye <vegard_oye at hotmail.com>
 
-;; Version: 1.2.3
+;; Version: 1.14.0
 
 ;;
 ;; This file is NOT part of GNU Emacs.
@@ -139,6 +139,36 @@ line and `evil-want-visual-char-semi-exclusive', then:
   :string (lambda (beg end)
             (let ((height (count-lines beg end)))
               (format "%s line%s" height
+                      (if (= height 1) "" "s")))))
+
+(evil-define-type screen-line
+  "Include whole lines, being aware of `visual-line-mode'
+when `evil-respect-visual-line-mode' is non-nil."
+  :one-to-one nil
+  :expand (lambda (beg end)
+            (if (or (not evil-respect-visual-line-mode)
+                    (not visual-line-mode))
+                (evil-line-expand beg end)
+              (evil-range
+               (progn
+                 (goto-char beg)
+                 (save-excursion
+                   (beginning-of-visual-line)))
+               (progn
+                 (goto-char end)
+                 (save-excursion
+                   ;; `beginning-of-visual-line' reverts to the beginning of the
+                   ;; last visual line if the end of the last line is the end of
+                   ;; the buffer. This would prevent selecting the last screen
+                   ;; line.
+                   (if (= (line-beginning-position 2) (point-max))
+                       (point-max)
+                     (beginning-of-visual-line 2)))))))
+  :contract (lambda (beg end)
+              (evil-range beg (max beg (1- end))))
+  :string (lambda (beg end)
+            (let ((height (count-screen-lines beg end)))
+              (format "%s screen line%s" height
                       (if (= height 1) "" "s")))))
 
 (evil-define-type block
@@ -369,6 +399,55 @@ If visual state is inactive then those values are nil."
   :ex-arg substitution
   (when (evil-ex-p)
     (evil-ex-get-substitute-info evil-ex-argument t)))
+
+(evil-define-interactive-code "<xc/>"
+  "Ex register and count argument, both optional.
+Can be used for commands such as :delete [REGISTER] [COUNT] where the
+command can be called with either zero, one or two arguments. When the
+argument is one, if it's numeric it's treated as a COUNT, otherwise -
+REGISTER"
+  (when (evil-ex-p)
+    (evil-ex-get-optional-register-and-count evil-ex-argument)))
+
+(defun evil-ex-get-optional-register-and-count (string)
+  "Parse STRING as an ex arg with both optional REGISTER and COUNT.
+Returns a list (REGISTER COUNT)."
+  (let* ((split-args (split-string (or string "")))
+         (arg-count (length split-args))
+         (arg0 (car split-args))
+         (arg1 (cadr split-args))
+         (number-regex "^-?[1-9][0-9]*$")
+         (register nil)
+         (count nil))
+    (cond
+     ;; :command REGISTER or :command COUNT
+     ((= arg-count 1)
+      (if (string-match-p number-regex arg0)
+          (setq count arg0)
+        (setq register arg0)))
+     ;; :command REGISTER COUNT
+     ((eq arg-count 2)
+      (setq register arg0
+            count arg1))
+     ;; more than 2 args aren't allowed
+     ((> arg-count 2)
+      (user-error "Invalid use")))
+
+    ;; if register is given, check it's valid
+    (when register
+      (unless (= (length register) 1)
+        (user-error "Invalid register"))
+      (setq register (string-to-char register)))
+
+    ;; if count is given, check it's valid
+    (when count
+      (unless (string-match-p number-regex count)
+        (user-error "Invalid count"))
+      (setq count (string-to-number count))
+      (unless (> count 0)
+        (user-error "Invalid count")))
+
+    (list register count)))
 
 (provide 'evil-types)
 

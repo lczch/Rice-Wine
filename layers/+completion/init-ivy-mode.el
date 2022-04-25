@@ -14,6 +14,21 @@
   (use-package counsel
     :ensure t
     :config
+
+    ;; my function 
+    (defun counsel-find-file-other-window ()
+      (interactive)
+      (ivy-read "find file other window: "
+                #'read-file-name-internal
+                :matcher #'counsel--find-file-matcher
+                :action (lambda (x)
+                          (find-file-other-window x))
+                :preselect (counsel--preselect-file)
+                :require-match 'confirm-after-completion
+                :history 'file-name-history
+                :caller 'counsel-find-file-other-window))
+ 
+    
     (when (executable-find "rg")
       ;; ripgrep says that "-n" is enabled actually not,
       ;; so we manually add it
