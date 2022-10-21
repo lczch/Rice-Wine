@@ -10,7 +10,7 @@
 (setq message-log-max 16384)
 
 ;; five times of default value
-(defvar best-gc-cons-threshold 4000000 "Best default gc threshold value. Should't be too big.")
+(defvar best-gc-cons-threshold 1000000 "Best default gc threshold value. Should't be too big.")
 (setq gc-cons-threshold best-gc-cons-threshold)
 ;;------------------------------------------------------------------------------
 ;; prepare work: set working directory and load-path

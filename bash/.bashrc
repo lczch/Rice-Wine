@@ -29,7 +29,7 @@ if [ -d "$HOME/bin/Coq8.6.1/bin" ] ; then
 fi
 # texlive for latex
 # windows中的绝对路径必须使用window的路径方式, 不知道为什么
-PATH="C:\\texlive\\2018\\bin\\win32:$PATH"
+PATH="E:\\texlive\\2018\\bin\\win32:$PATH"
 
 # specify emacs server file manually, necessary on windows
 export EMACS_SERVER_FILE="$HOME/rice-wine/server/server"

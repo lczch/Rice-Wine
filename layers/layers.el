@@ -359,5 +359,4 @@ Return the updated `exec-path'"
 ;; replace evil-mode
 ;; (use-package init-meow)
 
-
 (provide 'layers)

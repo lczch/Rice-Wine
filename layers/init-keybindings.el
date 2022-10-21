@@ -1,4 +1,5 @@
 
+(global-set-key (kbd "<f1>") 'counsel-M-x)
 
 ;; find a tag 
 (global-set-key (kbd "C-\\") 'counsel-etags-find-tag-at-point)
@@ -92,7 +93,7 @@
   "ss" 'swiper
   ;; counsel
   "xr" 'counsel-recentf 
-  "ff" 'counsel-find-file
+  "xf" 'counsel-find-file
   "off"  'counsel-find-file-other-window
   ;; help
   "?"   'counsel-descbinds
