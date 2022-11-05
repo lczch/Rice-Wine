@@ -48,42 +48,51 @@
   
   (setq org-return-follows-link t)
 
+
+  (setq org-startup-with-inline-images t)
+  
   ;; 从剪贴板中粘贴图片, 现在只在windows中有效, 需要imagemagick.
   ;; https://emacs-china.org/t/markdown/9296/3
   ;; 在windows上, 使用命令`magick clipboard: test.png'可以将clipboard中的图片读取保存为test.png.
-  (setq org-image-actual-width '(800))
-  (setq org-startup-with-inline-images t)
-  (defun org-insert-picture-clipboard ()
+  
+  ;; 如果图片很小, 那就保持图片本身的大小. 如果图片太大, 那就800.
+  ;; 现在采取的方式, 是自动插入控制width的参数, 可以供我调整. 默认是800.
+  (setq org-image-actual-width nil)
+  (defun rw/org-insert-picture-clipboard ()
     (interactive)
     (let* ((image-dir
-	    (if (not (buffer-file-name))
-	        (cond ((string-prefix-p "CAPTURE-[0-9]" (buffer-name))
-		       (let ((buffer-name (replace-regexp-in-string "CAPTURE-[0-9-]*" "" (buffer-name))))
-		         (concat (file-name-directory (buffer-file-name (get-file-buffer buffer-name))) "images")))
-		      (t (yank) (error "")))
-	      "images"))
-	   (fname (concat (make-temp-name "image-") (format-time-string "%Y%m%d-%H%M%S")))
-	   (image-file (concat image-dir "/" fname ".png")))
+            (if (not (buffer-file-name))
+                (cond ((string-prefix-p "CAPTURE-[0-9]" (buffer-name))
+        	       (let ((buffer-name (replace-regexp-in-string "CAPTURE-[0-9-]*" "" (buffer-name))))
+        	         (concat (file-name-directory (buffer-file-name (get-file-buffer buffer-name))) "images")))
+        	      (t (yank) (error "")))
+              "images"))
+           (fname (concat (make-temp-name "image-") (format-time-string "%Y%m%d-%H%M%S")))
+           (image-file (concat image-dir "/" fname ".png")))
       
       (unless (file-exists-p image-dir) (make-directory image-dir))
       ;; 将剪贴板中的图片保存为image-file
       (call-process "magick" nil nil nil
-		    "clipboard:" image-file)
+        	    "clipboard:" image-file)
+      (let* ((image-width (first (image-size (create-image image-file) t)))
+             (display-width (if (< image-width 800)
+                                image-width
+                              800)))
+        (insert (concat "#+ATTR_ORG: :width " (number-to-string display-width) "\n")))
       (insert (format "[[file:%s]]" image-file))
       (org-display-inline-images)
       ))
   
-  (use-package org-download
-    :ensure t
-    :disabled 
-    :config
-    (add-hook 'dired-mode-hook 'org-download-enable)
-    (setq-default org-download-method 'directory
-                  org-download-heading-lvl nil
-                  org-download-image-dir "./images"
-                  org-download-screenshot-method "imagemagick/convert"
-                  org-download-timestamp ""
-                  org-download-screenshot-file (expand-file-name "screenshot.jpg" temporary-file-directory)))
+  ;; (use-package org-download
+  ;;   :ensure t
+  ;;   :disabled 
+  ;;   :config
+  ;;   (add-hook 'dired-mode-hook 'org-download-enable)
+  ;;   (setq-default org-download-method 'directory
+  ;;                 org-download-heading-lvl nil
+  ;;                 org-download-image-dir "./images"
+  ;;                 org-download-screenshot-method "irfanview /capture=4 /convert=\"%s\""                     org-download-timestamp ""
+  ;;                 org-download-screenshot-file (expand-file-name "screenshot.jpg" temporary-file-directory)))
   
   (use-package htmlize
     :ensure t)
@@ -91,6 +100,7 @@
   (defcustom centaur-prettify-org-symbols-alist
     '(("[ ]" . ?☐)
       ("[X]" . ?☑)
+      ("[x]" . ?☑)
       ("[-]" . ?⛝)
 
       ("#+ARCHIVE:" . ?📦)
@@ -216,6 +226,9 @@
     :init
     (org-roam)
     :config
+    ;; 不需要根据title来更改文件名.
+    (setq org-roam-rename-file-on-title-change nil)
+    
     (setq org-roam-db-gc-threshold most-positive-fixnum)
     ;; 它需要的seq库太新了, 而seq库是emacs自带的, 所以....也许可以通过melpa下一个更新的, 但我更粗暴一些.
     (use-package my-seq)
@@ -291,8 +304,11 @@
     
     (setq org-roam-capture-templates
           `(("d" "default" plain #'org-roam-capture--get-point "%?"
+             ;; 原来我是在这里设置文件名的, 这种设计真是太聪明了!
              :file-name "%<%Y%m%d%H%M%S>"
-             :head ,(s-concat rw-org-html-theme "#+title: ${title}\n#+roam_tags: \n#+roam_alias: \n\n") :unnarrowed t)
+             :head ,(s-concat rw-org-html-theme "#+title: ${title}\n#+roam_tags: \n#+roam_alias: \n\n") :unnarrowed t
+             ;; 不要打开capture buffer, 直接在文件中编辑
+             :immediate-finish t)
             ("t" "group")
             ("ta" "work task" plain #'org-roam-capture--get-point
              "* TODO %?    :work:"

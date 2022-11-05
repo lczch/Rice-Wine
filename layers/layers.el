@@ -359,4 +359,11 @@ Return the updated `exec-path'"
 ;; replace evil-mode
 ;; (use-package init-meow)
 
+;; 通过点击打开网页
+(global-goto-address-mode)
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
+
+
 (provide 'layers)

@@ -1,6 +1,4 @@
 
-(global-set-key (kbd "<f1>") 'counsel-M-x)
-
 ;; find a tag 
 (global-set-key (kbd "C-\\") 'counsel-etags-find-tag-at-point)
 (global-set-key (kbd "C-t") 'pop-tag-mark)
