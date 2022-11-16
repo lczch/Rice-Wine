@@ -21,7 +21,6 @@
 (global-set-key (kbd "C-x 1") 'sanityinc/toggle-delete-other-windows)
 (global-set-key (kbd "C-x 2") (split-window-func-with-other-buffer 'split-window-vertically))
 (global-set-key (kbd "C-x 3") (split-window-func-with-other-buffer 'split-window-horizontally))
-(global-set-key (kbd "<f5>") 'sanityinc/toggle-current-window-dedication)
 
 
 ;; 如果在emacs是启动了server的时候(我保证全局只有一个server), 那么"C-x C-s"不会杀掉这个emacs,
@@ -40,19 +39,9 @@
 ;; window
 (my-space-leader-def
   "x0" 'delete-window
-  "x1" 'delete-other-windows
+  "x1" 'sanityinc/toggle-delete-other-windows
   "x2" 'split-window-vertically
   "x3" 'split-window-horizontally
-  "xq" 'delete-window
-  "xa" 'split-window-vertically
-  "xd" 'split-window-horizontally
-  "s0" 'delete-window
-  "s1" 'delete-other-windows
-  "s2" 'split-window-vertically
-  "s3" 'split-window-horizontally
-  "sq" 'delete-window
-  "sa" 'split-window-vertically
-  "sd" 'split-window-horizontally
   "oo" 'delete-other-windows
   ;; interesting 
   "xr" 'rotate-windows
@@ -116,11 +105,7 @@
   "ll" 'evilmi-jump-items 
   "vf" 'vc-rename-file-and-buffer
   "ee" 'eval-last-sexp
-  ;; paste picture
-  "pfc" 'org-insert-picture-clipboard 
  )
-
-
 
 ;; tricky use: for a specific purpose 
 ;; (my-space-leader-def
@@ -130,5 +115,24 @@
 ;; coq's layout in multi frames.
 ;; (my-space-leader-def
 ;;   "cl" 'rw/pg-show-goals-and-responds-in-other-frame)
+
+
+(my-space-leader-def
+   "wl" 'winner-undo
+   "wr" 'winner-redo
+  )
+
+(my-space-leader-def
+  "cl" 'org-insert-link
+  "cs" 'org-store-link)
+
+
+(my-space-leader-def
+  "rwi" 'rw/org-insert-picture-clipboard)
+
+(global-set-key (kbd "<f5>") 'org-redisplay-inline-images)
+
+(my-space-leader-def
+  "pin" 'sanityinc/toggle-current-window-dedication)
 
 (provide 'init-keybindings)

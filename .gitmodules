@@ -1,0 +1,6 @@
+[submodule "git/evil"]
+	path = git/evil
+	url = git@github.com:emacs-evil/evil.git
+[submodule "git/goto-chg"]
+	path = git/goto-chg
+	url = git@github.com:lczch/goto-chg.git

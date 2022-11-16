@@ -12,6 +12,9 @@
   
   ;; :commands (org-mode)
   :config
+
+  (setq org-src-window-setup 'split-window-below)
+  
   (require 'org-agenda)
 
   ;; 让latex公式可以自动indent
