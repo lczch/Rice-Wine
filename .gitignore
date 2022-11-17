@@ -12,3 +12,23 @@ temp/
 \#*\#
 .\#*
 *.elc
+
+# other
+.emacs.desktop
+.org-id-locations
+TAGS
+amx-items
+backups/
+bookmarks
+company-statistics-cache.el
+custom.el
+elpa/
+eshell/
+ido.last
+org-roam.db
+projectile-bookmarks.eld
+projectile.cache
+recentf
+server/
+smex-items
+transient/
