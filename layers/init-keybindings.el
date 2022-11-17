@@ -1,4 +1,10 @@
 
+(defun aweshell-toggle--no-prefix ()
+  (interactive)
+  (aweshell-toggle 4))
+
+(global-set-key (kbd "<f1>") 'aweshell-toggle--no-prefix)
+
 ;; find a tag 
 (global-set-key (kbd "C-\\") 'counsel-etags-find-tag-at-point)
 (global-set-key (kbd "C-t") 'pop-tag-mark)

@@ -4,3 +4,6 @@
 [submodule "git/goto-chg"]
 	path = git/goto-chg
 	url = git@github.com:lczch/goto-chg.git
+[submodule "git/aweshell"]
+	path = git/aweshell
+	url = git@github.com:lczch/aweshell.git

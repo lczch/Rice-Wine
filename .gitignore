@@ -32,3 +32,4 @@ recentf
 server/
 smex-items
 transient/
+*.lock 
