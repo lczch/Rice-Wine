@@ -366,4 +366,6 @@ Return the updated `exec-path'"
       browse-url-generic-program "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
 
 
+(require 'init-auto-save)
+
 (provide 'layers)

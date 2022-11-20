@@ -30,10 +30,10 @@
                            (if overwrite-mode "overwrite" "insert") " mode")))
 
     ;; was this buffer modified since the last save?
-    '(:eval (when (buffer-modified-p)
-              (concat ","  (propertize "Mod"
-                             'face nil
-                             'help-echo "Buffer has been modified"))))
+    ;; '(:eval (when (buffer-modified-p)
+    ;;           (concat ","  (propertize "Mod"
+    ;;                          'face nil
+    ;;                          'help-echo "Buffer has been modified"))))
 
     ;; is this buffer read-only?
     '(:eval (when buffer-read-only

@@ -7,3 +7,6 @@
 [submodule "git/aweshell"]
 	path = git/aweshell
 	url = git@github.com:lczch/aweshell.git
+[submodule "git/auto-save"]
+	path = git/auto-save
+	url = git@github.com:lczch/auto-save.git

@@ -55,6 +55,12 @@
   (rw-add-to-load-path dir)
   (rw-add-subdirs-to-load-path dir))
 
+(defun rw/refresh-git-load-path ()
+  "保证新加入git中的package也能被读到"
+  (interactive)
+  (rw-add-subdirs-to-load-path rice-wine-git-package-dir)
+  (message "refresh git load path successful")) 
+
 (let ((dirs (list
              ;; configurations for packages 
              rice-wine-lisp-dir
