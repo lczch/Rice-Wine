@@ -10,4 +10,9 @@
   (let ((file (buffer-file-name)))
     (async-shell-command (concat "emacs " file " --debug"))))
 
+(defun rw/dnd ()
+  "100面的骰子"
+  (interactive)
+  (insert (format "骰子结果: %d" (+ (random 100) 1))))
+
 (provide 'rw-misc-lib)

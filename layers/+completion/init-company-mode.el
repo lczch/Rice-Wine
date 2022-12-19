@@ -79,14 +79,14 @@
   (push 'company-cmake company-backends)
   (push 'company-c-headers company-backends)
   (push 'company-ctags company-backends)
-  (add-to-list 'company-backends 'company-files)
+  ;; (add-to-list 'company-backends 'company-files)
   ;; tabnine on windows is slow. 
   ;; (add-to-list 'company-backends #'company-tabnine) 
   ;; Specific backends for various modes: 
 
   (defvar elisp-company-backends
     '(company-elisp
-      company-ctags
+      ;; company-ctags
       ;; (company-elisp company-tabnine)
       ;; 在笔记本上用时很慢, 不知道为什么...
       ;; company-files

@@ -303,7 +303,9 @@
       (make-directory org-roam-directory))
 
     ;; 导出成为html更加好看
-    (setq rw-org-html-theme "#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup\n")
+    (setq rw-org-html-theme ""
+	  ;; "#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup\n"
+	  )
     
     (setq org-roam-capture-templates
           `(("d" "default" plain #'org-roam-capture--get-point "%?"

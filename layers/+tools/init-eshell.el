@@ -26,6 +26,8 @@
     ;; (eshell/alias "ec" "emacsclient -c $1")
     ;; Commands about git need magic, which I am planning to use.
     (eshell/alias "gis" "git status")
+    (eshell/alias "rw-git-add-all" "git add -A")
+    (eshell/alias "rw-git-quick-push" "git commit -m \"1\"")
     )
   
   (defun eshell-mode-func ()
