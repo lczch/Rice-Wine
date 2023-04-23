@@ -73,7 +73,7 @@
   "eb" 'eval-buffer
   "rb" 'revert-buffer
   ;; org-roam
-  "rff" 'org-roam-find-file
+  "rff" 'org-roam-find-file-immediate
   "roff" 'org-roam-find-file-other-window
   "rll" 'org-roam-insert
   "rtt" 'my-org-roam-capture-new-task

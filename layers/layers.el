@@ -365,6 +365,10 @@ Return the updated `exec-path'"
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
 
+;; create *scratch* as org-mode
+
+(setq initial-major-mode 'org-mode)
+
 
 (require 'init-auto-save)
 
