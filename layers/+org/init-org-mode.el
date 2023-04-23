@@ -236,8 +236,7 @@
     ;; 它需要的seq库太新了, 而seq库是emacs自带的, 所以....也许可以通过melpa下一个更新的, 但我更粗暴一些.
     (use-package my-seq)
     ;; (use-package org-roam-protocol)
-    (use-package emacsql
-      :ensure t)
+    (use-package emacsql)
     (use-package emacsql-sqlite3
       :ensure t
       :custom (emacsql-sqlite-executable-path "C:\\\\msys64\\\\home\\\\lzh\\\\bin\\\\sqlite3.exe"))
