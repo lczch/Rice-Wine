@@ -1,6 +1,9 @@
 # ignore straight
 straight/
 
+# ignore git
+git/
+
 # ignore my private directory
 private/
 
