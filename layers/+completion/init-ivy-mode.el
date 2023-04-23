@@ -128,11 +128,11 @@ This function is intended for use with `ivy-ignore-buffers'."
                                 (counsel-describe-function . ivy--regex-fuzzy)
                                 (ivy-switch-buffer . ivy--regex-fuzzy)
                                 (counsel-M-x . ivy--regex-fuzzy)
-                                (t . ivy--regex-plus)
+                                (t . ivy--regex)
                                 ;; (T . re-builder-extended-pattern)
                                 ))
   ;; (setq ivy-re-builders-alist
-  ;;       '((swiper . ivy--regex-plus)
+  ;;       '((swiper . ivy--regex-splus)
   ;;         ;; fuzzy search in counsel-rg is noisy. 
   ;;         (counsel-rg . ivy--regex-plus)
   ;;         ;; fuzzy is not suitable for me!

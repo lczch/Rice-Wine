@@ -16,6 +16,9 @@
   (setq TeX-parse-self t)
   (setq-default TeX-master nil)
 
+  ;; 使用makefile来编译, 兼容性很好
+  (add-to-list 'TeX-command-list '("Make" "make" TeX-run-compile nil t))
+  
   (use-package company-auctex
     :ensure t)
   

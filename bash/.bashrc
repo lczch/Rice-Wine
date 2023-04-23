@@ -16,6 +16,9 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
+# current emacs 
+PATH="$HOME/bin/emacs29/bin:$PATH" 
+
 # git flow completion
 # echo "turn on git completion."
 # source "$HOME/rice-wine/bash/git-completion"
@@ -24,12 +27,8 @@ fi
 #     PATH="$HOME/bin/Coq8.4/bin:$PATH"
 # fi
 
-if [ -d "$HOME/bin/Coq8.6.1/bin" ] ; then
-    PATH="$HOME/bin/Coq8.6.1/bin:$PATH"
-fi
 # texlive for latex
-# windows中的绝对路径必须使用window的路径方式, 不知道为什么
-PATH="E:\\texlive\\2018\\bin\\win32:$PATH"
+PATH="/e/texlive/2018/bin/win32:$PATH"
 
 # specify emacs server file manually, necessary on windows
 export EMACS_SERVER_FILE="$HOME/rice-wine/server/server"

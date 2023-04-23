@@ -12,7 +12,15 @@
   
   ;; :commands (org-mode)
   :config
-
+  ;; org latex preview会读的包
+  ;; 增加: 替换"proof"到想要的包的名字
+  (setq org-latex-packages-alist
+        '(("" "proof" t)
+          )
+        )
+  
+  (setq org-startup-folded t)
+  
   (setq org-src-window-setup 'split-window-below)
   
   (require 'org-agenda)
@@ -236,10 +244,11 @@
     ;; 它需要的seq库太新了, 而seq库是emacs自带的, 所以....也许可以通过melpa下一个更新的, 但我更粗暴一些.
     (use-package my-seq)
     ;; (use-package org-roam-protocol)
-    (use-package emacsql
-      :ensure t)
-    (use-package emacsql-sqlite3
+    (use-package emacsql)
+    (use-package emacsql-sqlite-builtin)
+    (use-package emacsql-sqlte3
       :ensure t
+      :disabled
       :custom (emacsql-sqlite-executable-path "C:\\\\msys64\\\\home\\\\lzh\\\\bin\\\\sqlite3.exe"))
 
     ;; my function 
@@ -384,11 +393,13 @@
             ))
 
     (setq org-roam-capture-immediate-template
-          '("d" "default" plain #'org-roam-capture--get-point "%?"
-            :file-name "%<%Y%m%d%H%M%S>"
-            :head "#+title: ${title}\n#+roam_tags:\n\n"
-            :unnarrowed t
-            :immediate-finish t))
+          `("d" "default" plain #'org-roam-capture--get-point "%?"
+           ;; 原来我是在这里设置文件名的, 这种设计真是太聪明了!
+           :file-name "%<%Y%m%d%H%M%S>"
+           :head ,(s-concat rw-org-html-theme "#+title: ${title}\n#+roam_tags: \n#+roam_alias: \n\n") :unnarrowed t
+           ;; 不要打开capture buffer, 直接在文件中编辑
+           :immediate-finish t)
+          )
 
     ;; https://emacs-china.org/t/org-roam-error-running-timer-org-roam-db-update-cache-on-timer-error-selecting-deleted-buffer/15346/2
     (setq org-roam-db-update-method 'immediate)

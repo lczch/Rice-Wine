@@ -33,7 +33,7 @@
 ;;;; Library Requires
 (eval-when-compile (require 'subr-x))
 (require 'emacsql)
-(require 'emacsql-sqlite3)
+;; (require 'emacsql-sqlite3)
 (require 'seq)
 
 (eval-and-compile
@@ -112,11 +112,39 @@ so that multi-directories are updated.")
   :group 'org-roam)
 
 ;;;; Core Functions
-
 (defun org-roam-db--get-connection ()
   "Return the database connection, if any."
   (gethash (expand-file-name org-roam-directory)
            org-roam-db--connection))
+
+;; personal update `org-roam-db' to use emacs-builtin-sqlite in emacs29
+(declare-function emacsql-sqlite-builtin "ext:emacsql-sqlite-builtin")
+
+(setq org-roam-database-connector 'sqlite-builtin)
+
+(defun org-roam-db--conn-fn ()
+  "Return the function for creating the database connection."
+  (cl-case org-roam-database-connector
+    (sqlite
+     (progn
+       (require 'emacsql-sqlite)
+       #'emacsql-sqlite))
+    (sqlite-builtin
+     (progn
+       (require 'emacsql-sqlite-builtin)
+       #'emacsql-sqlite-builtin))
+    (sqlite-module
+     (progn
+       (require 'emacsql-sqlite-module)
+       #'emacsql-sqlite-module))
+    (libsqlite3
+     (progn
+       (require 'emacsql-libsqlite3)
+       #'emacsql-libsqlite3))
+    (sqlite3
+     (progn
+       (require 'emacsql-sqlite3)
+       #'emacsql-sqlite3))))
 
 (defun org-roam-db ()
   "Entrypoint to the Org-roam sqlite database.
@@ -126,26 +154,19 @@ Performs a database upgrade when required."
                (emacsql-live-p (org-roam-db--get-connection)))
     (let ((init-db (not (file-exists-p org-roam-db-location))))
       (make-directory (file-name-directory org-roam-db-location) t)
-      (let ((conn (emacsql-sqlite3 org-roam-db-location)))
-        (set-process-query-on-exit-flag (emacsql-process conn) nil)
+      (let ((conn (funcall (org-roam-db--conn-fn) org-roam-db-location)))
+        (emacsql conn [:pragma (= foreign_keys ON)])
+        (when-let* ((process (emacsql-process conn))
+                    (_ (processp process)))
+          (set-process-query-on-exit-flag process nil))
         (puthash (expand-file-name org-roam-directory)
                  conn
                  org-roam-db--connection)
         (when init-db
           (org-roam-db--init conn))
-        (let* ((version (caar (emacsql conn "PRAGMA user_version")))
-               (version (org-roam-db--upgrade-maybe conn version)))
-          (cond
-           ((> version org-roam-db--version)
-            (emacsql-close conn)
-            (user-error
-             "The Org-roam database was created with a newer Org-roam version.  "
-             "You need to update the Org-roam package"))
-           ((< version org-roam-db--version)
-            (emacsql-close conn)
-            (error "BUG: The Org-roam database scheme changed %s"
-                   "and there is no upgrade path")))))))
+        )))
   (org-roam-db--get-connection))
+;; update end 
 
 ;;;; Entrypoint: (org-roam-db-query)
 (defun org-roam-db-query (sql &rest args)
