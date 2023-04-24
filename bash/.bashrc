@@ -17,7 +17,7 @@ if [ -d "$HOME/bin" ] ; then
 fi
 
 # current emacs 
-PATH="$HOME/bin/emacs29/bin:$PATH" 
+# PATH="$HOME/bin/emacs29/bin:$PATH" 
 
 # git flow completion
 # echo "turn on git completion."
