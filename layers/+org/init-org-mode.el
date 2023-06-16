@@ -226,10 +226,11 @@
 
 
   (use-package org-roam
-    ;; defer也没用
-    ;; :defer 10
+    ;; 很有用, 速度快乐很多
+    :defer 3
     ;; use my own version
     :commands (org-roam-find-file
+               org-roam-find-file-immediate
                org-roam-mode)
     
     :bind (:map org-roam-mode-map
@@ -240,7 +241,7 @@
                 (("C-c n i" . org-roam-insert))
                 (("C-c n I" . org-roam-insert-immediate)))
     :init
-    (org-roam)
+ ;;   (org-roam)
     :config
     ;; 不需要根据title来更改文件名.
     (setq org-roam-rename-file-on-title-change nil)
