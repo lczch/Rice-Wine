@@ -1,14 +1,18 @@
 ;;------------------------------------------------------------------------------
 ;; misc functions
 ;;------------------------------------------------------------------------------
+
+
+;; 失败, 完全没有达到禁止org-roam加载的效果.
+;; 这是因为--eval是在加载完配置之后eval的, 所以就不行. 
 (defun rw-test-new-config ()
-  "Async open a new emacs, with current file opened."
+  "Async open a new emacs, with current file opened and initial `not-test' as nil."
   (interactive)
   ;; (when (f-exists? rice-wine-configure-file)
   ;;   (org-babel-tangle-file rice-wine-configure-file))
   ;; start emacs
   (let ((file (buffer-file-name)))
-    (async-shell-command (concat "emacs " file " --debug"))))
+    (async-shell-command (concat "emacs " file " --eval \"(setq not-test nil)\"" " --debug"))))
 
 (defun rw/dnd ()
   "100面的骰子"

@@ -226,6 +226,8 @@
 
 
   (use-package org-roam
+    ;; defer也没用
+    ;; :defer 10
     ;; use my own version
     :commands (org-roam-find-file
                org-roam-mode)

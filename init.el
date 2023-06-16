@@ -36,6 +36,9 @@
 
 (defvar sys/win32p (eq system-type 'windows-nt))
 
+(defvar not-test t
+  "tell whether this startup is not a test for configuration.")
+
 ;; set load-path, include all packages and init files
 (defun rw-add-to-load-path (dir)
   "add DIR to the head of load-path"
