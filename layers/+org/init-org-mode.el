@@ -18,6 +18,9 @@
         '(("" "proof" t)
           )
         )
+
+  ;; 对中文友好的显示方式
+  (setq word-wrap-by-category t)
   
   (setq org-startup-folded t)
   

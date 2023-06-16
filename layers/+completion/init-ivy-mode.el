@@ -15,6 +15,10 @@
     :ensure t
     :config
 
+    ;; useful keybindings
+    ;; C-c C-o: ivy-occur Saves the current candidates to a new buffer and exits completion.
+    ;; M-o: dispatch 
+    
     ;; my function 
     (defun counsel-find-file-other-window ()
       (interactive)
