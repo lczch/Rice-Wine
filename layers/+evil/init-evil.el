@@ -72,17 +72,17 @@
     (setq evil-normal-state-map (make-sparse-keymap))
     (define-key evil-normal-state-map "a" 'evil-insert)
     (define-key evil-normal-state-map "d" 'evil-delete)
-    ;; (define-key evil-normal-state-map "i" 'evil-insert)
+    ;; (define-key evil-normal-state-map "o" 'evil-insert)
     (define-key evil-normal-state-map "m" 'evil-set-marker)
-    (define-key evil-normal-state-map "v" 'evil-paste-before)
-    (define-key evil-normal-state-map "V" 'rw/org-insert-picture-clipboard)
+    (define-key evil-normal-state-map "p" 'evil-paste-before)
+    (define-key evil-normal-state-map "P" 'evil-paste-after)
     ;; del
     (define-key evil-normal-state-map "x" 'evil-delete-char)
     ;; backspace
     (define-key evil-normal-state-map "X" 'evil-delete-backward-char)
     (define-key evil-normal-state-map [deletechar] 'evil-delete-char)
-    (define-key evil-normal-state-map "c" 'evil-yank)
-    (define-key evil-normal-state-map "C" 'evil-yank-line)
+    (define-key evil-normal-state-map "y" 'evil-yank)
+    (define-key evil-normal-state-map "Y" 'evil-yank-line)
     (define-key evil-normal-state-map "gf" 'find-file-at-point)
     (define-key evil-normal-state-map [escape] 'evil-force-normal-state)
     ;; "DEL" means backspace
@@ -115,8 +115,8 @@
     (define-key evil-motion-state-map "$" 'evil-end-of-line)
     ;;(define-key evil-motion-state-map "+" 'evil-next-line-first-non-blank)
     ;;(define-key evil-motion-state-map "-" 'evil-previous-line-first-non-blank)
-    (define-key evil-motion-state-map "e" 'evil-visual-char)
-    (define-key evil-motion-state-map "E" 'evil-visual-line)
+    (define-key evil-motion-state-map "v" 'evil-visual-char)
+    (define-key evil-motion-state-map "V" 'evil-visual-line)
     (define-key evil-motion-state-map "\C-v" 'evil-visual-block)
     (define-key evil-motion-state-map [left] 'evil-backward-char)
     (define-key evil-motion-state-map [right] 'evil-forward-char)
@@ -130,7 +130,12 @@
       (read-kbd-macro evil-toggle-key) 'evil-emacs-state))
 
   ;; fix a bug
-  (define-key evil-visual-state-map "i" 'evil-previous-visual-line)
+  ;; (define-key evil-visual-state-map "i" 'evil-previous-visual-line)
+  (when rw-evil-map-minimal
+    (setq evil-visual-state-map (make-sparse-keymap)))
+
+  ;; (when rw-evil-map-minimal
+  ;;   (setq evil-window-map (make-sparse-keymap)))
 
   
   ;; change mode-line color by evil state

@@ -10,10 +10,11 @@
 ;; (rw-add-to-load-path (expand-file-name "evil-escape" rw-straight-repos-dir))
 
 (use-package evil-escape
+  :disabled
   :ensure t
   :config 
   ;; {{ https://github.com/syl20bnr/evil-escape
-  (setq-default evil-escape-delay 0.3)
+  (setq-defxault evil-escape-delay 0.3)
   (setq evil-escape-excluded-major-modes '(dired-mode))
   (setq-default evil-escape-key-sequence "kj")
   ;; disable evil-escape when input method is on
